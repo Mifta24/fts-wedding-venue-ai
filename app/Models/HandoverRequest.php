@@ -20,11 +20,11 @@ class HandoverRequest extends Model
 
     public const REASON_COMPLAINT = 'complaint';
 
-    public const REASON_GROUP_BOOKING = 'group_booking';
+    public const REASON_CUSTOM_PACKAGE = 'custom_package';
 
     public const REASON_NEGOTIATED_RATE = 'negotiated_rate';
 
-    public const REASON_UNUSUAL_CANCELLATION = 'unusual_cancellation';
+    public const REASON_RESCHEDULE = 'reschedule';
 
     public const REASON_PAYMENT_ISSUE = 'payment_issue';
 

@@ -7,8 +7,8 @@ namespace App\Services\Concierge;
  * an uncensored one, so asking it politely to stay clean is not enough: rude,
  * sexual or illegal messages are answered with a fixed reply without ever
  * reaching the model, and a model reply that still contains such words is
- * replaced. Patterns are deliberately narrow so ordinary apartment questions
- * ("are dogs allowed?", "is there a pork-free menu?") are never blocked.
+ * replaced. Patterns are deliberately narrow so ordinary wedding questions
+ * ("can we bring our own caterer?", "is there a pork-free menu?") are never blocked.
  */
 class ContentGuard
 {
@@ -23,7 +23,7 @@ class ContentGuard
         '(?:dasar|lu|lo|loe|elu|kamu|kau|dasar)\s+(?:anjing|anjir|asu|babi|monyet|bodoh|bego|idiot|sampah)',
         '(?:anjing|asu|babi|monyet)\s+(?:lu|lo|loe|elu|kamu|kau|banget|kau)',
         '(?:maki|caci|hina)(?:-|\s)?(?:maki|caci|hina)?\s*(?:saya|aku|gue|gw)',
-        '(?:pemilik|owner)\w*\s+(?:apartment\s+)?(?:ini\s+)?(?:babi|anjing|bangsat)',
+        '(?:pemilik|owner)\w*\s+(?:gedung\s+)?(?:ini\s+)?(?:babi|anjing|bangsat)',
         // Indonesian sexual
         '(?:porno|bokep|mesum|cabul|sange|colmek|coli|onani|bugil|telanjang|ml\s+yuk|ngeseks|seks|sex|sexy|seksi)',
         '(?:cewek|wanita|perempuan|cowok|pria|lelaki)\s+(?:panggilan|bayaran|sewaan)',
@@ -50,9 +50,9 @@ class ContentGuard
     ];
 
     private const REFUSALS = [
-        'id' => 'Maaf, saya tidak bisa membantu dengan hal itu. Saya siap membantu soal unit, fasilitas gedung, permintaan sewa, atau menghubungkan Anda dengan tim apartemen.',
-        'en' => 'Sorry, I cannot help with that. I am happy to help with units, building facilities, stay requests, or connecting you with the apartment team.',
-        'ja' => '申し訳ございませんが、そのご依頼にはお応えできません。お部屋、共用施設、滞在のご依頼、スタッフへのご連絡でしたらお手伝いいたします。',
+        'id' => 'Maaf, saya tidak bisa membantu dengan hal itu. Saya siap membantu soal hall, layanan pernikahan, pengajuan tanggal acara, atau menghubungkan Anda dengan tim gedung.',
+        'en' => 'Sorry, I cannot help with that. I am happy to help with halls, wedding services, date requests, or connecting you with the venue team.',
+        'ja' => '申し訳ございませんが、そのご依頼にはお応えできません。会場、ウェディングサービス、日程のご依頼、スタッフへのご連絡でしたらお手伝いいたします。',
     ];
 
     /**
@@ -77,13 +77,13 @@ class ContentGuard
         return false;
     }
 
-    private const INDONESIAN_WORDS = ['yang', 'dan', 'apa', 'ada', 'saya', 'aku', 'kamu', 'anda', 'bisa', 'untuk', 'tidak', 'ini', 'itu', 'dong', 'nggak', 'gak', 'berapa', 'mau', 'dengan', 'di', 'ke', 'dari', 'kamar', 'lu', 'gue'];
+    private const INDONESIAN_WORDS = ['yang', 'dan', 'apa', 'ada', 'saya', 'aku', 'kamu', 'anda', 'bisa', 'untuk', 'tidak', 'ini', 'itu', 'dong', 'nggak', 'gak', 'berapa', 'mau', 'dengan', 'di', 'ke', 'dari', 'tanggal', 'lu', 'gue'];
 
     private const ENGLISH_WORDS = ['the', 'and', 'what', 'is', 'are', 'you', 'your', 'can', 'do', 'does', 'i', 'my', 'me', 'have', 'with', 'for', 'this', 'that', 'how', 'much', 'please', 'tell', 'say', 'write'];
 
     /**
      * Best guess of the language a message is written in, so a fixed reply can
-     * match the guest rather than the page. Falls back when it is unclear.
+     * match the client rather than the page. Falls back when it is unclear.
      */
     public function detectLocale(string $text, string $fallback): string
     {

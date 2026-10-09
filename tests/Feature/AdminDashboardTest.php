@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
-use App\Models\Apartment;
 use App\Models\Booking;
 use App\Models\Conversation;
+use App\Models\Hall;
+use App\Models\HallInventory;
 use App\Models\HandoverRequest;
-use App\Models\UnitInventory;
-use App\Models\UnitType;
 use App\Models\User;
+use App\Models\Venue;
 use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
@@ -18,9 +18,9 @@ class AdminDashboardTest extends TestCase
 {
     use RefreshDatabase;
 
-    private Apartment $apartment;
+    private Venue $venue;
 
-    private UnitType $unitType;
+    private Hall $hall;
 
     private User $staff;
 
@@ -30,19 +30,18 @@ class AdminDashboardTest extends TestCase
     {
         parent::setUp();
 
-        $this->apartment = Apartment::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published', 'timezone' => 'Asia/Jakarta']);
-        $this->unitType = $this->apartment->unitTypes()->create(['name' => 'Studio', 'slug' => 'studio', 'base_price' => 500000, 'max_adults' => 2, 'max_children' => 0, 'is_active' => true]);
+        $this->venue = Venue::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published', 'timezone' => 'Asia/Jakarta']);
+        $this->hall = $this->venue->halls()->create(['name' => 'Studio', 'slug' => 'studio', 'base_price' => 500000, 'is_active' => true]);
         $this->staff = User::factory()->create();
-        $this->apartment->users()->attach($this->staff->id, ['role' => 'staff', 'status' => 'active']);
+        $this->venue->users()->attach($this->staff->id, ['role' => 'staff', 'status' => 'active']);
         $this->today = CarbonImmutable::now('Asia/Jakarta')->startOfDay();
     }
 
-    private function booking(string $status, int $checkInOffset, ?\DateTimeInterface $createdAt = null, ?Apartment $apartment = null, ?UnitType $unitType = null): Booking
+    private function booking(string $status, int $eventOffset, ?\DateTimeInterface $createdAt = null, ?Venue $venue = null, ?Hall $hall = null): Booking
     {
         $booking = Booking::create([
-            'reference' => 'BK-'.Str::upper(Str::random(6)), 'apartment_id' => ($apartment ?? $this->apartment)->id, 'unit_type_id' => ($unitType ?? $this->unitType)->id,
-            'guest_name' => 'Guest '.Str::random(4), 'check_in' => $this->today->addDays($checkInOffset), 'check_out' => $this->today->addDays($checkInOffset + 2),
-            'adults' => 2, 'unit_count' => 1, 'total_price' => 1000000, 'status' => $status,
+            'reference' => 'WD-'.Str::upper(Str::random(6)), 'venue_id' => ($venue ?? $this->venue)->id, 'hall_id' => ($hall ?? $this->hall)->id,
+            'client_name' => 'Client '.Str::random(4), 'event_date' => $this->today->addDays($eventOffset), 'guest_count' => 100, 'total_price' => 1000000, 'deposit_amount' => 300000, 'status' => $status,
         ]);
 
         if ($createdAt) {
@@ -74,58 +73,58 @@ class AdminDashboardTest extends TestCase
         $this->dashboard()->assertOk()->assertSee('None waiting over 24h')->assertDontSee('border-amber-300', false);
     }
 
-    public function test_move_ins_count_and_list_only_confirmed_bookings_in_the_next_seven_days(): void
+    public function test_weddings_count_and_list_only_confirmed_bookings_in_the_next_thirty_days(): void
     {
         $soon = $this->booking(Booking::STATUS_CONFIRMED, 0);
-        $this->booking(Booking::STATUS_CONFIRMED, 6);
-        $this->booking(Booking::STATUS_CONFIRMED, 7);
+        $this->booking(Booking::STATUS_CONFIRMED, 29);
+        $this->booking(Booking::STATUS_CONFIRMED, 30);
         $this->booking(Booking::STATUS_CONFIRMED, -1);
         $this->booking(Booking::STATUS_PENDING, 2);
         $this->booking(Booking::STATUS_CANCELLED, 2);
 
-        $response = $this->dashboard()->assertOk()->assertSee('Move-ins · 7 days')->assertSee($soon->guest_name);
+        $response = $this->dashboard()->assertOk()->assertSee('Weddings · 30 days')->assertSee($soon->client_name);
 
-        $this->assertCount(2, $response->viewData('arrivals'));
-        $this->assertSame(2, $response->viewData('stats')['arrivals']);
+        $this->assertCount(2, $response->viewData('upcoming'));
+        $this->assertSame(2, $response->viewData('stats')['upcoming_events']);
     }
 
-    public function test_occupancy_is_booked_over_total_units_for_the_next_thirty_days_of_active_unit_types(): void
+    public function test_dates_booked_is_booked_over_total_slots_for_the_next_thirty_days_of_active_halls(): void
     {
-        $hidden = $this->apartment->unitTypes()->create(['name' => 'Hidden', 'slug' => 'hidden', 'base_price' => 1, 'max_adults' => 1, 'max_children' => 0, 'is_active' => false]);
-        foreach ([[$this->unitType, 0, 10, 4], [$this->unitType, 29, 10, 6], [$this->unitType, 30, 10, 10], [$hidden, 1, 10, 10]] as [$unitType, $offset, $total, $booked]) {
-            UnitInventory::create(['unit_type_id' => $unitType->id, 'stay_date' => $this->today->addDays($offset)->toDateString(), 'total_units' => $total, 'booked_units' => $booked, 'price' => 1]);
+        $hidden = $this->venue->halls()->create(['name' => 'Hidden', 'slug' => 'hidden', 'base_price' => 1, 'is_active' => false]);
+        foreach ([[$this->hall, 0, 10, 4], [$this->hall, 29, 10, 6], [$this->hall, 30, 10, 10], [$hidden, 1, 10, 10]] as [$hall, $offset, $total, $booked]) {
+            HallInventory::create(['hall_id' => $hall->id, 'event_date' => $this->today->addDays($offset)->toDateString(), 'total_slots' => $total, 'booked_slots' => $booked, 'price' => 1]);
         }
 
-        $response = $this->dashboard()->assertOk()->assertSee('Occupancy · 30 days')->assertSee('50%');
+        $response = $this->dashboard()->assertOk()->assertSee('Dates booked · 30 days')->assertSee('50%');
 
-        $this->assertSame(50, $response->viewData('stats')['occupancy_percent']);
+        $this->assertSame(50, $response->viewData('stats')['booked_percent']);
     }
 
-    public function test_occupancy_is_a_dash_until_dates_are_open(): void
+    public function test_dates_booked_is_a_dash_until_dates_are_open(): void
     {
         $this->dashboard()->assertOk()->assertSee('No dates open yet');
 
-        $this->assertNull($this->dashboard()->viewData('stats')['occupancy_percent']);
+        $this->assertNull($this->dashboard()->viewData('stats')['booked_percent']);
     }
 
-    public function test_figures_never_include_another_apartments_data(): void
+    public function test_figures_never_include_another_venues_data(): void
     {
         $this->freezeTime();
-        $other = Apartment::create(['name' => 'Other', 'slug' => 'other', 'public_status' => 'published']);
-        $foreign = $other->unitTypes()->create(['name' => 'Foreign', 'slug' => 'foreign', 'base_price' => 1, 'max_adults' => 1, 'max_children' => 0, 'is_active' => true]);
+        $other = Venue::create(['name' => 'Other', 'slug' => 'other', 'public_status' => 'published']);
+        $foreign = $other->halls()->create(['name' => 'Foreign', 'slug' => 'foreign', 'base_price' => 1, 'is_active' => true]);
         $this->booking(Booking::STATUS_CONFIRMED, 1, null, $other, $foreign);
         $this->booking(Booking::STATUS_PENDING, 1, now()->subDays(2), $other, $foreign);
-        UnitInventory::create(['unit_type_id' => $foreign->id, 'stay_date' => $this->today->toDateString(), 'total_units' => 5, 'booked_units' => 5, 'price' => 1]);
-        $conversation = Conversation::create(['apartment_id' => $other->id, 'guest_token' => (string) Str::uuid(), 'locale' => 'en']);
+        HallInventory::create(['hall_id' => $foreign->id, 'event_date' => $this->today->toDateString(), 'total_slots' => 5, 'booked_slots' => 5, 'price' => 1]);
+        $conversation = Conversation::create(['venue_id' => $other->id, 'client_token' => (string) Str::uuid(), 'locale' => 'en']);
         HandoverRequest::create(['conversation_id' => $conversation->id, 'reason' => 'complaint', 'summary' => 'Foreign complaint']);
 
         $stats = $this->dashboard()->assertOk()->viewData('stats');
 
-        $this->assertSame(0, $stats['arrivals']);
+        $this->assertSame(0, $stats['upcoming_events']);
         $this->assertSame(0, $stats['pending_bookings']);
         $this->assertSame(0, $stats['waiting_bookings']);
         $this->assertSame(0, $stats['open_handovers']);
-        $this->assertNull($stats['occupancy_percent']);
+        $this->assertNull($stats['booked_percent']);
     }
 
     public function test_every_admin_page_has_a_menu_for_phones_and_marks_the_current_page(): void

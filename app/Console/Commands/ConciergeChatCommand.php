@@ -2,24 +2,24 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Apartment;
+use App\Models\Venue;
 use App\Services\Concierge\ConciergeService;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 
-#[Signature('concierge:chat {apartment? : Apartment slug} {--locale=id : id|en|ja}')]
-#[Description('Talk to the AI Concierge for an apartment from the terminal, for testing the tool-calling loop before the web UI exists.')]
+#[Signature('concierge:chat {venue? : Venue slug} {--locale=id : id|en|ja}')]
+#[Description('Talk to the AI Concierge for a wedding venue from the terminal, for testing the tool-calling loop before the web UI exists.')]
 class ConciergeChatCommand extends Command
 {
     public function handle(ConciergeService $service): int
     {
-        $apartment = $this->argument('apartment')
-            ? Apartment::where('slug', $this->argument('apartment'))->first()
-            : Apartment::first();
+        $venue = $this->argument('venue')
+            ? Venue::where('slug', $this->argument('venue'))->first()
+            : Venue::first();
 
-        if (! $apartment) {
-            $this->error('No apartment found. Seed one first: php artisan db:seed');
+        if (! $venue) {
+            $this->error('No venue found. Seed one first: php artisan db:seed');
 
             return self::FAILURE;
         }
@@ -31,19 +31,19 @@ class ConciergeChatCommand extends Command
         }
 
         $locale = $this->option('locale');
-        $conversation = $service->startConversation($apartment, $locale);
+        $conversation = $service->startConversation($venue, $locale);
 
-        $this->info("Chatting with the AI Concierge for {$apartment->name} ({$locale}). Type 'exit' to quit.");
+        $this->info("Chatting with the AI Concierge for {$venue->name} ({$locale}). Type 'exit' to quit.");
         $this->newLine();
 
         while (true) {
-            $guestMessage = $this->ask('You');
+            $clientMessage = $this->ask('You');
 
-            if ($guestMessage === null || in_array(trim($guestMessage), ['exit', 'quit'], true)) {
+            if ($clientMessage === null || in_array(trim($clientMessage), ['exit', 'quit'], true)) {
                 break;
             }
 
-            $message = $service->reply($apartment, $conversation, $guestMessage);
+            $message = $service->reply($venue, $conversation, $clientMessage);
 
             $this->newLine();
             $this->line('<fg=cyan>Concierge:</> '.($message->content ?? '(no text — see UI payload below)'));

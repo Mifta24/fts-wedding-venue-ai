@@ -3,16 +3,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>FTS Apartment AI</title>
+    <title>Wedding Venue AI</title>
     @fonts
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="stage-page antialiased">
-    <main class="stage stage-opening" data-floor="L">
+    <main class="stage stage-opening" data-chapter="I">
         <div class="stage-loader" data-stage-loader role="status">
-            <span class="lift-door lift-door-left" aria-hidden="true"></span>
-            <span class="lift-door lift-door-right" aria-hidden="true"></span>
-            <span class="stage-loader-floor" aria-hidden="true">L</span>
+            <span class="curtain curtain-left" aria-hidden="true"></span>
+            <span class="curtain curtain-right" aria-hidden="true"></span>
+            <span class="stage-loader-chapter" aria-hidden="true">I</span>
             <p>{{ $opening['loading'] }}</p>
         </div>
         <img src="{{ $openingImage }}" alt="" class="stage-image" fetchpriority="high">
@@ -20,8 +20,8 @@
 
         <header class="stage-header">
             <span class="stage-brand">
-                <x-apartment-mark />
-                <span class="stage-brand-name">FTS Apartment AI</span>
+                <x-venue-mark />
+                <span class="stage-brand-name">Wedding Venue AI</span>
             </span>
             <div class="stage-tools">
                 <x-sound-toggle :on="$opening['sound_on']" :off="$opening['sound_off']" />
@@ -39,10 +39,10 @@
             <p class="opening-tagline">{{ $opening['tagline'] }}</p>
 
             <div class="opening-enter">
-                @forelse ($apartments as $apartment)
-                    <a href="{{ route('apartment.show', ['apartmentSlug' => $apartment->slug, 'lang' => $locale]) }}" class="opening-button" data-stage-exit>
-                        <span class="lift-key" aria-hidden="true">L</span>
-                        <span>{{ str_replace(':name', $apartment->name, $opening['enter']) }}</span>
+                @forelse ($venues as $venue)
+                    <a href="{{ route('venue.show', ['venueSlug' => $venue->slug, 'lang' => $locale]) }}" class="opening-button" data-stage-exit>
+                        <span class="journey-key" aria-hidden="true">I</span>
+                        <span>{{ str_replace(':name', $venue->name, $opening['enter']) }}</span>
                         <span aria-hidden="true">→</span>
                     </a>
                 @empty
@@ -51,22 +51,22 @@
             </div>
         </section>
 
-        @if ($apartments->count() === 1)
+        @if ($venues->count() === 1)
             @php
-                $apartmentSlug = $apartments->first()->slug;
+                $venueSlug = $venues->first()->slug;
                 $openingLinks = [
-                    'staff' => route('apartment.staff', ['apartmentSlug' => $apartmentSlug, 'lang' => $locale]),
-                    'reservation' => route('apartment.reservation', ['apartmentSlug' => $apartmentSlug, 'lang' => $locale]),
-                    'facilities' => route('apartment.facilities', ['apartmentSlug' => $apartmentSlug, 'lang' => $locale]),
-                    'units' => route('apartment.units', ['apartmentSlug' => $apartmentSlug, 'lang' => $locale]),
+                    'halls' => route('venue.halls', ['venueSlug' => $venueSlug, 'lang' => $locale]),
+                    'services' => route('venue.services', ['venueSlug' => $venueSlug, 'lang' => $locale]),
+                    'reservation' => route('venue.reservation', ['venueSlug' => $venueSlug, 'lang' => $locale]),
+                    'staff' => route('venue.staff', ['venueSlug' => $venueSlug, 'lang' => $locale]),
                 ];
             @endphp
-            {{-- A building directory board, top floor first, as it hangs beside the lifts. --}}
+            {{-- The order of the day, set out like the back of a wedding invitation. --}}
             <aside class="opening-directory" aria-label="{{ $opening['directory'] }}">
                 <p class="opening-directory-title">{{ $opening['directory'] }}</p>
                 <ul class="opening-links">
                     @foreach ($openingLinks as $key => $href)
-                        <li><a data-stage-exit href="{{ $href }}"><span class="opening-links-floor">{{ $floors[$key] }}</span><span>{{ $opening[$key] }}</span><span aria-hidden="true">→</span></a></li>
+                        <li><a data-stage-exit href="{{ $href }}"><span class="opening-links-chapter">{{ $chapters[$key] }}</span><span>{{ $opening[$key] }}</span><span aria-hidden="true">→</span></a></li>
                     @endforeach
                 </ul>
             </aside>

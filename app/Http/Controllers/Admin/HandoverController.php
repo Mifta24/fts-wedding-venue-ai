@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Concerns\ResolvesCurrentApartment;
+use App\Http\Controllers\Concerns\ResolvesCurrentVenue;
 use App\Http\Controllers\Controller;
 use App\Models\Conversation;
 use App\Models\ConversationMessage;
@@ -13,38 +13,38 @@ use Illuminate\View\View;
 
 class HandoverController extends Controller
 {
-    use ResolvesCurrentApartment;
+    use ResolvesCurrentVenue;
 
     public function index(Request $request): View
     {
-        $apartment = $this->currentApartment($request);
+        $venue = $this->currentVenue($request);
 
         $status = $request->query('status', HandoverRequest::STATUS_OPEN);
 
-        $handovers = HandoverRequest::whereHas('conversation', fn ($q) => $q->where('apartment_id', $apartment->id))
+        $handovers = HandoverRequest::whereHas('conversation', fn ($q) => $q->where('venue_id', $venue->id))
             ->where('status', $status)
             ->with('conversation')
             ->latest()
             ->paginate(20)
             ->withQueryString();
 
-        return view('admin.handovers.index', compact('apartment', 'handovers', 'status'));
+        return view('admin.handovers.index', compact('venue', 'handovers', 'status'));
     }
 
     public function show(Request $request, HandoverRequest $handover): View
     {
-        $apartment = $this->currentApartment($request);
-        abort_if($handover->conversation->apartment_id !== $apartment->id, 404);
+        $venue = $this->currentVenue($request);
+        abort_if($handover->conversation->venue_id !== $venue->id, 404);
 
         $handover->load('conversation.messages');
 
-        return view('admin.handovers.show', compact('apartment', 'handover'));
+        return view('admin.handovers.show', compact('venue', 'handover'));
     }
 
     public function reply(Request $request, HandoverRequest $handover): RedirectResponse
     {
-        $apartment = $this->currentApartment($request);
-        abort_if($handover->conversation->apartment_id !== $apartment->id, 404);
+        $venue = $this->currentVenue($request);
+        abort_if($handover->conversation->venue_id !== $venue->id, 404);
 
         $data = $request->validate(['message' => ['required', 'string', 'max:2000']]);
 
@@ -53,13 +53,13 @@ class HandoverController extends Controller
             'content' => $data['message'],
         ]);
 
-        return back()->with('status', 'Reply sent to the guest.');
+        return back()->with('status', 'Reply sent to the client.');
     }
 
     public function resolve(Request $request, HandoverRequest $handover): RedirectResponse
     {
-        $apartment = $this->currentApartment($request);
-        abort_if($handover->conversation->apartment_id !== $apartment->id, 404);
+        $venue = $this->currentVenue($request);
+        abort_if($handover->conversation->venue_id !== $venue->id, 404);
 
         $handover->update(['status' => HandoverRequest::STATUS_RESOLVED, 'resolved_at' => now(), 'assigned_to' => $request->user()->id]);
         $handover->conversation->update(['status' => Conversation::STATUS_ACTIVE]);

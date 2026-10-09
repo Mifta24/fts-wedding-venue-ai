@@ -5,7 +5,7 @@
  *
  * The pointer position is eased and published as --depth-x / --depth-y
  * (-1 to 1) on the stage; the layers read it in CSS. Only runs for a fine
- * pointer and when the guest has not asked for reduced motion.
+ * pointer and when the client has not asked for reduced motion.
  */
 const EASE = 0.08;
 const SETTLED = 0.001;

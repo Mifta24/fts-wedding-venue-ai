@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Apartment;
+use App\Models\Booking;
 use App\Models\Conversation;
-use App\Models\UnitInventory;
-use App\Models\UnitType;
+use App\Models\Hall;
+use App\Models\HallInventory;
+use App\Models\Venue;
 use App\Services\Reservation\ReservationHandover;
 use App\Services\Reservation\ReservationService;
 use Carbon\CarbonImmutable;
@@ -18,47 +19,41 @@ class ReservationController extends Controller
 {
     private const SUPPORTED_LOCALES = ['id', 'en', 'ja'];
 
-    /** How far ahead the date picker looks for open nights. */
-    private const AVAILABILITY_DAYS = 366;
+    /** How far ahead the date picker looks for open dates: weddings are planned a year or two out. */
+    private const AVAILABILITY_DAYS = 730;
 
     private const PHONE_PATTERN = '/^\+?[0-9\s\-().]{6,20}$/';
 
     /**
-     * Guest-facing validation messages, keyed by locale.
+     * Client-facing validation messages, keyed by locale.
      *
      * @var array<string, array<string, string>>
      */
     public const MESSAGES = [
         'en' => [
             'invalid' => 'Please check this field.',
-            'check_in_past' => 'Check-in cannot be in the past.',
-            'check_out_after' => 'Check-out must be after check-in.',
-            'too_long' => 'Online requests cover up to :max nights. For a longer lease, please contact our leasing team.',
-            'unit_unknown' => 'Please choose a unit type.',
-            'capacity' => 'This unit does not fit that many residents. Choose a larger unit or add another unit.',
-            'unavailable' => 'This unit type is not available for those dates.',
+            'date_past' => 'The wedding date cannot be in the past.',
+            'hall_unknown' => 'Please choose a hall.',
+            'capacity' => 'This hall holds up to :max guests. Choose a larger hall or contact our wedding team.',
+            'unavailable' => 'This hall is not available on that date.',
             'contact_email' => 'Please enter a valid email address.',
             'contact_phone' => 'Please enter a valid phone or WhatsApp number.',
         ],
         'id' => [
             'invalid' => 'Mohon periksa kolom ini.',
-            'check_in_past' => 'Tanggal check-in tidak boleh di masa lalu.',
-            'check_out_after' => 'Tanggal check-out harus setelah check-in.',
-            'too_long' => 'Permintaan online maksimal :max malam. Untuk sewa lebih lama, hubungi tim leasing kami.',
-            'unit_unknown' => 'Silakan pilih tipe unit.',
-            'capacity' => 'Unit ini tidak cukup untuk jumlah penghuni tersebut. Pilih unit yang lebih besar atau tambah unit.',
-            'unavailable' => 'Tipe unit ini tidak tersedia pada tanggal tersebut.',
+            'date_past' => 'Tanggal acara tidak boleh di masa lalu.',
+            'hall_unknown' => 'Silakan pilih hall.',
+            'capacity' => 'Hall ini menampung maksimal :max tamu. Pilih hall yang lebih besar atau hubungi tim wedding kami.',
+            'unavailable' => 'Hall ini tidak tersedia pada tanggal tersebut.',
             'contact_email' => 'Masukkan alamat email yang valid.',
             'contact_phone' => 'Masukkan nomor telepon atau WhatsApp yang valid.',
         ],
         'ja' => [
             'invalid' => 'この項目をご確認ください。',
-            'check_in_past' => '入居日は過去にできません。',
-            'check_out_after' => '退去日は入居日より後にしてください。',
-            'too_long' => 'オンラインでのご依頼は最大:max泊までです。それ以上の長期契約はリーシングチームにご相談ください。',
-            'unit_unknown' => 'お部屋タイプを選択してください。',
-            'capacity' => 'このお部屋では人数に対応できません。広いお部屋を選ぶか、戸数を増やしてください。',
-            'unavailable' => 'この日程では、このお部屋タイプはご利用いただけません。',
+            'date_past' => '挙式日は過去にできません。',
+            'hall_unknown' => '会場（ホール）を選択してください。',
+            'capacity' => 'このホールは最大:max名様までです。広いホールを選ぶか、ウェディングチームにご相談ください。',
+            'unavailable' => 'この日程では、このホールはご利用いただけません。',
             'contact_email' => '有効なメールアドレスを入力してください。',
             'contact_phone' => '有効な電話番号またはWhatsApp番号を入力してください。',
         ],
@@ -70,23 +65,25 @@ class ReservationController extends Controller
     ) {}
 
     /**
-     * The nights on which at least one unit type still has a free unit, so
-     * the date picker can grey out the days that are fully booked.
+     * The dates on which at least one hall is still free, so the date picker
+     * can grey out the days that are fully booked or not yet opened.
      */
-    public function availability(string $apartmentSlug): JsonResponse
+    public function availability(Request $request, string $venueSlug): JsonResponse
     {
-        $apartment = $this->publishedApartment($apartmentSlug);
-        $today = CarbonImmutable::now($apartment->timezone)->startOfDay();
+        $venue = $this->publishedVenue($venueSlug);
+        $today = CarbonImmutable::now($venue->timezone)->startOfDay();
         $until = $today->addDays(self::AVAILABILITY_DAYS);
 
-        $dates = UnitInventory::whereIn('unit_type_id', $apartment->unitTypes()->where('is_active', true)->select('id'))
-            ->whereRaw('total_units > booked_units')
-            ->whereDate('stay_date', '>=', $today->toDateString())
-            ->whereDate('stay_date', '<=', $until->toDateString())
-            ->distinct()
-            ->orderBy('stay_date')
-            ->get(['stay_date'])
-            ->map(fn (UnitInventory $night) => $night->stay_date->toDateString())
+        $halls = $venue->halls()->where('is_active', true)
+            ->when($request->query('hall'), fn ($q, $slug) => $q->where('slug', $slug));
+
+        $dates = HallInventory::whereIn('hall_id', $halls->select('id'))
+            ->whereRaw('total_slots > booked_slots')
+            ->whereDate('event_date', '>=', $today->toDateString())
+            ->whereDate('event_date', '<=', $until->toDateString())
+            ->orderBy('event_date')
+            ->pluck('event_date')
+            ->map(fn ($date) => CarbonImmutable::parse($date)->toDateString())
             ->unique()
             ->values();
 
@@ -97,46 +94,40 @@ class ReservationController extends Controller
         ]);
     }
 
-    public function quote(Request $request, string $apartmentSlug): JsonResponse
+    public function quote(Request $request, string $venueSlug): JsonResponse
     {
-        $apartment = $this->publishedApartment($apartmentSlug);
-        $locale = $this->locale($request, $apartment);
+        $venue = $this->publishedVenue($venueSlug);
+        $locale = $this->locale($request, $venue);
 
-        $data = $request->validate($this->stayRules($apartment), $this->validationMessages($locale));
-        [$unitType, $checkIn, $checkOut, $units, $extraBed] = $this->resolveStay($apartment, $data, $locale);
+        $data = $request->validate($this->eventRules($venue), $this->validationMessages($locale));
+        [$hall, $eventDate, $extraHours] = $this->resolveEvent($venue, $data, $locale);
 
-        $quote = $this->reservations->quote($unitType, $checkIn, $checkOut, $units, $extraBed);
+        $quote = $this->reservations->quote($hall, $eventDate, $extraHours);
 
         if (! $quote) {
-            return $this->unavailable($apartment, $unitType, $data, $locale);
+            return $this->unavailable($venue, $hall, $data, $locale);
         }
 
         return response()->json([
             'available' => true,
-            'nights' => $quote['nights'],
-            'unit_total' => $quote['unit_total'],
-            'extra_bed_total' => $quote['extra_bed_total'],
-            'subtotal' => $quote['subtotal'],
-            'discount_percent' => $quote['discount_percent'],
-            'discount_total' => $quote['discount_total'],
-            'grand_total' => $quote['grand_total'],
-            'currency' => $apartment->currency,
+            ...$quote,
+            'currency' => $venue->currency,
         ]);
     }
 
-    public function store(Request $request, string $apartmentSlug): JsonResponse
+    public function store(Request $request, string $venueSlug): JsonResponse
     {
-        $apartment = $this->publishedApartment($apartmentSlug);
-        $locale = $this->locale($request, $apartment);
+        $venue = $this->publishedVenue($venueSlug);
+        $locale = $this->locale($request, $venue);
         $messages = self::MESSAGES[$locale];
 
         $data = $request->validate([
-            ...$this->stayRules($apartment),
-            'guest_name' => ['required', 'string', 'max:100'],
+            ...$this->eventRules($venue),
+            'client_name' => ['required', 'string', 'max:100'],
             'contact_type' => ['required', Rule::in(['whatsapp', 'phone', 'email'])],
             'contact_value' => ['required', 'string', 'max:120'],
             'special_request' => ['nullable', 'string', 'max:500'],
-            'guest_token' => ['nullable', 'uuid'],
+            'client_token' => ['nullable', 'uuid'],
         ], $this->validationMessages($locale));
 
         $isEmail = $data['contact_type'] === 'email';
@@ -149,55 +140,52 @@ class ReservationController extends Controller
             throw ValidationException::withMessages(['contact_value' => $messages['contact_phone']]);
         }
 
-        [$unitType, $checkIn, $checkOut, $units, $extraBed] = $this->resolveStay($apartment, $data, $locale);
+        [$hall, $eventDate, $extraHours] = $this->resolveEvent($venue, $data, $locale);
 
-        $conversation = isset($data['guest_token'])
-            ? Conversation::where('apartment_id', $apartment->id)->where('guest_token', $data['guest_token'])->first()
+        $conversation = isset($data['client_token'])
+            ? Conversation::where('venue_id', $venue->id)->where('client_token', $data['client_token'])->first()
             : null;
 
-        $booking = $this->reservations->createRequest($apartment, $unitType, [
-            'check_in' => $checkIn,
-            'check_out' => $checkOut,
-            'adults' => (int) $data['adults'],
-            'children' => (int) ($data['children'] ?? 0),
-            'units' => $units,
-            'extra_bed' => $extraBed,
-            'guest_name' => $data['guest_name'],
-            'guest_email' => $isEmail ? $data['contact_value'] : null,
-            'guest_phone' => $isEmail ? null : $data['contact_value'],
+        $booking = $this->reservations->createRequest($venue, $hall, [
+            'event_date' => $eventDate,
+            'event_type' => $data['event_type'],
+            'guest_count' => (int) $data['guests'],
+            'extra_hours' => $extraHours,
+            'client_name' => $data['client_name'],
+            'client_email' => $isEmail ? $data['contact_value'] : null,
+            'client_phone' => $isEmail ? null : $data['contact_value'],
             'contact_type' => $data['contact_type'],
             'locale' => $locale,
             'notes' => $data['special_request'] ?? null,
         ], $conversation);
 
         if (! $booking) {
-            return $this->unavailable($apartment, $unitType, $data, $locale);
+            return $this->unavailable($venue, $hall, $data, $locale);
         }
 
         return response()->json([
             'reference' => $booking->reference,
             'status' => $booking->status,
             'total' => (float) $booking->total_price,
-            'currency' => $apartment->currency,
-            'handover' => $this->handover->forBooking($apartment, $booking, $locale),
+            'deposit' => (float) $booking->deposit_amount,
+            'currency' => $venue->currency,
+            'handover' => $this->handover->forBooking($venue, $booking, $locale),
         ], 201);
     }
 
     /**
      * @return array<string, mixed>
      */
-    private function stayRules(Apartment $apartment): array
+    private function eventRules(Venue $venue): array
     {
-        $today = now($apartment->timezone)->toDateString();
+        $today = now($venue->timezone)->toDateString();
 
         return [
-            'unit_type_slug' => ['required', 'string', 'max:120'],
-            'check_in' => ['required', 'date_format:Y-m-d', 'after_or_equal:'.$today],
-            'check_out' => ['required', 'date_format:Y-m-d', 'after:check_in'],
-            'adults' => ['required', 'integer', 'min:1', 'max:20'],
-            'children' => ['nullable', 'integer', 'min:0', 'max:10'],
-            'units' => ['required', 'integer', 'min:1', 'max:10'],
-            'extra_bed' => ['nullable', 'boolean'],
+            'hall_slug' => ['required', 'string', 'max:120'],
+            'event_date' => ['required', 'date_format:Y-m-d', 'after_or_equal:'.$today],
+            'event_type' => ['required', Rule::in(Booking::EVENT_TYPES)],
+            'guests' => ['required', 'integer', 'min:1', 'max:'.ReservationService::MAX_GUESTS],
+            'extra_hours' => ['nullable', 'integer', 'min:0', 'max:'.Hall::MAX_EXTRA_HOURS],
             'locale' => ['nullable', Rule::in(self::SUPPORTED_LOCALES)],
         ];
     }
@@ -215,72 +203,56 @@ class ReservationController extends Controller
             'integer' => $messages['invalid'],
             'min' => $messages['invalid'],
             'max' => $messages['invalid'],
-            'boolean' => $messages['invalid'],
             'in' => $messages['invalid'],
             'uuid' => $messages['invalid'],
-            'after_or_equal' => $messages['check_in_past'],
-            'after' => $messages['check_out_after'],
+            'after_or_equal' => $messages['date_past'],
         ];
     }
 
     /**
      * @param  array<string, mixed>  $data
-     * @return array{0: UnitType, 1: CarbonImmutable, 2: CarbonImmutable, 3: int, 4: bool}
+     * @return array{0: Hall, 1: CarbonImmutable, 2: int}
      */
-    private function resolveStay(Apartment $apartment, array $data, string $locale): array
+    private function resolveEvent(Venue $venue, array $data, string $locale): array
     {
         $messages = self::MESSAGES[$locale];
 
-        $unitType = $apartment->unitTypes()->where('is_active', true)->where('slug', $data['unit_type_slug'])->first();
+        $hall = $venue->halls()->where('is_active', true)->where('slug', $data['hall_slug'])->first();
 
-        if (! $unitType) {
-            throw ValidationException::withMessages(['unit_type_slug' => $messages['unit_unknown']]);
+        if (! $hall) {
+            throw ValidationException::withMessages(['hall_slug' => $messages['hall_unknown']]);
         }
 
-        $checkIn = CarbonImmutable::parse($data['check_in'])->startOfDay();
-        $checkOut = CarbonImmutable::parse($data['check_out'])->startOfDay();
-
-        if ($checkIn->diffInDays($checkOut) > ReservationService::MAX_NIGHTS) {
-            throw ValidationException::withMessages([
-                'check_out' => str_replace(':max', (string) ReservationService::MAX_NIGHTS, $messages['too_long']),
-            ]);
+        if (! $hall->fitsGuests((int) $data['guests'])) {
+            throw ValidationException::withMessages(['guests' => str_replace(':max', (string) $hall->max_guests, $messages['capacity'])]);
         }
 
-        $units = (int) $data['units'];
-
-        if (! $this->reservations->fitsOccupancy($unitType, (int) $data['adults'], (int) ($data['children'] ?? 0), $units)) {
-            throw ValidationException::withMessages(['adults' => $messages['capacity']]);
-        }
-
-        return [$unitType, $checkIn, $checkOut, $units, (bool) ($data['extra_bed'] ?? false)];
+        return [$hall, CarbonImmutable::parse($data['event_date'])->startOfDay(), (int) ($data['extra_hours'] ?? 0)];
     }
 
     /**
-     * The unit cannot be booked for those nights: say so, and offer the unit
-     * types that can host the same party on the same dates.
+     * The hall cannot be booked on that date: say so, and offer the halls that
+     * are free on the same date for the same number of guests.
      *
      * @param  array<string, mixed>  $data
      */
-    private function unavailable(Apartment $apartment, UnitType $requested, array $data, string $locale): JsonResponse
+    private function unavailable(Venue $venue, Hall $requested, array $data, string $locale): JsonResponse
     {
-        $checkIn = CarbonImmutable::parse($data['check_in'])->startOfDay();
-        $checkOut = CarbonImmutable::parse($data['check_out'])->startOfDay();
-        $units = (int) $data['units'];
-        $adults = (int) $data['adults'];
-        $children = (int) ($data['children'] ?? 0);
+        $eventDate = CarbonImmutable::parse($data['event_date'])->startOfDay();
+        $guests = (int) $data['guests'];
 
-        $alternatives = $apartment->unitTypes()
+        $alternatives = $venue->halls()
             ->where('is_active', true)
             ->whereKeyNot($requested->id)
             ->orderBy('sort_order')
             ->get()
-            ->filter(fn (UnitType $unitType) => $this->reservations->fitsOccupancy($unitType, $adults, $children, $units))
-            ->map(function (UnitType $unitType) use ($checkIn, $checkOut, $units, $locale) {
-                $quote = $this->reservations->quote($unitType, $checkIn, $checkOut, $units);
+            ->filter(fn (Hall $hall) => $hall->fitsGuests($guests))
+            ->map(function (Hall $hall) use ($eventDate, $locale) {
+                $quote = $this->reservations->quote($hall, $eventDate);
 
                 return $quote ? [
-                    'slug' => $unitType->slug,
-                    'name' => $unitType->translatedName($locale),
+                    'slug' => $hall->slug,
+                    'name' => $hall->translatedName($locale),
                     'total' => $quote['grand_total'],
                 ] : null;
             })
@@ -291,25 +263,25 @@ class ReservationController extends Controller
 
         return response()->json([
             'message' => $message,
-            'errors' => ['unit_type_slug' => [$message]],
+            'errors' => ['hall_slug' => [$message]],
             'alternatives' => $alternatives,
-            'currency' => $apartment->currency,
+            'currency' => $venue->currency,
         ], 422);
     }
 
-    private function locale(Request $request, Apartment $apartment): string
+    private function locale(Request $request, Venue $venue): string
     {
         return in_array($request->input('locale'), self::SUPPORTED_LOCALES, true)
             ? $request->input('locale')
-            : $apartment->default_locale;
+            : $venue->default_locale;
     }
 
-    private function publishedApartment(string $apartmentSlug): Apartment
+    private function publishedVenue(string $venueSlug): Venue
     {
-        $apartment = Apartment::where('slug', $apartmentSlug)->first();
+        $venue = Venue::where('slug', $venueSlug)->first();
 
-        abort_if(! $apartment || ! $apartment->isPublished(), 404);
+        abort_if(! $venue || ! $venue->isPublished(), 404);
 
-        return $apartment;
+        return $venue;
     }
 }

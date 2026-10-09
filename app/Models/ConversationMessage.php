@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 ])]
 class ConversationMessage extends Model
 {
-    public const ROLE_GUEST = 'guest';
+    public const ROLE_CLIENT = 'client';
 
     public const ROLE_ASSISTANT = 'assistant';
 

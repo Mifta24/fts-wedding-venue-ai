@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\Apartment;
-use App\Models\UnitInventory;
-use App\Models\UnitType;
+use App\Models\Hall;
+use App\Models\HallInventory;
+use App\Models\Venue;
 use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -13,7 +13,7 @@ class ReservationAvailabilityTest extends TestCase
 {
     use RefreshDatabase;
 
-    private Apartment $apartment;
+    private Venue $venue;
 
     private CarbonImmutable $today;
 
@@ -21,64 +21,64 @@ class ReservationAvailabilityTest extends TestCase
     {
         parent::setUp();
 
-        $this->apartment = Apartment::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published', 'timezone' => 'Asia/Makassar']);
+        $this->venue = Venue::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published', 'timezone' => 'Asia/Makassar']);
         $this->today = CarbonImmutable::now('Asia/Makassar')->startOfDay();
     }
 
-    private function unitType(string $slug, bool $active = true): UnitType
+    private function hall(string $slug, bool $active = true): Hall
     {
-        return $this->apartment->unitTypes()->create(['name' => $slug, 'slug' => $slug, 'base_price' => 500000, 'max_adults' => 2, 'max_children' => 0, 'is_active' => $active]);
+        return $this->venue->halls()->create(['name' => $slug, 'slug' => $slug, 'base_price' => 500000, 'is_active' => $active]);
     }
 
-    private function night(UnitType $unitType, int $offset, int $total = 2, int $booked = 0): void
+    private function day(Hall $hall, int $offset, int $total = 1, int $booked = 0): void
     {
-        UnitInventory::create(['unit_type_id' => $unitType->id, 'stay_date' => $this->today->addDays($offset)->toDateString(), 'total_units' => $total, 'booked_units' => $booked, 'price' => 500000]);
+        HallInventory::create(['hall_id' => $hall->id, 'event_date' => $this->today->addDays($offset)->toDateString(), 'total_slots' => $total, 'booked_slots' => $booked, 'price' => 500000]);
     }
 
     /**
      * @return list<string>
      */
-    private function openNights(): array
+    private function openDates(): array
     {
         return $this->getJson('/demo/reservation/availability')->assertOk()->json('dates');
     }
 
-    public function test_a_night_is_open_while_any_active_unit_type_has_a_free_unit(): void
+    public function test_a_date_is_open_while_any_active_hall_has_a_free_slot(): void
     {
-        $studio = $this->unitType('studio');
-        $suite = $this->unitType('suite');
-        $this->night($studio, 1, total: 1, booked: 1);
-        $this->night($suite, 1, total: 2, booked: 1);
+        $studio = $this->hall('studio');
+        $suite = $this->hall('suite');
+        $this->day($studio, 1, total: 1, booked: 1);
+        $this->day($suite, 1, total: 2, booked: 1);
 
-        $this->assertSame([$this->today->addDay()->toDateString()], $this->openNights());
+        $this->assertSame([$this->today->addDay()->toDateString()], $this->openDates());
     }
 
-    public function test_a_night_is_closed_when_every_unit_is_booked_or_nothing_is_open(): void
+    public function test_a_date_is_closed_when_every_hall_is_booked_or_nothing_is_open(): void
     {
-        $studio = $this->unitType('studio');
-        $this->night($studio, 1, total: 2, booked: 2);
-        $this->night($studio, 3, total: 0);
+        $studio = $this->hall('studio');
+        $this->day($studio, 1, total: 1, booked: 1);
+        $this->day($studio, 3, total: 0);
 
-        $this->assertSame([], $this->openNights());
+        $this->assertSame([], $this->openDates());
     }
 
-    public function test_inactive_unit_types_and_past_nights_do_not_open_a_date(): void
+    public function test_inactive_halls_and_past_dates_do_not_open_a_date(): void
     {
-        $hidden = $this->unitType('hidden', active: false);
-        $studio = $this->unitType('studio');
-        $this->night($hidden, 2);
-        $this->night($studio, -1);
+        $hidden = $this->hall('hidden', active: false);
+        $studio = $this->hall('studio');
+        $this->day($hidden, 2);
+        $this->day($studio, -1);
 
-        $this->assertSame([], $this->openNights());
+        $this->assertSame([], $this->openDates());
     }
 
-    public function test_nights_are_listed_once_and_in_date_order_with_the_guest_time_zone_today(): void
+    public function test_dates_are_listed_once_and_in_date_order_with_the_venue_time_zone_today(): void
     {
-        $studio = $this->unitType('studio');
-        $suite = $this->unitType('suite');
-        $this->night($studio, 5);
-        $this->night($suite, 5);
-        $this->night($studio, 2);
+        $studio = $this->hall('studio');
+        $suite = $this->hall('suite');
+        $this->day($studio, 5);
+        $this->day($suite, 5);
+        $this->day($studio, 2);
 
         $response = $this->getJson('/demo/reservation/availability')->assertOk();
 
@@ -86,27 +86,27 @@ class ReservationAvailabilityTest extends TestCase
         $this->assertSame($this->today->toDateString(), $response->json('today'));
     }
 
-    public function test_nights_beyond_the_look_ahead_window_are_left_out(): void
+    public function test_dates_beyond_the_look_ahead_window_are_left_out(): void
     {
-        $studio = $this->unitType('studio');
-        $this->night($studio, 366);
-        $this->night($studio, 367);
+        $studio = $this->hall('studio');
+        $this->day($studio, 730);
+        $this->day($studio, 731);
 
-        $this->assertSame([$this->today->addDays(366)->toDateString()], $this->openNights());
+        $this->assertSame([$this->today->addDays(730)->toDateString()], $this->openDates());
     }
 
-    public function test_another_apartments_inventory_is_never_listed(): void
+    public function test_another_venues_inventory_is_never_listed(): void
     {
-        $other = Apartment::create(['name' => 'Other', 'slug' => 'other', 'public_status' => 'published']);
-        $foreign = $other->unitTypes()->create(['name' => 'Foreign', 'slug' => 'foreign', 'base_price' => 1, 'max_adults' => 1, 'max_children' => 0, 'is_active' => true]);
-        $this->night($foreign, 2);
+        $other = Venue::create(['name' => 'Other', 'slug' => 'other', 'public_status' => 'published']);
+        $foreign = $other->halls()->create(['name' => 'Foreign', 'slug' => 'foreign', 'base_price' => 1, 'is_active' => true]);
+        $this->day($foreign, 2);
 
-        $this->assertSame([], $this->openNights());
+        $this->assertSame([], $this->openDates());
     }
 
-    public function test_an_unpublished_or_unknown_apartment_returns_404(): void
+    public function test_an_unpublished_or_unknown_venue_returns_404(): void
     {
-        Apartment::create(['name' => 'Draft', 'slug' => 'draft']);
+        Venue::create(['name' => 'Draft', 'slug' => 'draft']);
 
         $this->getJson('/draft/reservation/availability')->assertNotFound();
         $this->getJson('/nowhere/reservation/availability')->assertNotFound();

@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\Models\Apartment;
 use App\Models\Booking;
 use App\Models\Conversation;
 use App\Models\ConversationMessage;
 use App\Models\HandoverRequest;
 use App\Models\User;
+use App\Models\Venue;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -16,9 +16,9 @@ class AdminAccessTest extends TestCase
 {
     use RefreshDatabase;
 
-    private Apartment $apartment;
+    private Venue $venue;
 
-    private Apartment $otherApartment;
+    private Venue $otherVenue;
 
     private User $staff;
 
@@ -26,45 +26,45 @@ class AdminAccessTest extends TestCase
     {
         parent::setUp();
 
-        $this->apartment = Apartment::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published']);
-        $this->otherApartment = Apartment::create(['name' => 'Other', 'slug' => 'other', 'public_status' => 'published']);
+        $this->venue = Venue::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published']);
+        $this->otherVenue = Venue::create(['name' => 'Other', 'slug' => 'other', 'public_status' => 'published']);
 
         $this->staff = User::factory()->create();
-        $this->apartment->users()->attach($this->staff->id, ['role' => 'owner', 'status' => 'active']);
+        $this->venue->users()->attach($this->staff->id, ['role' => 'owner', 'status' => 'active']);
     }
 
     private function foreignBooking(): Booking
     {
-        $unit = $this->otherApartment->unitTypes()->create(['name' => 'Foreign', 'slug' => 'foreign', 'base_price' => 1, 'max_adults' => 1, 'max_children' => 0, 'is_active' => true]);
+        $hall = $this->otherVenue->halls()->create(['name' => 'Foreign', 'slug' => 'foreign', 'base_price' => 1, 'is_active' => true]);
 
         return Booking::create([
-            'reference' => 'BK-FOREIGN', 'apartment_id' => $this->otherApartment->id, 'unit_type_id' => $unit->id, 'guest_name' => 'Foreign Guest',
-            'check_in' => now()->addDays(3)->toDateString(), 'check_out' => now()->addDays(4)->toDateString(), 'total_price' => 1,
+            'reference' => 'WD-FOREIGN', 'venue_id' => $this->otherVenue->id, 'hall_id' => $hall->id, 'client_name' => 'Foreign Client',
+            'event_date' => now()->addDays(3)->toDateString(), 'guest_count' => 1, 'total_price' => 1,
         ]);
     }
 
     private function foreignHandover(): HandoverRequest
     {
-        $conversation = Conversation::create(['apartment_id' => $this->otherApartment->id, 'guest_token' => (string) Str::uuid(), 'locale' => 'en']);
+        $conversation = Conversation::create(['venue_id' => $this->otherVenue->id, 'client_token' => (string) Str::uuid(), 'locale' => 'en']);
 
         return HandoverRequest::create(['conversation_id' => $conversation->id, 'reason' => 'complaint', 'summary' => 'Foreign complaint']);
     }
 
     public function test_visitors_are_sent_to_the_login_page_for_every_admin_screen(): void
     {
-        foreach (['admin.dashboard', 'admin.unit-types.index', 'admin.knowledge-items.index', 'admin.bookings.index', 'admin.handovers.index'] as $route) {
+        foreach (['admin.dashboard', 'admin.halls.index', 'admin.knowledge-items.index', 'admin.bookings.index', 'admin.handovers.index'] as $route) {
             $this->get(route($route))->assertRedirect(route('admin.login'));
         }
     }
 
-    public function test_staff_only_see_bookings_of_their_own_apartment(): void
+    public function test_staff_only_see_bookings_of_their_own_venue(): void
     {
         $this->foreignBooking();
 
-        $this->actingAs($this->staff)->get(route('admin.bookings.index'))->assertOk()->assertDontSee('BK-FOREIGN')->assertDontSee('Foreign Guest');
+        $this->actingAs($this->staff)->get(route('admin.bookings.index'))->assertOk()->assertDontSee('BK-FOREIGN')->assertDontSee('Foreign Client');
     }
 
-    public function test_staff_cannot_change_another_apartments_booking(): void
+    public function test_staff_cannot_change_another_venues_booking(): void
     {
         $booking = $this->foreignBooking();
 
@@ -75,7 +75,7 @@ class AdminAccessTest extends TestCase
         $this->assertSame(Booking::STATUS_PENDING, $booking->fresh()->status);
     }
 
-    public function test_staff_cannot_read_reply_to_or_resolve_another_apartments_handover(): void
+    public function test_staff_cannot_read_reply_to_or_resolve_another_venues_handover(): void
     {
         $handover = $this->foreignHandover();
 
@@ -87,10 +87,10 @@ class AdminAccessTest extends TestCase
         $this->assertSame(HandoverRequest::STATUS_OPEN, $handover->fresh()->status);
     }
 
-    public function test_staff_reply_reaches_the_guest_and_resolving_returns_the_conversation_to_the_ai(): void
+    public function test_staff_reply_reaches_the_client_and_resolving_returns_the_conversation_to_the_ai(): void
     {
-        $conversation = Conversation::create(['apartment_id' => $this->apartment->id, 'guest_token' => (string) Str::uuid(), 'locale' => 'en', 'status' => Conversation::STATUS_HANDED_OVER]);
-        $handover = HandoverRequest::create(['conversation_id' => $conversation->id, 'reason' => 'complaint', 'summary' => 'Noisy unit']);
+        $conversation = Conversation::create(['venue_id' => $this->venue->id, 'client_token' => (string) Str::uuid(), 'locale' => 'en', 'status' => Conversation::STATUS_HANDED_OVER]);
+        $handover = HandoverRequest::create(['conversation_id' => $conversation->id, 'reason' => 'complaint', 'summary' => 'Noisy hall']);
 
         $this->actingAs($this->staff)->post(route('admin.handovers.reply', $handover), ['message' => 'We are on it.'])->assertRedirect();
         $this->assertSame('We are on it.', $conversation->messages()->where('role', ConversationMessage::ROLE_STAFF)->value('content'));
@@ -109,10 +109,10 @@ class AdminAccessTest extends TestCase
         $this->post(route('admin.login.store'), ['email' => $this->staff->email, 'password' => 'wrong'])->assertTooManyRequests();
     }
 
-    public function test_staff_can_give_a_facility_a_photo_and_only_a_real_url_is_accepted(): void
+    public function test_staff_can_give_a_service_a_photo_and_only_a_real_url_is_accepted(): void
     {
-        $item = $this->apartment->knowledgeItems()->create(['category' => 'facilities', 'title' => 'Garden pool', 'body' => 'Open until 8pm.', 'is_active' => true]);
-        $form = ['category' => 'facilities', 'title' => 'Garden pool', 'body' => 'Open until 8pm.', 'is_active' => 1];
+        $item = $this->venue->knowledgeItems()->create(['category' => 'services', 'title' => 'Garden pool', 'body' => 'Open until 8pm.', 'is_active' => true]);
+        $form = ['category' => 'services', 'title' => 'Garden pool', 'body' => 'Open until 8pm.', 'is_active' => 1];
 
         $this->actingAs($this->staff)
             ->put(route('admin.knowledge-items.update', $item), [...$form, 'image_url' => 'javascript:alert(1)'])

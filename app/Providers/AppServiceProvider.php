@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Every guest message costs an LLM round trip, so it is limited per
+     * Every client message costs an LLM round trip, so it is limited per
      * conversation and, as a backstop against rotating tokens, per address.
      */
     private function configureRateLimiting(): void
@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('concierge-start', fn (Request $request) => Limit::perMinute(10)->by('start:'.$request->ip()));
 
         RateLimiter::for('concierge-message', fn (Request $request) => [
-            Limit::perMinute(12)->by('conversation:'.($request->input('guest_token') ?: $request->ip())),
+            Limit::perMinute(12)->by('conversation:'.($request->input('client_token') ?: $request->ip())),
             Limit::perMinute(40)->by('ip:'.$request->ip()),
         ]);
 

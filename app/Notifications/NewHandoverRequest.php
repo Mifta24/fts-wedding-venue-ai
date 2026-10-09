@@ -9,7 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 /**
- * Tells the apartment team that the concierge handed a conversation to them.
+ * Tells the venue team that the concierge handed a conversation to them.
  */
 class NewHandoverRequest extends Notification implements ShouldQueue
 {
@@ -33,8 +33,8 @@ class NewHandoverRequest extends Notification implements ShouldQueue
         $reason = str_replace('_', ' ', $this->handover->reason);
 
         return (new MailMessage)
-            ->subject("A guest is waiting for staff: {$reason}")
-            ->greeting('A guest needs a person')
+            ->subject("A couple is waiting for the team: {$reason}")
+            ->greeting('A couple needs a person')
             ->line("The AI concierge handed this conversation over ({$reason}).")
             ->line($this->handover->summary)
             ->action('Open the conversation', route('admin.handovers.show', $this->handover));

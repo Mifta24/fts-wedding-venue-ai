@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\Apartment;
 use App\Models\Booking;
-use App\Models\UnitInventory;
-use App\Models\UnitType;
+use App\Models\Hall;
+use App\Models\HallInventory;
 use App\Models\User;
+use App\Models\Venue;
 use App\Notifications\BookingStatusChanged;
 use App\Services\Reservation\ReservationService;
 use Carbon\CarbonImmutable;
@@ -18,44 +18,42 @@ class BookingStatusTest extends TestCase
 {
     use RefreshDatabase;
 
-    private Apartment $apartment;
+    private Venue $venue;
 
-    private UnitType $unitType;
+    private Hall $hall;
 
     private User $staff;
 
-    private CarbonImmutable $checkIn;
+    private CarbonImmutable $eventDate;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->apartment = Apartment::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published', 'currency' => 'IDR']);
-        $this->unitType = $this->apartment->unitTypes()->create(['name' => 'Studio', 'slug' => 'studio', 'base_price' => 500000, 'max_adults' => 2, 'max_children' => 0, 'is_active' => true]);
+        $this->venue = Venue::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published', 'currency' => 'IDR']);
+        $this->hall = $this->venue->halls()->create(['name' => 'Studio', 'slug' => 'studio', 'base_price' => 500000, 'is_active' => true]);
 
         $this->staff = User::factory()->create();
-        $this->apartment->users()->attach($this->staff->id, ['role' => 'owner', 'status' => 'active']);
+        $this->venue->users()->attach($this->staff->id, ['role' => 'owner', 'status' => 'active']);
 
-        $this->checkIn = CarbonImmutable::now()->addDays(5)->startOfDay();
-        foreach ([0, 1] as $offset) {
-            UnitInventory::create(['unit_type_id' => $this->unitType->id, 'stay_date' => $this->checkIn->addDays($offset)->toDateString(), 'total_units' => 2, 'booked_units' => 0, 'price' => 500000]);
-        }
+        $this->eventDate = CarbonImmutable::now()->addDays(5)->startOfDay();
+        HallInventory::create(['hall_id' => $this->hall->id, 'event_date' => $this->eventDate->toDateString(), 'total_slots' => 2, 'booked_slots' => 0, 'price' => 500000]);
     }
 
-    private function holdUnit(): Booking
+    private function holdDate(): Booking
     {
-        return app(ReservationService::class)->createRequest($this->apartment, $this->unitType, [
-            'check_in' => $this->checkIn, 'check_out' => $this->checkIn->addDays(2), 'adults' => 2,
-            'guest_name' => 'Ayu', 'guest_phone' => '+62 811 111 222', 'contact_type' => 'whatsapp',
+        return app(ReservationService::class)->createRequest($this->venue, $this->hall, [
+            'event_date' => $this->eventDate, 'event_type' => 'reception', 'guest_count' => 100,
+            'client_name' => 'Ayu', 'client_phone' => '+62 811 111 222', 'contact_type' => 'whatsapp',
         ]);
     }
 
     /**
      * @return list<int>
      */
-    private function bookedUnits(): array
+    private function bookedSlots(): array
     {
-        return UnitInventory::orderBy('stay_date')->pluck('booked_units')->all();
+        return HallInventory::orderBy('event_date')->pluck('booked_slots')->all();
     }
 
     private function setStatus(Booking $booking, string $status)
@@ -63,52 +61,52 @@ class BookingStatusTest extends TestCase
         return $this->actingAs($this->staff)->patch(route('admin.bookings.status', $booking), ['status' => $status]);
     }
 
-    public function test_confirming_a_pending_booking_keeps_its_units_held(): void
+    public function test_confirming_a_pending_booking_keeps_its_date_held(): void
     {
-        $booking = $this->holdUnit();
+        $booking = $this->holdDate();
 
         $this->setStatus($booking, Booking::STATUS_CONFIRMED)->assertRedirect()->assertSessionHas('status');
 
         $this->assertSame(Booking::STATUS_CONFIRMED, $booking->fresh()->status);
-        $this->assertSame([1, 1], $this->bookedUnits());
+        $this->assertSame([1], $this->bookedSlots());
     }
 
-    public function test_cancelling_a_confirmed_booking_gives_its_units_back(): void
+    public function test_cancelling_a_confirmed_booking_frees_its_date_again(): void
     {
-        $booking = $this->holdUnit();
+        $booking = $this->holdDate();
         $this->setStatus($booking, Booking::STATUS_CONFIRMED);
 
         $this->setStatus($booking, Booking::STATUS_CANCELLED)->assertRedirect()->assertSessionHas('status');
 
         $this->assertSame(Booking::STATUS_CANCELLED, $booking->fresh()->status);
-        $this->assertSame([0, 0], $this->bookedUnits());
+        $this->assertSame([0], $this->bookedSlots());
     }
 
     public function test_a_cancelled_booking_cannot_be_confirmed_again(): void
     {
-        $booking = $this->holdUnit();
+        $booking = $this->holdDate();
         $this->setStatus($booking, Booking::STATUS_CANCELLED);
 
         $this->setStatus($booking, Booking::STATUS_CONFIRMED)->assertRedirect()->assertSessionHas('error');
 
         $this->assertSame(Booking::STATUS_CANCELLED, $booking->fresh()->status);
-        $this->assertSame([0, 0], $this->bookedUnits());
+        $this->assertSame([0], $this->bookedSlots());
     }
 
-    public function test_cancelling_twice_releases_the_units_only_once(): void
+    public function test_cancelling_twice_releases_the_date_only_once(): void
     {
-        $first = $this->holdUnit();
-        $this->holdUnit();
+        $first = $this->holdDate();
+        $this->holdDate();
 
         $this->setStatus($first, Booking::STATUS_CANCELLED);
         $this->setStatus($first, Booking::STATUS_CANCELLED)->assertSessionHas('error');
 
-        $this->assertSame([1, 1], $this->bookedUnits());
+        $this->assertSame([1], $this->bookedSlots());
     }
 
     public function test_an_unknown_status_is_rejected(): void
     {
-        $booking = $this->holdUnit();
+        $booking = $this->holdDate();
 
         $this->setStatus($booking, Booking::STATUS_PENDING)->assertSessionHasErrors('status');
 
@@ -117,7 +115,7 @@ class BookingStatusTest extends TestCase
 
     public function test_the_booking_list_offers_only_the_moves_a_booking_can_make(): void
     {
-        $booking = $this->holdUnit();
+        $booking = $this->holdDate();
         $this->setStatus($booking, Booking::STATUS_CONFIRMED);
 
         $this->actingAs($this->staff)->get(route('admin.bookings.index'))
@@ -126,41 +124,41 @@ class BookingStatusTest extends TestCase
             ->assertSee('>Cancel</button>', false);
     }
 
-    public function test_a_unit_type_with_open_bookings_cannot_be_deleted(): void
+    public function test_a_hall_with_open_bookings_cannot_be_deleted(): void
     {
-        $this->holdUnit();
+        $this->holdDate();
 
-        $this->actingAs($this->staff)->delete(route('admin.unit-types.destroy', $this->unitType))->assertSessionHas('error');
+        $this->actingAs($this->staff)->delete(route('admin.halls.destroy', $this->hall))->assertSessionHas('error');
 
-        $this->assertNotSoftDeleted($this->unitType);
+        $this->assertNotSoftDeleted($this->hall);
     }
 
-    public function test_a_unit_type_whose_bookings_are_cancelled_can_be_deleted_and_the_booking_list_still_works(): void
+    public function test_a_hall_whose_bookings_are_cancelled_can_be_deleted_and_the_booking_list_still_works(): void
     {
-        $booking = $this->holdUnit();
+        $booking = $this->holdDate();
         $this->setStatus($booking, Booking::STATUS_CANCELLED);
 
-        $this->actingAs($this->staff)->delete(route('admin.unit-types.destroy', $this->unitType))->assertSessionHas('status');
+        $this->actingAs($this->staff)->delete(route('admin.halls.destroy', $this->hall))->assertSessionHas('status');
 
-        $this->assertSoftDeleted($this->unitType);
+        $this->assertSoftDeleted($this->hall);
         $this->actingAs($this->staff)->get(route('admin.bookings.index'))->assertOk()->assertSee($booking->reference)->assertSee('Studio');
     }
 
-    public function test_a_unit_type_whose_open_bookings_ended_in_the_past_can_be_deleted(): void
+    public function test_a_hall_whose_open_bookings_ended_in_the_past_can_be_deleted(): void
     {
-        $booking = $this->holdUnit();
-        $booking->update(['check_in' => now()->subDays(10), 'check_out' => now()->subDays(8)]);
+        $booking = $this->holdDate();
+        $booking->update(['event_date' => now()->subDays(10)]);
 
-        $this->actingAs($this->staff)->delete(route('admin.unit-types.destroy', $this->unitType))->assertSessionHas('status');
+        $this->actingAs($this->staff)->delete(route('admin.halls.destroy', $this->hall))->assertSessionHas('status');
 
-        $this->assertSoftDeleted($this->unitType);
+        $this->assertSoftDeleted($this->hall);
     }
 
-    public function test_guests_with_an_email_are_told_when_their_booking_is_confirmed_or_cancelled(): void
+    public function test_clients_with_an_email_are_told_when_their_booking_is_confirmed_or_cancelled(): void
     {
         Notification::fake();
-        $booking = $this->holdUnit();
-        $booking->update(['guest_email' => 'ayu@example.test']);
+        $booking = $this->holdDate();
+        $booking->update(['client_email' => 'ayu@example.test']);
 
         $this->setStatus($booking, Booking::STATUS_CONFIRMED);
         $this->setStatus($booking, Booking::STATUS_CANCELLED);

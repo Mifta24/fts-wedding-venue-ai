@@ -2,72 +2,72 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Concerns\ResolvesCurrentApartment;
+use App\Http\Controllers\Concerns\ResolvesCurrentVenue;
 use App\Http\Controllers\Controller;
-use App\Models\ApartmentKnowledgeItem;
+use App\Models\VenueKnowledgeItem;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class KnowledgeItemController extends Controller
 {
-    use ResolvesCurrentApartment;
+    use ResolvesCurrentVenue;
 
     public function index(Request $request): View
     {
-        $apartment = $this->currentApartment($request);
+        $venue = $this->currentVenue($request);
 
-        $items = $apartment->knowledgeItems()->orderBy('category')->orderBy('sort_order')->get();
+        $items = $venue->knowledgeItems()->orderBy('category')->orderBy('sort_order')->get();
 
-        return view('admin.knowledge-items.index', compact('apartment', 'items'));
+        return view('admin.knowledge-items.index', compact('venue', 'items'));
     }
 
     public function create(Request $request): View
     {
-        $apartment = $this->currentApartment($request);
+        $venue = $this->currentVenue($request);
 
         return view('admin.knowledge-items.form', [
-            'apartment' => $apartment,
-            'item' => new ApartmentKnowledgeItem(['category' => ApartmentKnowledgeItem::CATEGORY_GENERAL, 'is_active' => true]),
+            'venue' => $venue,
+            'item' => new VenueKnowledgeItem(['category' => VenueKnowledgeItem::CATEGORY_GENERAL, 'is_active' => true]),
             'categories' => $this->categories(),
         ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
-        $apartment = $this->currentApartment($request);
+        $venue = $this->currentVenue($request);
 
-        $item = $apartment->knowledgeItems()->create($this->validated($request));
+        $item = $venue->knowledgeItems()->create($this->validated($request));
 
         return redirect()->route('admin.knowledge-items.index')->with('status', "Knowledge item \"{$item->title}\" created.");
     }
 
-    public function edit(Request $request, ApartmentKnowledgeItem $knowledgeItem): View
+    public function edit(Request $request, VenueKnowledgeItem $knowledgeItem): View
     {
-        $apartment = $this->currentApartment($request);
-        abort_if($knowledgeItem->apartment_id !== $apartment->id, 404);
+        $venue = $this->currentVenue($request);
+        abort_if($knowledgeItem->venue_id !== $venue->id, 404);
 
         return view('admin.knowledge-items.form', [
-            'apartment' => $apartment,
+            'venue' => $venue,
             'item' => $knowledgeItem,
             'categories' => $this->categories(),
         ]);
     }
 
-    public function update(Request $request, ApartmentKnowledgeItem $knowledgeItem): RedirectResponse
+    public function update(Request $request, VenueKnowledgeItem $knowledgeItem): RedirectResponse
     {
-        $apartment = $this->currentApartment($request);
-        abort_if($knowledgeItem->apartment_id !== $apartment->id, 404);
+        $venue = $this->currentVenue($request);
+        abort_if($knowledgeItem->venue_id !== $venue->id, 404);
 
         $knowledgeItem->update($this->validated($request));
 
         return redirect()->route('admin.knowledge-items.index')->with('status', "Knowledge item \"{$knowledgeItem->title}\" updated.");
     }
 
-    public function destroy(Request $request, ApartmentKnowledgeItem $knowledgeItem): RedirectResponse
+    public function destroy(Request $request, VenueKnowledgeItem $knowledgeItem): RedirectResponse
     {
-        $apartment = $this->currentApartment($request);
-        abort_if($knowledgeItem->apartment_id !== $apartment->id, 404);
+        $venue = $this->currentVenue($request);
+        abort_if($knowledgeItem->venue_id !== $venue->id, 404);
 
         $knowledgeItem->delete();
 
@@ -108,12 +108,12 @@ class KnowledgeItemController extends Controller
     private function categories(): array
     {
         return [
-            ApartmentKnowledgeItem::CATEGORY_GENERAL,
-            ApartmentKnowledgeItem::CATEGORY_FACILITIES,
-            ApartmentKnowledgeItem::CATEGORY_POLICIES,
-            ApartmentKnowledgeItem::CATEGORY_DINING,
-            ApartmentKnowledgeItem::CATEGORY_TRANSPORT,
-            ApartmentKnowledgeItem::CATEGORY_FAQ,
+            VenueKnowledgeItem::CATEGORY_GENERAL,
+            VenueKnowledgeItem::CATEGORY_SERVICES,
+            VenueKnowledgeItem::CATEGORY_CATERING,
+            VenueKnowledgeItem::CATEGORY_POLICIES,
+            VenueKnowledgeItem::CATEGORY_ACCESS,
+            VenueKnowledgeItem::CATEGORY_FAQ,
         ];
     }
 }

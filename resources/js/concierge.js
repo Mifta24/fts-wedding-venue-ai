@@ -1,7 +1,7 @@
 /**
- * AI Concierge chat panel. Vanilla JS, no framework: sends guest messages to
+ * AI Concierge chat panel. Vanilla JS, no framework: sends client messages to
  * the Laravel backend and renders both plain text and the structured
- * ui_payload the AI's tools attach (unit cards, price quotes, booking
+ * ui_payload the AI's tools attach (hall cards, price quotes, booking
  * confirmations, handover notices) as real DOM, not markdown-in-a-bubble.
  */
 function initConcierge() {
@@ -17,21 +17,22 @@ function initConcierge() {
         locale: root.dataset.locale,
         currency: root.dataset.currency,
         lobbyUrl: root.dataset.lobbyUrl,
-        unitUrlTemplate: root.dataset.unitUrl,
+        hallUrlTemplate: root.dataset.hallUrl,
         staffUrl: root.dataset.staffUrl,
         reservationUrlTemplate: root.dataset.reservationUrl,
+        settings: JSON.parse(root.dataset.settingLabels || '{}'),
+        eventTypes: JSON.parse(root.dataset.eventLabels || '{}'),
         labels: {
             placeholder: root.dataset.labelPlaceholder,
             send: root.dataset.labelSend,
             open: root.dataset.labelOpen,
             close: root.dataset.labelClose,
             intro: root.dataset.labelIntro,
-            breakfastIncluded: root.dataset.labelBreakfastIncluded,
+            cateringIncluded: root.dataset.labelCateringIncluded,
             maxGuests: root.dataset.labelMaxGuests,
-            unitOnly: root.dataset.labelUnitOnly,
-            night: root.dataset.labelNight,
-            studio: root.dataset.labelStudio,
-            bedrooms: root.dataset.labelBedrooms,
+            cateringExcluded: root.dataset.labelCateringExcluded,
+            deposit: root.dataset.labelDeposit,
+            perEvent: root.dataset.labelPerEvent,
             discount: root.dataset.labelDiscount,
             noAvailability: root.dataset.labelNoAvailability,
             bookingReceived: root.dataset.labelBookingReceived,
@@ -47,7 +48,7 @@ function initConcierge() {
             draftKeep: root.dataset.labelDraftKeep,
             draftDiscard: root.dataset.labelDraftDiscard,
             viewDetails: root.dataset.labelViewDetails,
-            unitDetailsQuestion: root.dataset.labelUnitDetailsQuestion,
+            hallDetailsQuestion: root.dataset.labelHallDetailsQuestion,
             bookNow: root.dataset.labelBookNow,
             menuHeading: root.dataset.labelMenuHeading,
             staff: root.dataset.labelStaff,
@@ -166,7 +167,7 @@ function initConcierge() {
     }
 
     // Cloudflare drops a request that is still unanswered after 100s, so give
-    // up just before that and let the guest retry instead of waiting forever.
+    // up just before that and let the client retry instead of waiting forever.
     const API_TIMEOUT_MS = 95000;
 
     async function api(url, body) {
@@ -209,14 +210,14 @@ function initConcierge() {
     function bubble(role, text) {
         const wrap = document.createElement('div');
         wrap.className =
-            role === 'guest' ? 'flex justify-end' : 'flex items-end justify-start gap-2';
+            role === 'client' ? 'flex justify-end' : 'flex items-end justify-start gap-2';
 
-        if (role !== 'guest') {
+        if (role !== 'client') {
             wrap.appendChild(avatarMark());
         }
 
         const inner = document.createElement('div');
-        inner.className = role === 'guest' ? 'chat-bubble is-guest' : 'chat-bubble is-host';
+        inner.className = role === 'client' ? 'chat-bubble is-client' : 'chat-bubble is-host';
         inner.textContent = text;
 
         wrap.appendChild(inner);
@@ -233,54 +234,56 @@ function initConcierge() {
         return wrap;
     }
 
-    /** "Studio" or "2 BR" — the first thing anyone renting an apartment wants to know. */
-    function layoutLabel(unit) {
-        if (unit.bedrooms === undefined || unit.bedrooms === null) return '';
-        return Number(unit.bedrooms) === 0 ? config.labels.studio : `${unit.bedrooms} ${config.labels.bedrooms}`;
-    }
+    const longDate = (iso) => {
+        const [year, month, day] = String(iso).split('-').map(Number);
+        const tag = config.locale === 'ja' ? 'ja-JP' : config.locale === 'en' ? 'en-US' : 'id-ID';
+        return new Intl.DateTimeFormat(tag, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(year, month - 1, day));
+    };
 
-    function unitResultCard(unit) {
+    const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+
+    function hallResultCard(hall) {
         const el = document.createElement('div');
         el.className = 'chat-card';
-        const facts = [layoutLabel(unit), unit.size_sqm ? `${unit.size_sqm} m²` : '', `${unit.max_adults + unit.max_children} ${config.labels.maxGuests}`].filter(Boolean).join(' · ');
+        const facts = [config.settings[hall.setting] || '', hall.size_sqm ? `${hall.size_sqm} m²` : '', `${hall.min_guests}–${hall.max_guests} ${config.labels.maxGuests}`].filter(Boolean).join(' · ');
         el.innerHTML = `
-            ${unit.thumbnail_url ? `<img src="${unit.thumbnail_url}" alt="${unit.name}" class="h-28 w-full object-cover">` : ''}
+            ${hall.thumbnail_url ? `<img src="${esc(hall.thumbnail_url)}" alt="${esc(hall.name)}" class="h-28 w-full object-cover">` : ''}
             <div class="p-3">
-                <p class="chat-card-tag">${facts}</p>
-                <p class="mt-1 font-semibold">${unit.name}</p>
-                <p class="mt-1 text-sm font-semibold">${money(unit.total_price)} <span class="font-normal opacity-60">/ ${unit.nights} ${config.labels.night}</span></p>
-                ${unit.discount_percent > 0 ? `<p class="chat-card-tag mt-1">−${unit.discount_percent}% ${config.labels.discount}</p>` : ''}
-                <button type="button" class="chat-card-button" data-detail-slug="${unit.unit_type_slug}">
-                    ${config.labels.viewDetails}
+                <p class="chat-card-tag">${esc(facts)}</p>
+                <p class="mt-1 font-semibold">${esc(hall.name)}</p>
+                <p class="mt-1 text-sm font-semibold">${money(hall.total_price)} <span class="font-normal opacity-60">${esc(config.labels.perEvent)}</span></p>
+                ${hall.discount_percent > 0 ? `<p class="chat-card-tag mt-1">−${hall.discount_percent}% ${esc(config.labels.discount)}</p>` : ''}
+                <p class="mt-1 text-xs opacity-70">${esc(config.labels.deposit)}: ${money(hall.deposit_total)}</p>
+                <button type="button" class="chat-card-button" data-detail-slug="${esc(hall.hall_slug)}">
+                    ${esc(config.labels.viewDetails)}
                 </button>
             </div>
         `;
         el.querySelector('[data-detail-slug]').addEventListener('click', () => {
-            sendMessage(config.labels.unitDetailsQuestion.replace(':unit', unit.name));
+            sendMessage(config.labels.hallDetailsQuestion.replace(':hall', hall.name));
         });
         return el;
     }
 
-    function unitDetailCard(unit) {
+    function hallDetailCard(hall) {
         const el = document.createElement('div');
         el.className = 'chat-card';
 
-        const images = (unit.images || [])
+        const images = (hall.images || [])
             .slice(0, 4)
-            .map((img) => `<img src="${img.url}" alt="${img.alt || unit.name}" class="h-16 w-full rounded object-cover">`)
+            .map((img) => `<img src="${esc(img.url)}" alt="${esc(img.alt || hall.name)}" class="h-16 w-full rounded object-cover">`)
             .join('');
 
         el.innerHTML = `
             <div class="p-3">
-                <p class="chat-card-tag">${[layoutLabel(unit), unit.floor_range ? `${unit.floor_range}F` : ''].filter(Boolean).join(' · ')}</p>
-                <p class="mt-1 font-semibold">${unit.name}</p>
-                <p class="mt-1 text-xs opacity-70">${unit.description || ''}</p>
+                <p class="chat-card-tag">${esc([config.settings[hall.setting] || '', `${hall.min_guests}–${hall.max_guests} ${config.labels.maxGuests}`].filter(Boolean).join(' · '))}</p>
+                <p class="mt-1 font-semibold">${esc(hall.name)}</p>
+                <p class="mt-1 text-xs opacity-70">${esc(hall.description || '')}</p>
                 <div class="mt-2 grid grid-cols-4 gap-1">${images}</div>
                 <dl class="mt-2 grid grid-cols-2 gap-1 text-xs opacity-70">
-                    <div>${unit.size_sqm ?? '-'} m²</div>
-                    <div>${unit.max_adults + unit.max_children} ${config.labels.maxGuests}</div>
-                    ${unit.breakfast_included ? `<div>${config.labels.breakfastIncluded}</div>` : ''}
-                    <div>${unit.view_type ? unit.view_type + ' ' + config.labels.viewSuffix : ''}</div>
+                    <div>${hall.size_sqm ?? '-'} m²</div>
+                    <div>${hall.catering_included ? esc(config.labels.cateringIncluded) : esc(config.labels.cateringExcluded)}</div>
+                    <div>${hall.view_type ? esc(hall.view_type + ' ' + config.labels.viewSuffix) : ''}</div>
                 </dl>
             </div>
         `;
@@ -292,16 +295,17 @@ function initConcierge() {
         el.className = 'chat-card p-3';
 
         if (!payload.available) {
-            el.innerHTML = `<p class="text-sm opacity-70">${config.labels.noAvailability}</p>`;
+            el.innerHTML = `<p class="text-sm opacity-70">${esc(config.labels.noAvailability)}</p>`;
             return el;
         }
 
         const q = payload.quote;
         el.innerHTML = `
-            <p class="font-semibold">${q.name}</p>
-            <p class="chat-card-tag mt-1">${q.check_in} → ${q.check_out} · ${q.nights} ${config.labels.night}</p>
-            ${q.discount_percent > 0 ? `<p class="mt-1 text-xs opacity-70"><s>${money(q.subtotal)}</s> · −${q.discount_percent}% ${config.labels.discount}</p>` : ''}
+            <p class="font-semibold">${esc(q.name)}</p>
+            <p class="chat-card-tag mt-1">${esc(longDate(q.event_date))}</p>
+            ${q.discount_percent > 0 ? `<p class="mt-1 text-xs opacity-70"><s>${money(q.subtotal)}</s> · −${q.discount_percent}% ${esc(config.labels.discount)}</p>` : ''}
             <p class="mt-1 text-base font-semibold">${money(q.grand_total)}</p>
+            <p class="mt-1 text-xs opacity-70">${esc(config.labels.deposit)} (${q.deposit_percent}%): ${money(q.deposit_total)}</p>
         `;
         return el;
     }
@@ -310,12 +314,13 @@ function initConcierge() {
         const b = payload.booking;
         const el = document.createElement('div');
         el.className = 'chat-card p-3';
-        el.style.borderLeft = '3px solid var(--signal-deep)';
+        el.style.borderLeft = '3px solid var(--gold-deep)';
         el.innerHTML = `
-            <p class="text-sm font-semibold">${config.labels.bookingReceived}</p>
-            <p class="chat-card-tag mt-1">${config.labels.reference}: ${b.booking_reference}</p>
-            <p class="mt-1 text-xs opacity-70">${b.name} · ${b.check_in} → ${b.check_out} · ${b.nights} ${config.labels.night}</p>
+            <p class="text-sm font-semibold">${esc(config.labels.bookingReceived)}</p>
+            <p class="chat-card-tag mt-1">${esc(config.labels.reference)}: ${esc(b.booking_reference)}</p>
+            <p class="mt-1 text-xs opacity-70">${esc(b.name)} · ${esc(longDate(b.event_date))}${config.eventTypes[b.event_type] ? ' · ' + esc(config.eventTypes[b.event_type]) : ''}</p>
             <p class="mt-1 text-sm font-semibold">${money(b.total_price)}</p>
+            <p class="mt-1 text-xs opacity-70">${esc(config.labels.deposit)}: ${money(b.deposit_amount)}</p>
         `;
         return el;
     }
@@ -323,7 +328,7 @@ function initConcierge() {
     function handoverCard(payload) {
         const el = document.createElement('div');
         el.className = 'chat-card p-3 text-xs';
-        el.style.borderLeft = '3px solid #f3b743';
+        el.style.borderLeft = '3px solid #d9a441';
         el.textContent = config.labels.handedOver;
         return el;
     }
@@ -332,10 +337,10 @@ function initConcierge() {
         if (!uiPayload || !uiPayload.length) return;
 
         uiPayload.forEach((payload) => {
-            if (payload.type === 'unit_results') {
-                messagesEl.appendChild(card(payload.units.map(unitResultCard)));
-            } else if (payload.type === 'unit_detail') {
-                messagesEl.appendChild(card([unitDetailCard(payload.unit)]));
+            if (payload.type === 'hall_results') {
+                messagesEl.appendChild(card(payload.halls.map(hallResultCard)));
+            } else if (payload.type === 'hall_detail') {
+                messagesEl.appendChild(card([hallDetailCard(payload.hall)]));
             } else if (payload.type === 'availability') {
                 messagesEl.appendChild(card([availabilityCard(payload)]));
             } else if (payload.type === 'booking_confirmation') {
@@ -396,11 +401,11 @@ function initConcierge() {
     }
 
     async function pollForStaffReplies() {
-        const guestToken = localStorage.getItem(config.storageKey);
-        if (!guestToken) return;
+        const clientToken = localStorage.getItem(config.storageKey);
+        if (!clientToken) return;
 
         try {
-            const response = await fetch(`${config.historyUrl}?guest_token=${encodeURIComponent(guestToken)}`, {
+            const response = await fetch(`${config.historyUrl}?client_token=${encodeURIComponent(clientToken)}`, {
                 headers: { Accept: 'application/json' },
             });
             if (!response.ok) return;
@@ -413,7 +418,7 @@ function initConcierge() {
                 if (newMessages.some((message) => message.role === 'staff')) {
                     setChatStatus(config.labels.statusReplied, 'replied');
                 }
-                window.apartmentSound?.play('incoming');
+                window.venueSound?.play('incoming');
                 knownMessageCount = data.messages.length;
                 scrollToBottom();
             }
@@ -427,8 +432,8 @@ function initConcierge() {
     }
 
     function renderMessage(message) {
-        if (message.role === 'guest') {
-            messagesEl.appendChild(bubble('guest', message.content));
+        if (message.role === 'client') {
+            messagesEl.appendChild(bubble('client', message.content));
         } else if (message.role === 'assistant') {
             if (message.content) {
                 messagesEl.appendChild(bubble('assistant', message.content));
@@ -462,7 +467,7 @@ function initConcierge() {
         template.content.querySelectorAll('[data-quick-message]').forEach((source) => {
             const item = document.createElement('button');
             item.type = 'button';
-            item.className = 'flex w-full items-center justify-between px-3 py-2.5 text-left text-sm hover:bg-[#d7f75b33]';
+            item.className = 'flex w-full items-center justify-between px-3 py-2.5 text-left text-sm hover:bg-[#e3c27c33]';
             item.innerHTML = `<span>${source.textContent}</span><span class="opacity-40">→</span>`;
             item.addEventListener('click', () => sendMessage(source.dataset.quickMessage));
             list.appendChild(item);
@@ -475,32 +480,32 @@ function initConcierge() {
     function staffBubble(text) {
         const el = document.createElement('div');
         el.className = 'chat-bubble is-host';
-        el.style.borderLeft = '3px solid #5fb8e0';
-        el.innerHTML = `<p class="chat-card-tag mb-0.5" style="color:#2f7fa3">${config.labels.staff}</p>`;
+        el.style.borderLeft = '3px solid #d98a93';
+        el.innerHTML = `<p class="chat-card-tag mb-0.5" style="color:#a85a64">${config.labels.staff}</p>`;
         el.append(document.createTextNode(text));
         return el;
     }
 
-    const sceneNames = { home: 'reception', lobby: 'reception', info: 'reception', units: 'units', unit: 'unit_detail', facilities: 'facilities', facility: 'facility_detail', reservation: 'reservation', staff: 'handover' };
+    const sceneNames = { home: 'reception', lobby: 'reception', info: 'reception', halls: 'halls', hall: 'hall_detail', services: 'services', service: 'service_detail', reservation: 'reservation', staff: 'handover' };
 
     /**
-     * Where the guest is in the lobby, so the concierge can answer for "this
-     * unit" or the reservation on screen. Never includes name or contact data.
+     * Where the client is in the lobby, so the concierge can answer for "this
+     * hall" or the reservation on screen. Never includes name or contact data.
      */
     function uiContext() {
         const pageScene = document.querySelector('[data-lobby]')?.dataset.scene || 'lobby';
         const context = { scene: sceneNames[pageScene] || 'reception' };
 
         const lastSegment = decodeURIComponent(window.location.pathname.split('/').pop());
-        if (pageScene === 'unit') context.selected_unit = lastSegment;
-        if (pageScene === 'facility') context.selected_facility = Number(lastSegment);
+        if (pageScene === 'hall') context.selected_hall = lastSegment;
+        if (pageScene === 'service') context.selected_service = Number(lastSegment);
 
         if (pageScene === 'reservation') {
             try {
-                const draft = JSON.parse(sessionStorage.getItem(`reservation_draft_${root.dataset.apartmentSlug}`) || 'null');
-                const { check_in, check_out, adults, children, units, unit_type_slug } = draft?.values || {};
-                context.reservation = { check_in, check_out, adults, children, units, unit_type_slug };
-                if (unit_type_slug) context.selected_unit = unit_type_slug;
+                const draft = JSON.parse(sessionStorage.getItem(`reservation_draft_${root.dataset.venueSlug}`) || 'null');
+                const { event_date, event_type, guests, extra_hours, hall_slug } = draft?.values || {};
+                context.reservation = { event_date, event_type, guests, extra_hours, hall_slug };
+                if (hall_slug) context.selected_hall = hall_slug;
             } catch { /* no draft to share */ }
         }
 
@@ -510,11 +515,11 @@ function initConcierge() {
     function actionChips(actions) {
         if (!actions || !actions.length) return null;
 
-        const unitUrl = (slug) => config.unitUrlTemplate.replace('__SLUG__', encodeURIComponent(slug));
+        const hallUrl = (slug) => config.hallUrlTemplate.replace('__SLUG__', encodeURIComponent(slug));
         const reservationUrl = (slug) => config.reservationUrlTemplate.replace('__SLUG__', encodeURIComponent(slug));
         const targets = {
-            view_unit: [config.labels.viewDetails, (action) => unitUrl(action.unit)],
-            reserve: [config.labels.bookNow, (action) => reservationUrl(action.unit)],
+            view_hall: [config.labels.viewDetails, (action) => hallUrl(action.hall)],
+            reserve: [config.labels.bookNow, (action) => reservationUrl(action.hall)],
             staff: [config.labels.staff, () => config.staffUrl],
         };
 
@@ -533,9 +538,9 @@ function initConcierge() {
 
                 // Another page: walk there the way the menu does. A panel on
                 // this page is just a hash change, so leave it to the browser.
-                if (link.pathname !== window.location.pathname && window.apartmentStage) {
+                if (link.pathname !== window.location.pathname && window.venueStage) {
                     event.preventDefault();
-                    window.apartmentStage.leave(link.href);
+                    window.venueStage.leave(link.href);
                 }
             });
             wrap.appendChild(link);
@@ -571,9 +576,9 @@ function initConcierge() {
         staff.addEventListener('click', (event) => {
             closePanel({ confirmDraft: false, restoreFocus: false });
 
-            if (window.apartmentStage) {
+            if (window.venueStage) {
                 event.preventDefault();
-                window.apartmentStage.leave(staff.href);
+                window.venueStage.leave(staff.href);
             }
         });
 
@@ -585,21 +590,21 @@ function initConcierge() {
     async function sendMessage(text, { retry = false } = {}) {
         if (!text.trim() || handedOver || busy || !ready) return;
 
-        const guestToken = localStorage.getItem(config.storageKey);
-        if (!guestToken) return;
+        const clientToken = localStorage.getItem(config.storageKey);
+        if (!clientToken) return;
 
         openPanel();
-        if (!retry) messagesEl.appendChild(bubble('guest', text));
-        window.apartmentSound?.play('sent');
+        if (!retry) messagesEl.appendChild(bubble('client', text));
+        window.venueSound?.play('sent');
         scrollToBottom();
         setBusy(true);
 
         try {
-            const data = await api(config.messageUrl, { guest_token: guestToken, message: text, ...uiContext() });
+            const data = await api(config.messageUrl, { client_token: clientToken, message: text, ...uiContext() });
             renderMessage(data.message);
             setChatStatus(config.labels.statusSent, 'sent');
-            window.apartmentSound?.play('incoming');
-            knownMessageCount += 2; // the guest message just sent + the reply just rendered
+            window.venueSound?.play('incoming');
+            knownMessageCount += 2; // the client message just sent + the reply just rendered
             if (data.status === 'handed_over') {
                 showHandedOverBanner();
             }
@@ -612,12 +617,12 @@ function initConcierge() {
     }
 
     async function boot() {
-        let guestToken = localStorage.getItem(config.storageKey);
+        let clientToken = localStorage.getItem(config.storageKey);
 
-        if (!guestToken) {
+        if (!clientToken) {
             const data = await api(config.startUrl, { locale: config.locale });
-            guestToken = data.guest_token;
-            localStorage.setItem(config.storageKey, guestToken);
+            clientToken = data.client_token;
+            localStorage.setItem(config.storageKey, clientToken);
             messagesEl.appendChild(bubble('assistant', config.labels.intro));
             const menu = quickMenuCard();
             if (menu) messagesEl.appendChild(card([menu]));
@@ -625,7 +630,7 @@ function initConcierge() {
         }
 
         try {
-            const response = await fetch(`${config.historyUrl}?guest_token=${encodeURIComponent(guestToken)}`, {
+            const response = await fetch(`${config.historyUrl}?client_token=${encodeURIComponent(clientToken)}`, {
                 headers: { Accept: 'application/json' },
             });
 
@@ -666,10 +671,10 @@ function initConcierge() {
 
     document.querySelectorAll('[data-ask-ai-button]').forEach((button) => {
         button.addEventListener('click', () => {
-            const unitCard = button.closest('[data-unit-card]');
-            const unitName = unitCard?.dataset.unitName || '';
+            const hallCard = button.closest('[data-hall-card]');
+            const hallName = hallCard?.dataset.hallName || '';
             openPanel();
-            sendMessage(`Tell me more about the ${unitName}`);
+            sendMessage(`${hallName}`);
         });
     });
 
@@ -682,7 +687,7 @@ function initConcierge() {
         });
     });
 
-    // A menu pick in the same scene: the concierge answers right where the guest stands.
+    // A menu pick in the same scene: the concierge answers right where the client stands.
     window.addEventListener('concierge:ask', (event) => sendMessage(event.detail.message));
 
     setBusy(true);
@@ -696,7 +701,7 @@ function initConcierge() {
     }).finally(() => {
         setBusy(false);
 
-        // The guest chose this topic from the menu on the previous scene:
+        // The client chose this topic from the menu on the previous scene:
         // let the new scene settle for a beat, then carry on the conversation.
         const topic = window.takePendingConciergeTopic?.();
         if (topic && ready) window.setTimeout(() => sendMessage(topic), 650);
@@ -705,10 +710,10 @@ function initConcierge() {
 
 document.addEventListener('DOMContentLoaded', initConcierge);
 
-function initUnitGallery() {
-    document.querySelectorAll('[data-unit-gallery]').forEach((gallery) => {
-        const main = gallery.querySelector('[data-unit-gallery-main]');
-        const thumbs = [...gallery.querySelectorAll('[data-unit-thumb]')];
+function initHallGallery() {
+    document.querySelectorAll('[data-hall-gallery]').forEach((gallery) => {
+        const main = gallery.querySelector('[data-hall-gallery-main]');
+        const thumbs = [...gallery.querySelectorAll('[data-hall-thumb]')];
         if (!main) return;
 
         thumbs.forEach((thumb) => {
@@ -721,4 +726,4 @@ function initUnitGallery() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', initUnitGallery);
+document.addEventListener('DOMContentLoaded', initHallGallery);

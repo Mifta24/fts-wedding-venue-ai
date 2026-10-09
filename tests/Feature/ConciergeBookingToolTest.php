@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\Apartment;
 use App\Models\Booking;
 use App\Models\Conversation;
-use App\Models\UnitInventory;
-use App\Services\Concierge\ApartmentConciergeTools;
+use App\Models\HallInventory;
+use App\Models\Venue;
+use App\Services\Concierge\VenueConciergeTools;
 use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
@@ -16,68 +16,83 @@ class ConciergeBookingToolTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_ai_booking_tool_creates_a_reference_and_holds_the_requested_units(): void
+    public function test_ai_booking_tool_creates_a_reference_holds_the_date_and_refuses_a_second_request(): void
     {
-        $apartment = Apartment::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published', 'currency' => 'IDR']);
-        $unit = $apartment->unitTypes()->create(['name' => 'Deluxe King', 'slug' => 'deluxe-king', 'base_price' => 1000000, 'max_adults' => 2, 'max_children' => 0, 'is_active' => true]);
-        $conversation = Conversation::create(['apartment_id' => $apartment->id, 'guest_token' => (string) Str::uuid(), 'locale' => 'en']);
+        $venue = Venue::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published', 'currency' => 'IDR', 'deposit_percent' => 30]);
+        $hall = $venue->halls()->create(['name' => 'Garden Pavilion', 'slug' => 'garden-pavilion', 'base_price' => 50000000, 'min_guests' => 100, 'max_guests' => 400, 'is_active' => true]);
+        $conversation = Conversation::create(['venue_id' => $venue->id, 'client_token' => (string) Str::uuid(), 'locale' => 'en']);
 
-        $checkIn = CarbonImmutable::now()->addDays(5);
-        foreach ([0, 1] as $offset) {
-            UnitInventory::create(['unit_type_id' => $unit->id, 'stay_date' => $checkIn->addDays($offset)->toDateString(), 'total_units' => 3, 'booked_units' => 0, 'price' => 1000000]);
-        }
+        $date = $this->saturdayAhead();
+        HallInventory::create(['hall_id' => $hall->id, 'event_date' => $date->toDateString(), 'total_slots' => 1, 'booked_slots' => 0, 'price' => 50000000]);
 
-        $tools = new ApartmentConciergeTools($apartment, $conversation, 'en');
+        $tools = new VenueConciergeTools($venue, $conversation, 'en');
         $input = [
-            'unit_type_slug' => 'deluxe-king', 'check_in' => $checkIn->toDateString(), 'check_out' => $checkIn->addDays(2)->toDateString(),
-            'adults' => 2, 'guest_name' => 'Ayu', 'guest_phone' => '+62 811 111 222',
+            'hall_slug' => 'garden-pavilion', 'event_date' => $date->toDateString(), 'event_type' => 'akad_reception',
+            'guests' => 250, 'client_name' => 'Ayu & Raka', 'client_phone' => '+62 811 111 222',
         ];
 
-        $quote = $tools->dispatch('check_availability', [...$input, 'extra_bed' => false]);
-        $this->assertSame(2000000.0, $quote['ui']['quote']['grand_total']);
+        $quote = $tools->dispatch('check_availability', $input);
+        $this->assertSame(50000000.0, $quote['ui']['quote']['grand_total']);
+        $this->assertSame(15000000.0, $quote['ui']['quote']['deposit_total']);
 
-        $result = $tools->dispatch('create_booking_request', [...$input, 'units' => 2]);
+        $result = $tools->dispatch('create_booking_request', $input);
 
         $booking = Booking::firstOrFail();
         $this->assertSame($booking->reference, $result['ui']['booking']['booking_reference']);
-        $this->assertSame(2, $booking->unit_count);
-        $this->assertSame(4000000.0, (float) $booking->total_price);
-        $this->assertSame([2, 2], UnitInventory::orderBy('stay_date')->pluck('booked_units')->all());
+        $this->assertSame(250, $booking->guest_count);
+        $this->assertSame('akad_reception', $booking->event_type);
+        $this->assertSame(50000000.0, (float) $booking->total_price);
+        $this->assertSame(15000000.0, (float) $booking->deposit_amount);
+        $this->assertSame([1], HallInventory::pluck('booked_slots')->all());
 
-        $tooMany = $tools->dispatch('create_booking_request', [...$input, 'units' => 2]);
-        $this->assertNull($tooMany['ui']);
+        $taken = $tools->dispatch('create_booking_request', $input);
+        $this->assertNull($taken['ui']);
         $this->assertSame(1, Booking::count());
     }
 
-    public function test_ai_tools_quote_long_stays_with_the_discount_and_filter_by_bedrooms(): void
+    public function test_ai_tools_apply_the_weekday_discount_and_filter_halls_by_guest_count_and_setting(): void
     {
-        $apartment = Apartment::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published', 'currency' => 'IDR', 'weekly_discount_percent' => 10, 'monthly_discount_percent' => 25]);
-        $studio = $apartment->unitTypes()->create(['name' => 'Studio', 'slug' => 'studio', 'base_price' => 600000, 'bedrooms' => 0, 'max_adults' => 2, 'max_children' => 0, 'is_active' => true]);
-        $family = $apartment->unitTypes()->create(['name' => 'Two Bedroom', 'slug' => 'two-bedroom', 'base_price' => 1500000, 'bedrooms' => 2, 'bathrooms' => 2, 'floor_range' => '15–26', 'max_adults' => 4, 'max_children' => 2, 'is_active' => true]);
-        $conversation = Conversation::create(['apartment_id' => $apartment->id, 'guest_token' => (string) Str::uuid(), 'locale' => 'en']);
+        $venue = Venue::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published', 'currency' => 'IDR', 'weekday_discount_percent' => 20]);
+        $salon = $venue->halls()->create(['name' => 'Salon', 'slug' => 'salon', 'base_price' => 20000000, 'setting' => 'indoor', 'min_guests' => 40, 'max_guests' => 120, 'is_active' => true]);
+        $garden = $venue->halls()->create(['name' => 'Garden', 'slug' => 'garden', 'base_price' => 40000000, 'setting' => 'outdoor', 'min_guests' => 150, 'max_guests' => 500, 'view_type' => 'garden', 'is_active' => true]);
+        $conversation = Conversation::create(['venue_id' => $venue->id, 'client_token' => (string) Str::uuid(), 'locale' => 'en']);
 
-        $checkIn = CarbonImmutable::now()->addDays(5)->startOfDay();
-        foreach ([$studio, $family] as $unit) {
-            foreach (range(0, 6) as $offset) {
-                UnitInventory::create(['unit_type_id' => $unit->id, 'stay_date' => $checkIn->addDays($offset)->toDateString(), 'total_units' => 2, 'booked_units' => 0, 'price' => $unit->base_price]);
+        $tuesday = CarbonImmutable::now()->addDays(10)->startOfWeek()->addWeeks(2)->addDay();
+        $saturday = $tuesday->addDays(4);
+        foreach ([$salon, $garden] as $hall) {
+            foreach ([$tuesday, $saturday] as $date) {
+                HallInventory::create(['hall_id' => $hall->id, 'event_date' => $date->toDateString(), 'total_slots' => 1, 'booked_slots' => 0, 'price' => $hall->base_price]);
             }
         }
 
-        $tools = new ApartmentConciergeTools($apartment, $conversation, 'en');
-        $week = ['check_in' => $checkIn->toDateString(), 'check_out' => $checkIn->addDays(7)->toDateString()];
+        $tools = new VenueConciergeTools($venue, $conversation, 'en');
 
-        $quote = $tools->dispatch('check_availability', [...$week, 'unit_type_slug' => 'two-bedroom'])['ui']['quote'];
-        $this->assertSame(10, $quote['discount_percent']);
-        $this->assertSame(10500000.0, $quote['subtotal']);
-        $this->assertSame(9450000.0, $quote['grand_total']);
+        $weekday = $tools->dispatch('check_availability', ['hall_slug' => 'garden', 'event_date' => $tuesday->toDateString()])['ui']['quote'];
+        $this->assertSame(20, $weekday['discount_percent']);
+        $this->assertSame(40000000.0, $weekday['subtotal']);
+        $this->assertSame(32000000.0, $weekday['grand_total']);
 
-        $search = $tools->dispatch('search_units', [...$week, 'adults' => 2, 'bedrooms' => 1])['ui']['units'];
-        $this->assertSame(['two-bedroom'], array_column($search, 'unit_type_slug'));
-        $this->assertSame(9450000.0, $search[0]['total_price']);
-        $this->assertSame('15–26', $search[0]['floor_range']);
+        $weekend = $tools->dispatch('check_availability', ['hall_slug' => 'garden', 'event_date' => $saturday->toDateString()])['ui']['quote'];
+        $this->assertSame(0, $weekend['discount_percent']);
+        $this->assertSame(40000000.0, $weekend['grand_total']);
 
-        $detail = json_decode($tools->dispatch('get_unit_detail', ['unit_type_slug' => 'studio'])['text'], true);
-        $this->assertSame(0, $detail['bedrooms']);
-        $this->assertSame(25, $detail['long_stay']['monthly_discount_percent']);
+        $search = $tools->dispatch('search_halls', ['event_date' => $tuesday->toDateString(), 'guests' => 100])['ui']['halls'];
+        $this->assertSame(['salon', 'garden'], array_column($search, 'hall_slug'));
+        $this->assertSame(16000000.0, $search[0]['total_price']);
+
+        $outdoor = $tools->dispatch('search_halls', ['event_date' => $tuesday->toDateString(), 'guests' => 100, 'setting' => 'outdoor'])['ui']['halls'];
+        $this->assertSame(['garden'], array_column($outdoor, 'hall_slug'));
+
+        $big = $tools->dispatch('search_halls', ['event_date' => $tuesday->toDateString(), 'guests' => 300])['ui']['halls'];
+        $this->assertSame(['garden'], array_column($big, 'hall_slug'));
+
+        $detail = json_decode($tools->dispatch('get_hall_detail', ['hall_slug' => 'salon'])['text'], true);
+        $this->assertSame(120, $detail['max_guests']);
+        $this->assertSame(20, $detail['weekday_discount_percent']);
+    }
+
+    private function saturdayAhead(): CarbonImmutable
+    {
+        return CarbonImmutable::now()->addDays(20)->startOfWeek()->addDays(5);
     }
 }

@@ -1,7 +1,7 @@
 /**
  * The AI concierge introducing a scene: types the intro like speech, animates
  * the avatar and sound bars while "speaking", and can read it aloud with the
- * browser's speech synthesis when the guest asks (never automatically).
+ * browser's speech synthesis when the client asks (never automatically).
  * The full text is always in the DOM for screen readers and no-JS visitors.
  */
 function initNarrators() {
@@ -217,9 +217,9 @@ function initNarrators() {
     });
 
     // A browser can support speech synthesis in general but still ship with
-    // no voice for this guest's language — reading the text with whatever
+    // no voice for this client's language — reading the text with whatever
     // default voice it falls back to just produces the wrong language, so
-    // hide the control rather than mislead the guest.
+    // hide the control rather than mislead the client.
     if (canSpeak) {
         voicesReady.then(() => {
             narrators.forEach((element) => {

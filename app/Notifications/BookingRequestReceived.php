@@ -9,7 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 /**
- * Tells a guest their stay request arrived. It is not a confirmation yet.
+ * Tells a client their date request arrived. It is not a confirmation yet.
  */
 class BookingRequestReceived extends Notification implements ShouldQueue
 {
@@ -30,18 +30,18 @@ class BookingRequestReceived extends Notification implements ShouldQueue
 
     public function toMail(object $notifiable): MailMessage
     {
-        $booking = $this->booking->loadMissing(['apartment', 'unitType']);
-        $locale = $booking->locale ?? $booking->apartment->default_locale;
+        $booking = $this->booking->loadMissing(['venue', 'hall']);
+        $locale = $booking->locale ?? $booking->venue->default_locale;
         $copy = $this->copy($locale);
-        $summary = GuestBookingSummary::lines($booking, $locale);
+        $summary = ClientBookingSummary::lines($booking, $locale);
 
         return (new MailMessage)
             ->subject(sprintf($copy['subject'], $booking->reference))
-            ->greeting(sprintf($copy['greeting'], $booking->guest_name))
-            ->line(sprintf($copy['intro'], $booking->apartment->name))
+            ->greeting(sprintf($copy['greeting'], $booking->client_name))
+            ->line(sprintf($copy['intro'], $booking->venue->name))
             ->lines($summary)
             ->line($copy['next'])
-            ->salutation($booking->apartment->name);
+            ->salutation($booking->venue->name);
     }
 
     /**
@@ -51,21 +51,21 @@ class BookingRequestReceived extends Notification implements ShouldQueue
     {
         return [
             'en' => [
-                'subject' => 'We received your stay request %s',
+                'subject' => 'We received your wedding date request %s',
                 'greeting' => 'Hello %s,',
-                'intro' => 'Thank you for your request at %s. Our team will check it and reply shortly. This is not a confirmation yet.',
+                'intro' => 'Thank you for choosing %s for your big day. Our wedding team will check the date and reply shortly. This is not a confirmation yet and no payment has been taken.',
                 'next' => 'Keep your reference handy if you contact us.',
             ],
             'ja' => [
-                'subject' => '入居リクエストを受け付けました %s',
+                'subject' => '挙式日のリクエストを受け付けました %s',
                 'greeting' => '%s 様',
-                'intro' => '%s へのリクエストありがとうございます。スタッフが確認のうえ、まもなくご連絡します。まだ確定ではありません。',
+                'intro' => '%s をお選びいただきありがとうございます。ウェディングチームが日程を確認し、まもなくご連絡します。まだ確定ではなく、お支払いも発生していません。',
                 'next' => 'お問い合わせの際は予約番号をお知らせください。',
             ],
             'id' => [
-                'subject' => 'Permintaan sewa %s kami terima',
+                'subject' => 'Pengajuan tanggal pernikahan %s kami terima',
                 'greeting' => 'Halo %s,',
-                'intro' => 'Terima kasih atas permintaan Anda di %s. Tim kami akan memeriksanya dan segera membalas. Ini belum merupakan konfirmasi.',
+                'intro' => 'Terima kasih telah memilih %s untuk hari bahagia Anda. Tim wedding kami akan memeriksa tanggalnya dan segera membalas. Ini belum konfirmasi dan belum ada pembayaran yang diambil.',
                 'next' => 'Simpan nomor referensi ini bila Anda menghubungi kami.',
             ],
         ][$locale] ?? $this->copy('en');

@@ -1,11 +1,11 @@
 <x-admin-layout title="Knowledge base">
     <x-slot name="actions">
-        <a href="{{ route('admin.knowledge-items.create') }}" class="rounded-lg bg-ink px-3 py-2 text-sm font-medium text-white hover:bg-signal hover:text-signal-ink">
+        <a href="{{ route('admin.knowledge-items.create') }}" class="rounded-lg bg-ink px-3 py-2 text-sm font-medium text-white hover:bg-gold hover:text-gold-ink">
             Add entry
         </a>
     </x-slot>
 
-    <p class="mb-4 text-sm text-stone-500">This is the only source the AI Concierge is allowed to answer apartment-fact questions from. If it's not here, the AI won't guess.</p>
+    <p class="mb-4 text-sm text-stone-500">This is the only source the AI Concierge is allowed to answer venue-fact questions from. If it's not here, the AI won't guess.</p>
 
     <div class="overflow-x-auto rounded-xl border border-stone-200 bg-white">
         <table class="w-full text-left text-sm">

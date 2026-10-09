@@ -20,12 +20,12 @@
                     <input type="number" name="sort_order" value="{{ old('sort_order', $item->sort_order) }}" class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">
                 </div>
                 <div class="col-span-2">
-                    <label class="block text-sm font-medium text-stone-700">Tags (comma-separated, helps the AI match guest questions)</label>
-                    <input type="text" name="tags" value="{{ old('tags', implode(', ', $item->tags ?? [])) }}" placeholder="check-in, late check-in, front desk"
+                    <label class="block text-sm font-medium text-stone-700">Tags (comma-separated, helps the AI match client questions)</label>
+                    <input type="text" name="tags" value="{{ old('tags', implode(', ', $item->tags ?? [])) }}" placeholder="catering, menu, halal"
                         class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">
                 </div>
                 <div class="col-span-2">
-                    <label class="block text-sm font-medium text-stone-700">Image URL (shown on the facilities cards)</label>
+                    <label class="block text-sm font-medium text-stone-700">Image URL (shown on the wedding service cards)</label>
                     <input type="url" name="image_url" value="{{ old('image_url', $item->image_url) }}" placeholder="https://…"
                         class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">
                 </div>
@@ -80,7 +80,7 @@
 
         <div class="flex justify-end gap-3">
             <a href="{{ route('admin.knowledge-items.index') }}" class="rounded-lg border border-stone-300 px-4 py-2 text-sm text-stone-600 hover:bg-stone-50">Cancel</a>
-            <button type="submit" class="rounded-lg bg-ink px-4 py-2 text-sm font-medium text-white hover:bg-signal hover:text-signal-ink">Save entry</button>
+            <button type="submit" class="rounded-lg bg-ink px-4 py-2 text-sm font-medium text-white hover:bg-gold hover:text-gold-ink">Save entry</button>
         </div>
     </form>
 </x-admin-layout>

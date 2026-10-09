@@ -1,9 +1,9 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "fts/wedding-venue-ai",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "Wedding Venue AI: an interactive wedding venue site with an AI wedding concierge.",
+    "keywords": ["laravel", "wedding", "venue", "ai-concierge"],
     "license": "MIT",
     "require": {
         "php": "^8.3",

@@ -2,13 +2,13 @@
     "version": "0.0.1",
     "configurations": [
         {
-            "name": "apartment-ai-dev",
+            "name": "wedding-venue-ai-dev",
             "runtimeExecutable": "php",
             "runtimeArgs": ["artisan", "dev"],
             "port": 8000
         },
         {
-            "name": "apartment-ai-preview",
+            "name": "wedding-venue-ai-preview",
             "runtimeExecutable": "php",
             "runtimeArgs": ["artisan", "serve", "--port=8030"],
             "port": 8030

@@ -1,9 +1,9 @@
 @php
-    $isOwner = auth()->user()?->currentApartment()?->pivot?->role === 'owner';
+    $isOwner = auth()->user()?->currentVenue()?->pivot?->role === 'owner';
 
     $navItems = [
         ['route' => 'admin.dashboard', 'label' => 'Dashboard'],
-        ['route' => 'admin.unit-types.index', 'label' => 'Units'],
+        ['route' => 'admin.halls.index', 'label' => 'Halls'],
         ['route' => 'admin.knowledge-items.index', 'label' => 'Knowledge base'],
         ['route' => 'admin.bookings.index', 'label' => 'Bookings'],
         ['route' => 'admin.handovers.index', 'label' => 'Handovers'],
@@ -18,7 +18,7 @@
         <a
             href="{{ route($item['route']) }}"
             @if (request()->routeIs($item['route'].'*')) aria-current="page" @endif
-            class="block rounded-lg px-3 py-2.5 {{ request()->routeIs($item['route'].'*') ? 'bg-signal font-medium text-signal-ink' : 'text-white/70 hover:bg-white/10 hover:text-white' }}"
+            class="block rounded-lg px-3 py-2.5 {{ request()->routeIs($item['route'].'*') ? 'bg-gold font-medium text-gold-ink' : 'text-white/70 hover:bg-white/10 hover:text-white' }}"
         >{{ $item['label'] }}</a>
     @endforeach
 </nav>

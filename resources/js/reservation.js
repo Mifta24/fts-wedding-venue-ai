@@ -1,8 +1,8 @@
 import { createDatePicker } from './date-picker';
 
 /**
- * Guided stay request wizard: five short steps on the leasing floor — dates,
- * residents, unit, contact, summary — then a reference number and
+ * Guided date request wizard: five short steps — wedding date, event and
+ * guest count, hall, contact, summary — then a reference number and
  * WhatsApp / phone / email hand-over. Progress survives leaving the page and
  * switching language (sessionStorage), and every rule is enforced again on the
  * server, which is the only source of price and availability.
@@ -18,15 +18,16 @@ function initReservationWizard() {
     const steps = [...root.querySelectorAll('[data-step]')];
     const progress = [...root.querySelectorAll('[data-progress-step]')];
     const stepLabel = root.querySelector('[data-wizard-step-label]');
-    const nightsHint = root.querySelector('[data-nights-hint]');
+    const dateHint = root.querySelector('[data-date-hint]');
     const backButton = root.querySelector('[data-wizard-back]');
     const nextButton = root.querySelector('[data-wizard-next]');
     const submitButton = root.querySelector('[data-wizard-submit]');
     const errorBox = root.querySelector('[data-wizard-error]');
     const errorText = root.querySelector('[data-wizard-error-text]');
     const alternativesBox = root.querySelector('[data-wizard-alternatives]');
-    const unitOptions = [...root.querySelectorAll('[data-unit-option]')];
-    const extraBedField = root.querySelector('[data-extra-bed-field]');
+    const hallOptions = [...root.querySelectorAll('[data-hall-option]')];
+    const extraHoursField = root.querySelector('[data-extra-hours-field]');
+    const extraHoursHint = root.querySelector('[data-extra-hours-hint]');
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
 
     const config = {
@@ -35,14 +36,14 @@ function initReservationWizard() {
         locale: root.dataset.locale,
         currency: root.dataset.currency,
         today: root.dataset.today,
-        maxNights: Number(root.dataset.maxNights),
-        draftKey: `reservation_draft_${root.dataset.apartmentSlug}`,
-        tokenKey: `concierge_token_${root.dataset.apartmentSlug}`,
+        weekdayDeal: root.dataset.weekdayDeal === '1',
+        draftKey: `reservation_draft_${root.dataset.venueSlug}`,
+        tokenKey: `concierge_token_${root.dataset.venueSlug}`,
     };
 
     const fieldStep = {
-        check_in: 1, check_out: 1, adults: 2, children: 2, units: 2, unit_type_slug: 3, extra_bed: 3,
-        guest_name: 4, contact_type: 4, contact_value: 4, special_request: 4,
+        event_date: 1, event_type: 2, guests: 2, hall_slug: 3, extra_hours: 3,
+        client_name: 4, contact_type: 4, contact_value: 4, special_request: 4,
     };
 
     let current = 1;
@@ -59,8 +60,7 @@ function initReservationWizard() {
 
     const datePicker = createDatePicker({
         root: root.querySelector('[data-date-picker]'),
-        checkIn: form.elements.check_in,
-        checkOut: form.elements.check_out,
+        eventDate: form.elements.event_date,
         config,
         labels,
         formatDate,
@@ -70,24 +70,15 @@ function initReservationWizard() {
         },
     });
 
-    function nightsBetween(checkIn, checkOut) {
-        if (!checkIn || !checkOut) return 0;
-        const [y1, m1, d1] = checkIn.split('-').map(Number);
-        const [y2, m2, d2] = checkOut.split('-').map(Number);
-        return Math.round((Date.UTC(y2, m2 - 1, d2) - Date.UTC(y1, m1 - 1, d1)) / 86400000);
-    }
-
     function values() {
         const data = new FormData(form);
         return {
-            check_in: data.get('check_in') || '',
-            check_out: data.get('check_out') || '',
-            adults: Number(data.get('adults')) || 0,
-            children: Number(data.get('children')) || 0,
-            units: Number(data.get('units')) || 0,
-            unit_type_slug: data.get('unit_type_slug') || '',
-            extra_bed: form.elements.extra_bed.checked && !extraBedField.hidden,
-            guest_name: (data.get('guest_name') || '').trim(),
+            event_date: data.get('event_date') || '',
+            event_type: data.get('event_type') || 'akad_reception',
+            guests: Number(data.get('guests')) || 0,
+            hall_slug: data.get('hall_slug') || '',
+            extra_hours: extraHoursField.hidden ? 0 : Number(data.get('extra_hours')) || 0,
+            client_name: (data.get('client_name') || '').trim(),
             contact_type: data.get('contact_type') || 'whatsapp',
             contact_value: (data.get('contact_value') || '').trim(),
             special_request: (data.get('special_request') || '').trim(),
@@ -111,13 +102,13 @@ function initReservationWizard() {
             const draft = JSON.parse(sessionStorage.getItem(config.draftKey) || 'null');
             if (!draft) return;
             const { values: saved } = draft;
-            ['check_in', 'check_out', 'adults', 'children', 'units', 'guest_name', 'contact_value', 'special_request'].forEach((name) => {
+            ['event_date', 'guests', 'client_name', 'contact_value', 'special_request'].forEach((name) => {
                 if (saved[name] !== undefined && saved[name] !== '' && saved[name] !== 0) form.elements[name].value = saved[name];
             });
-            if (saved.children === 0) form.elements.children.value = 0;
+            if (saved.event_type) form.elements.event_type.value = saved.event_type;
             if (saved.contact_type) form.elements.contact_type.value = saved.contact_type;
-            if (saved.unit_type_slug) form.elements.unit_type_slug.value = saved.unit_type_slug;
-            form.elements.extra_bed.checked = Boolean(saved.extra_bed);
+            if (saved.hall_slug) form.elements.hall_slug.value = saved.hall_slug;
+            if (saved.extra_hours) form.elements.extra_hours.value = saved.extra_hours;
             current = Math.min(Math.max(Number(draft.step) || 1, 1), steps.length);
         } catch { /* ignore a corrupt draft */ }
     }
@@ -142,8 +133,8 @@ function initReservationWizard() {
             button.className = 'wizard-secondary';
             button.textContent = `${alternative.name} · ${money(alternative.total)}`;
             button.addEventListener('click', () => {
-                form.elements.unit_type_slug.value = alternative.slug;
-                refreshUnits();
+                form.elements.hall_slug.value = alternative.slug;
+                refreshHalls();
                 clearError();
                 saveDraft();
             });
@@ -154,65 +145,63 @@ function initReservationWizard() {
     }
 
     function selectedOption() {
-        const slug = form.elements.unit_type_slug.value;
-        return unitOptions.find((option) => option.querySelector('input').value === slug) || null;
+        const slug = form.elements.hall_slug.value;
+        return hallOptions.find((option) => option.querySelector('input').value === slug) || null;
     }
 
-    function fits(option, party) {
-        return party.adults <= Number(option.dataset.maxAdults) * party.units
-            && party.adults + party.children <= Number(option.dataset.maxOccupancy) * party.units;
+    function fits(option, guests) {
+        return guests >= 1 && guests <= Number(option.dataset.maxGuests);
     }
 
-    function refreshUnits() {
-        const party = values();
+    function refreshHalls() {
+        const { guests } = values();
 
-        unitOptions.forEach((option) => {
+        hallOptions.forEach((option) => {
             const input = option.querySelector('input');
-            const suitable = fits(option, party);
+            const suitable = fits(option, guests);
             input.disabled = !suitable;
             option.classList.toggle('is-disabled', !suitable);
-            option.querySelector('[data-unit-hint]').textContent = suitable ? '' : labels.too_small;
+            option.querySelector('[data-hall-hint]').textContent = suitable ? '' : labels.too_small;
             if (!suitable && input.checked) input.checked = false;
         });
 
         const chosen = selectedOption();
-        extraBedField.hidden = !chosen || chosen.dataset.extraBed !== '1';
-        if (extraBedField.hidden) form.elements.extra_bed.checked = false;
+        extraHoursField.hidden = !chosen || chosen.dataset.extraHours !== '1';
+        if (extraHoursField.hidden) {
+            form.elements.extra_hours.value = '0';
+        } else {
+            extraHoursHint.textContent = text(labels.extra_hours_hint, { price: money(chosen.dataset.extraHourPrice) });
+        }
     }
 
-    function refreshNights() {
-        const checkIn = form.elements.check_in.value;
-        const nights = nightsBetween(checkIn, form.elements.check_out.value);
+    function refreshDateHint() {
+        const date = form.elements.event_date.value;
 
-        if (nights > 0) nightsHint.textContent = `${nights} ${labels.nights}`;
-        else if (!datePicker.hasOpenNights) nightsHint.textContent = labels.cal_none;
-        else nightsHint.textContent = checkIn ? labels.cal_pick_out : labels.cal_pick_in;
+        if (date) dateHint.textContent = formatDate(date);
+        else if (!datePicker.hasOpenDates) dateHint.textContent = labels.cal_none;
+        else dateHint.textContent = labels.cal_pick;
     }
 
     function validate(step) {
         const data = values();
 
         if (step === 1) {
-            if (!data.check_in) return { field: 'check_in', message: labels.cal_pick_in };
-            if (data.check_in < config.today) return { field: 'check_in', message: labels.check_in_past };
-            if (!data.check_out) return { field: 'check_out', message: labels.cal_pick_out };
-            if (data.check_out <= data.check_in) return { field: 'check_out', message: labels.check_out_after };
-            if (nightsBetween(data.check_in, data.check_out) > config.maxNights) return { field: 'check_out', message: text(labels.too_long, { max: config.maxNights }) };
+            if (!data.event_date) return { field: 'event_date', message: labels.cal_pick };
+            if (data.event_date < config.today) return { field: 'event_date', message: labels.date_past };
         }
 
         if (step === 2) {
-            if (data.adults < 1) return { field: 'adults', message: labels.invalid };
-            if (data.units < 1) return { field: 'units', message: labels.invalid };
+            if (data.guests < 1) return { field: 'guests', message: labels.invalid };
         }
 
         if (step === 3) {
             const chosen = selectedOption();
-            if (!chosen) return { field: 'unit_type_slug', message: labels.select_unit };
-            if (!fits(chosen, data)) return { field: 'unit_type_slug', message: labels.too_small };
+            if (!chosen) return { field: 'hall_slug', message: labels.select_hall };
+            if (!fits(chosen, data.guests)) return { field: 'hall_slug', message: labels.too_small };
         }
 
         if (step === 4) {
-            if (!data.guest_name) return { field: 'guest_name', message: labels.invalid };
+            if (!data.client_name) return { field: 'client_name', message: labels.invalid };
             const valid = data.contact_type === 'email'
                 ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.contact_value)
                 : /^\+?[0-9\s\-().]{6,20}$/.test(data.contact_value);
@@ -243,8 +232,8 @@ function initReservationWizard() {
         nextButton.hidden = step === steps.length;
         submitButton.hidden = step !== steps.length;
 
-        if (step === 2 || step === 3) refreshUnits();
-        if (step === 3 && unitOptions.every((option) => option.classList.contains('is-disabled'))) showError(labels.capacity);
+        if (step === 2 || step === 3) refreshHalls();
+        if (step === 3 && hallOptions.every((option) => option.classList.contains('is-disabled'))) showError(text(labels.capacity, { max: Math.max(...hallOptions.map((option) => Number(option.dataset.maxGuests))) }));
         if (step === steps.length) renderSummary();
         if (focus) steps[step - 1].querySelector('input:not([type="hidden"]):not([disabled]), textarea, [data-cal-focus]')?.focus({ preventScroll: true });
         saveDraft();
@@ -264,9 +253,9 @@ function initReservationWizard() {
         return { ok: response.ok, status: response.status, body };
     }
 
-    function stayPayload() {
-        const { check_in, check_out, adults, children, units, unit_type_slug, extra_bed } = values();
-        return { check_in, check_out, adults, children, units, unit_type_slug, extra_bed, locale: config.locale };
+    function eventPayload() {
+        const { event_date, event_type, guests, hall_slug, extra_hours } = values();
+        return { event_date, event_type, guests, hall_slug, extra_hours, locale: config.locale };
     }
 
     function handleFailure(result) {
@@ -293,7 +282,7 @@ function initReservationWizard() {
         if (current === 3) {
             setBusy(true, labels.checking);
             try {
-                const result = await post(config.quoteUrl, stayPayload());
+                const result = await post(config.quoteUrl, eventPayload());
                 if (!result.ok) {
                     handleFailure(result);
                     return;
@@ -329,21 +318,22 @@ function initReservationWizard() {
     function renderSummary() {
         const data = values();
         const chosen = selectedOption();
-        const nights = nightsBetween(data.check_in, data.check_out);
-        const guests = [`${data.adults} ${labels.adults.toLowerCase()}`];
-        if (data.children > 0) guests.push(`${data.children} ${labels.children.toLowerCase()}`);
 
-        const unit = `${chosen ? chosen.dataset.name : ''}${data.extra_bed ? ` + ${labels.extra_bed.toLowerCase()}` : ''}`;
         const rows = [
-            summaryRow(labels.dates, `${formatDate(data.check_in)} → ${formatDate(data.check_out)} (${nights} ${labels.nights})`, 1),
-            summaryRow(labels.guests, `${guests.join(', ')} · ${labels.units}: ${data.units}`, 2),
-            summaryRow(labels.unit, unit, 3),
-            summaryRow(labels.contact, `${data.guest_name} · ${labels[data.contact_type]}: ${data.contact_value}`, 4),
+            summaryRow(labels.dates, new Intl.DateTimeFormat(config.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(...data.event_date.split('-').map((part, index) => (index === 1 ? Number(part) - 1 : Number(part))))), 1),
+            summaryRow(labels.event, `${root.querySelector(`input[name="event_type"][value="${data.event_type}"]`)?.nextElementSibling?.textContent ?? ''} · ${data.guests} ${labels.guests_unit}`, 2),
+            summaryRow(labels.hall, `${chosen ? chosen.dataset.name : ''}${data.extra_hours > 0 ? ` + ${data.extra_hours} ${labels.extra_hours.toLowerCase().replace(/\s*\(.*\)/, '')}` : ''}`, 3),
+            summaryRow(labels.contact, `${data.client_name} · ${labels[data.contact_type]}: ${data.contact_value}`, 4),
         ];
         if (data.special_request) rows.push(summaryRow(labels.special, data.special_request, 4));
 
         root.querySelector('[data-summary]').replaceChildren(...rows);
         root.querySelector('[data-summary-total]').textContent = quote ? money(quote.grand_total) : '';
+
+        const extra = root.querySelector('[data-summary-extra]');
+        const hasExtra = Boolean(quote && quote.extra_hours_total > 0);
+        extra.hidden = !hasExtra;
+        if (hasExtra) extra.querySelector('[data-summary-extra-amount]').textContent = `+${money(quote.extra_hours_total)}`;
 
         const discount = root.querySelector('[data-summary-discount]');
         const hasDiscount = Boolean(quote && quote.discount_percent > 0);
@@ -352,6 +342,9 @@ function initReservationWizard() {
             discount.querySelector('[data-summary-discount-percent]').textContent = `−${quote.discount_percent}%`;
             discount.querySelector('[data-summary-discount-amount]').textContent = `−${money(quote.discount_total)}`;
         }
+
+        root.querySelector('[data-summary-deposit-label]').textContent = text(labels.deposit, { percent: quote ? quote.deposit_percent : '' });
+        root.querySelector('[data-summary-deposit]').textContent = quote ? money(quote.deposit_total) : '';
     }
 
     function showDone(result) {
@@ -384,12 +377,12 @@ function initReservationWizard() {
 
         try {
             const result = await post(config.submitUrl, {
-                ...stayPayload(),
-                guest_name: values().guest_name,
+                ...eventPayload(),
+                client_name: values().client_name,
                 contact_type: values().contact_type,
                 contact_value: values().contact_value,
                 special_request: values().special_request,
-                guest_token: localStorage.getItem(config.tokenKey) || undefined,
+                client_token: localStorage.getItem(config.tokenKey) || undefined,
             });
 
             if (!result.ok) {
@@ -415,24 +408,24 @@ function initReservationWizard() {
         done.hidden = true;
         flow.hidden = false;
         clearDraft();
-        refreshNights();
+        refreshDateHint();
         showStep(1, true);
     }
 
     function preselect(slug) {
         if (!flow.hidden) {
-            refreshUnits();
-            const option = unitOptions.find((candidate) => candidate.querySelector('input').value === slug);
+            refreshHalls();
+            const option = hallOptions.find((candidate) => candidate.querySelector('input').value === slug);
             if (option && !option.querySelector('input').disabled) {
-                form.elements.unit_type_slug.value = slug;
-                refreshUnits();
+                form.elements.hall_slug.value = slug;
+                refreshHalls();
                 saveDraft();
             }
         }
     }
 
-    form.addEventListener('input', () => { refreshNights(); if (current <= 3) refreshUnits(); saveDraft(); });
-    form.addEventListener('change', () => { refreshUnits(); saveDraft(); });
+    form.addEventListener('input', () => { refreshDateHint(); if (current <= 3) refreshHalls(); saveDraft(); });
+    form.addEventListener('change', () => { refreshHalls(); saveDraft(); });
     form.addEventListener('submit', submit);
     nextButton.addEventListener('click', next);
     backButton.addEventListener('click', () => { clearError(); showStep(Math.max(1, current - 1), true); });
@@ -446,21 +439,21 @@ function initReservationWizard() {
 
     restoreDraft();
     datePicker.show();
-    refreshNights();
+    refreshDateHint();
 
     if (root.dataset.availabilityUrl) {
         fetch(root.dataset.availabilityUrl, { headers: { Accept: 'application/json' } })
             .then((response) => (response.ok ? response.json() : Promise.reject(new Error('availability unavailable'))))
             .then((availability) => {
                 datePicker.setAvailability(availability.dates);
-                refreshNights();
+                refreshDateHint();
             })
-            .catch(() => { /* the server still checks every night when the guest continues */ });
+            .catch(() => { /* the server still checks the date when the client continues */ });
     }
 
-    refreshUnits();
+    refreshHalls();
     showStep(current);
-    preselect(root.dataset.preselectUnit || '');
+    preselect(root.dataset.preselectHall || '');
 }
 
 document.addEventListener('DOMContentLoaded', initReservationWizard);

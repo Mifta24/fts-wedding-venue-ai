@@ -1,8 +1,8 @@
 /**
- * The date range picker on the stay request wizard. It replaces the browser's
- * own date inputs, which ignore the guest's language and cannot show which
- * days are fully booked. The chosen dates live in two hidden inputs, so the
- * wizard reads, saves and validates them exactly as before.
+ * The single-date picker on the date request wizard. It replaces the browser's
+ * own date input, which ignores the client's language and cannot show which
+ * days are already taken. The chosen date lives in one hidden input, so the
+ * wizard reads, saves and validates it like any other field.
  */
 const DAY_MS = 86400000;
 
@@ -13,36 +13,27 @@ const addDays = (iso, days) => {
     const date = new Date(Date.UTC(year, month - 1, day) + days * DAY_MS);
     return toIso(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate());
 };
-const diffDays = (from, to) => {
-    const [y1, m1, d1] = parse(from);
-    const [y2, m2, d2] = parse(to);
-    return Math.round((Date.UTC(y2, m2 - 1, d2) - Date.UTC(y1, m1 - 1, d1)) / DAY_MS);
-};
 
 /**
  * @param {object} options
  * @param {HTMLElement} options.root  The [data-date-picker] element.
- * @param {HTMLInputElement} options.checkIn
- * @param {HTMLInputElement} options.checkOut
- * @param {{today: string, maxNights: number, locale: string}} options.config
+ * @param {HTMLInputElement} options.eventDate
+ * @param {{today: string, locale: string, weekdayDeal: boolean}} options.config
  * @param {Record<string, string>} options.labels
  * @param {(iso: string) => string} options.formatDate
- * @param {() => void} options.onChange  Called after the guest changes either date.
+ * @param {() => void} options.onChange  Called after the client picks a date.
  */
-export function createDatePicker({ root, checkIn, checkOut, config, labels, formatDate, onChange }) {
+export function createDatePicker({ root, eventDate, config, labels, formatDate, onChange }) {
     const grid = root.querySelector('[data-cal-grid]');
     const title = root.querySelector('[data-cal-title]');
     const weekdays = root.querySelector('[data-cal-weekdays]');
     const prevButton = root.querySelector('[data-cal-prev]');
     const nextButton = root.querySelector('[data-cal-next]');
-    const slots = {
-        check_in: root.querySelector('[data-slot="check_in"]'),
-        check_out: root.querySelector('[data-slot="check_out"]'),
-    };
+    const slot = root.querySelector('[data-slot="event_date"]');
 
-    /** @type {Set<string>|null} Open nights, or null while unknown (then every future day is allowed). */
-    let openNights = null;
-    let lastNight = null;
+    /** @type {Set<string>|null} Open dates, or null while unknown (then every future day is allowed). */
+    let openDates = null;
+    let lastDate = null;
     let [year, month] = parse(config.today);
 
     const monthTitle = new Intl.DateTimeFormat(config.locale, { month: 'long', year: 'numeric' });
@@ -56,41 +47,20 @@ export function createDatePicker({ root, checkIn, checkOut, config, labels, form
         return name;
     }));
 
-    const isOpenNight = (iso) => iso >= config.today && (openNights === null || openNights.has(iso));
+    const isOpen = (iso) => iso >= config.today && (openDates === null || openDates.has(iso));
 
-    /** The latest move-out date reachable from the chosen move-in without crossing a fully booked night. */
-    function latestCheckOut(from) {
-        let limit = addDays(from, config.maxNights);
-        for (let night = from; night < limit; night = addDays(night, 1)) {
-            if (!isOpenNight(night)) return night;
-        }
-        return limit;
-    }
-
-    function selectable(iso) {
-        const from = checkIn.value;
-        const choosingOut = from && !checkOut.value;
-
-        if (choosingOut && iso > from) return iso <= latestCheckOut(from);
-
-        return isOpenNight(iso);
-    }
-
-    function setDates(from, to) {
-        checkIn.value = from;
-        checkOut.value = to;
-        onChange();
-        render();
-    }
+    /** Monday to Thursday: the days a weekday discount applies to. */
+    const isWeekday = (iso) => {
+        const [y, m, d] = parse(iso);
+        const day = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+        return day >= 1 && day <= 4;
+    };
 
     function pick(iso) {
-        const from = checkIn.value;
-
-        if (from && !checkOut.value && iso > from) {
-            setDates(from, iso);
-        } else if (isOpenNight(iso)) {
-            setDates(iso, '');
-        }
+        if (!isOpen(iso)) return;
+        eventDate.value = iso;
+        onChange();
+        render();
     }
 
     function moveFocus(cell, step) {
@@ -109,8 +79,7 @@ export function createDatePicker({ root, checkIn, checkOut, config, labels, form
         const first = new Date(Date.UTC(year, month - 1, 1));
         const offset = (first.getUTCDay() + 6) % 7;
         const total = new Date(Date.UTC(year, month, 0)).getUTCDate();
-        const from = checkIn.value;
-        const to = checkOut.value;
+        const chosen = eventDate.value;
         const cells = [];
         let tabbable = null;
 
@@ -119,7 +88,7 @@ export function createDatePicker({ root, checkIn, checkOut, config, labels, form
         for (let day = 1; day <= total; day += 1) {
             const iso = toIso(year, month, day);
             const button = document.createElement('button');
-            const allowed = selectable(iso);
+            const allowed = isOpen(iso);
 
             button.type = 'button';
             button.textContent = String(day);
@@ -133,12 +102,13 @@ export function createDatePicker({ root, checkIn, checkOut, config, labels, form
 
             if (iso < config.today) button.classList.add('is-past');
             else if (!allowed) button.classList.add('is-full');
-            if (iso === from) button.classList.add('is-start');
-            if (iso === to) button.classList.add('is-end');
-            if (from && to && iso > from && iso < to) button.classList.add('is-between');
-            if (iso === from || iso === to) button.setAttribute('aria-pressed', 'true');
+            else if (config.weekdayDeal && isWeekday(iso)) button.classList.add('is-deal');
+            if (iso === chosen) {
+                button.classList.add('is-start');
+                button.setAttribute('aria-pressed', 'true');
+            }
 
-            if (allowed && (tabbable === null || iso === from)) tabbable = button;
+            if (allowed && (tabbable === null || iso === chosen)) tabbable = button;
             cells.push(button);
         }
 
@@ -151,13 +121,11 @@ export function createDatePicker({ root, checkIn, checkOut, config, labels, form
 
         const [currentYear, currentMonth] = parse(config.today);
         prevButton.disabled = year === currentYear && month === currentMonth;
-        const ceiling = (lastNight ? addDays(lastNight, 1) : addDays(config.today, 366)).slice(0, 7);
+        const ceiling = (lastDate ?? addDays(config.today, 730)).slice(0, 7);
         nextButton.disabled = toIso(year, month, 1).slice(0, 7) >= ceiling;
 
-        slots.check_in.querySelector('[data-slot-value]').textContent = from ? formatDate(from) : labels.cal_choose;
-        slots.check_out.querySelector('[data-slot-value]').textContent = to ? formatDate(to) : labels.cal_choose;
-        slots.check_in.toggleAttribute('data-active', !from || Boolean(to));
-        slots.check_out.toggleAttribute('data-active', Boolean(from) && !to);
+        slot.querySelector('[data-slot-value]').textContent = chosen ? formatDate(chosen) : labels.cal_choose;
+        slot.toggleAttribute('data-active', !chosen);
     }
 
     function step(delta) {
@@ -185,23 +153,22 @@ export function createDatePicker({ root, checkIn, checkOut, config, labels, form
     nextButton.addEventListener('click', () => step(1));
 
     return {
-        /** Applies the nights the server says are open. A failed or empty answer leaves the picker permissive or closed, respectively. */
+        /** Applies the dates the server says are open. A failed or empty answer leaves the picker permissive or closed, respectively. */
         setAvailability(dates) {
-            openNights = new Set(dates);
-            lastNight = dates.length ? dates[dates.length - 1] : null;
+            openDates = new Set(dates);
+            lastDate = dates.length ? dates[dates.length - 1] : null;
             render();
         },
-        get hasOpenNights() {
-            return openNights === null || openNights.size > 0;
+        get hasOpenDates() {
+            return openDates === null || openDates.size > 0;
         },
-        /** Shows the month of the chosen move-in, or the current month. */
+        /** Shows the month of the chosen date, or the current month. */
         show() {
-            [year, month] = parse(checkIn.value || config.today);
+            [year, month] = parse(eventDate.value || config.today);
             render();
         },
         clear() {
-            checkIn.value = '';
-            checkOut.value = '';
+            eventDate.value = '';
             this.show();
         },
     };

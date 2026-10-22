@@ -31,8 +31,8 @@ class ConciergeChatTest extends TestCase
             'services.local_llm.model' => 'test-model',
         ]);
 
-        $this->venue = Venue::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published', 'city' => 'Bali', 'country' => 'Indonesia', 'currency' => 'IDR', 'default_locale' => 'en']);
-        $this->deluxe = $this->venue->halls()->create([
+        $this->venue = Venue::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published', 'city' => 'Tangerang Selatan', 'country' => 'Indonesia', 'currency' => 'IDR', 'default_locale' => 'en']);
+        $this->garden = $this->venue->halls()->create([
             'name' => 'Garden Pavilion', 'slug' => 'garden-pavilion', 'base_price' => 1000000, 'is_active' => true,
         ]);
     }
@@ -171,12 +171,12 @@ class ConciergeChatTest extends TestCase
         $token = $this->startConversation();
 
         $this->postJson('/demo/concierge/message', [
-            'client_token' => $token, 'message' => 'Does this hall have a bathtub?', 'scene' => 'hall_detail', 'selected_hall' => 'garden-pavilion',
+            'client_token' => $token, 'message' => 'Does this hall have a bridal room?', 'scene' => 'hall_detail', 'selected_hall' => 'garden-pavilion',
         ])->assertOk();
 
         $conversation = Conversation::firstOrFail();
         $this->assertSame('hall_detail', $conversation->current_scene);
-        $this->assertSame($this->deluxe->id, $conversation->selected_hall_id);
+        $this->assertSame($this->garden->id, $conversation->selected_hall_id);
 
         $prompt = $this->systemPromptOfLastRequest();
         $this->assertStringContainsString('Current scene: hall_detail', $prompt);
@@ -251,12 +251,12 @@ class ConciergeChatTest extends TestCase
     public function test_a_price_quoted_without_a_tool_call_is_challenged_once(): void
     {
         Http::fake(['llm.test/*' => Http::sequence()
-            ->push($this->completion('Garden Pavilion starts at Rp 1.200.000 per night.'))
+            ->push($this->completion('Garden Pavilion starts at Rp 1.200.000 per event.'))
             ->push($this->completion(null, [$this->toolCall('get_hall_detail', ['hall_slug' => 'garden-pavilion'])]))
             ->push($this->completion('Here are the halls, with real prices.'))]);
         $token = $this->startConversation();
 
-        $this->postJson('/demo/concierge/message', ['client_token' => $token, 'message' => 'How much is the deluxe?'])
+        $this->postJson('/demo/concierge/message', ['client_token' => $token, 'message' => 'How much is the Garden Pavilion?'])
             ->assertOk()
             ->assertJsonPath('message.content', 'Here are the halls, with real prices.');
 

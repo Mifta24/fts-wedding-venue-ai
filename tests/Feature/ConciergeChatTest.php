@@ -264,6 +264,36 @@ class ConciergeChatTest extends TestCase
         Http::assertSent(fn (Request $request) => str_contains(collect($request['messages'])->last()['content'] ?? '', 'without calling a tool'));
     }
 
+    public function test_photo_links_written_without_a_tool_call_are_challenged_once(): void
+    {
+        Http::fake(['llm.test/*' => Http::sequence()
+            ->push($this->completion('Photos: [Lihat Foto](https://images.example.com/a.jpg)'))
+            ->push($this->completion(null, [$this->toolCall('get_hall_detail', ['hall_slug' => 'garden-pavilion'])]))
+            ->push($this->completion('Here is the gallery.'))]);
+        $token = $this->startConversation();
+
+        $this->postJson('/demo/concierge/message', ['client_token' => $token, 'message' => 'Show me photos of the Garden Pavilion'])
+            ->assertOk()
+            ->assertJsonPath('message.content', 'Here is the gallery.')
+            ->assertJsonPath('message.ui_payload.0.type', 'hall_detail');
+
+        Http::assertSentCount(3);
+    }
+
+    public function test_a_named_hall_is_looked_up_even_when_the_model_skips_the_tool(): void
+    {
+        Http::fake(['llm.test/*' => Http::sequence()
+            ->push($this->completion('It is a lovely hall with space for everyone.'))
+            ->push($this->completion('Here is the Garden Pavilion.'))]);
+        $token = $this->startConversation();
+
+        $this->postJson('/demo/concierge/message', ['client_token' => $token, 'message' => 'Tell me about the Garden Pavilion'])
+            ->assertOk()
+            ->assertJsonPath('message.content', 'Here is the Garden Pavilion.')
+            ->assertJsonPath('message.ui_payload.0.type', 'hall_detail')
+            ->assertJsonPath('message.ui_payload.0.hall.hall_slug', 'garden-pavilion');
+    }
+
     public function test_the_reservation_draft_reaches_the_concierge_without_personal_data(): void
     {
         $this->fakeReply();

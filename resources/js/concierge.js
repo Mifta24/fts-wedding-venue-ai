@@ -261,8 +261,11 @@ function initConcierge() {
         if (role === 'client') {
             inner.textContent = text;
         } else {
-            // The local model writes **bold**; escape everything first, then turn only that into <strong>.
-            inner.innerHTML = esc(text).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            // The local model writes **bold** and [links](https://…); escape everything first, then turn only those into markup.
+            inner.innerHTML = esc(text)
+                .replace(/!\[[^\]]*\]\(https?:\/\/[^\s)]+\)\s*/g, '')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="underline">$1</a>');
         }
 
         wrap.appendChild(inner);

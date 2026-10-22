@@ -2,12 +2,14 @@
 
 namespace Database\Seeders;
 
+use App\Models\Booking;
 use App\Models\Hall;
 use App\Models\HallInventory;
 use App\Models\User;
 use App\Models\Venue;
 use App\Models\VenueKnowledgeItem;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 
 class DemoVenueSeeder extends Seeder
@@ -87,6 +89,7 @@ class DemoVenueSeeder extends Seeder
             $this->seedInventory($hall);
         }
 
+        $this->seedBookings($venue);
         $this->seedKnowledgeBase($venue);
 
         $this->command?->info('Demo login: owner@ftswedding.test — password: password');
@@ -269,6 +272,56 @@ class DemoVenueSeeder extends Seeder
                     'price' => round((float) $hall->base_price * $multiplier, -5),
                 ]
             );
+        }
+    }
+
+    /**
+     * A handful of couples at different stages, so the admin dashboard and the bookings
+     * list are not empty on a fresh demo. Fixed references keep re-seeding idempotent.
+     */
+    private function seedBookings(Venue $venue): void
+    {
+        $samples = [
+            ['reference' => 'WD-DEMO01', 'hall' => 'grand-ballroom-aurora', 'weeks' => 10, 'client_name' => 'Aditya & Salsabila', 'client_email' => 'aditya.salsa@example.com', 'client_phone' => '6281311110001', 'contact_type' => 'whatsapp', 'event_type' => Booking::EVENT_AKAD_RECEPTION, 'guest_count' => 650, 'status' => Booking::STATUS_CONFIRMED, 'notes' => 'Tema ivory dan emas, mohon dekor pelaminan bunga segar.'],
+            ['reference' => 'WD-DEMO02', 'hall' => 'garden-pavilion-mawar', 'weeks' => 14, 'client_name' => 'Rizky & Nabila', 'client_email' => 'rizky.nabila@example.com', 'client_phone' => '6281311110002', 'contact_type' => 'whatsapp', 'event_type' => Booking::EVENT_RECEPTION, 'guest_count' => 300, 'status' => Booking::STATUS_PENDING, 'notes' => 'Resepsi sore hingga malam, butuh paket katering.'],
+            ['reference' => 'WD-DEMO03', 'hall' => 'chandelier-salon', 'weeks' => 6, 'client_name' => 'Bima & Citra', 'client_email' => 'bima.citra@example.com', 'client_phone' => '6281311110003', 'contact_type' => 'phone', 'event_type' => Booking::EVENT_ENGAGEMENT, 'guest_count' => 40, 'status' => Booking::STATUS_PENDING, 'notes' => null],
+            ['reference' => 'WD-DEMO04', 'hall' => 'lakeside-terrace-danau', 'weeks' => 20, 'client_name' => 'Fajar & Putri', 'client_email' => 'fajar.putri@example.com', 'client_phone' => null, 'contact_type' => 'email', 'event_type' => Booking::EVENT_AKAD, 'guest_count' => 120, 'status' => Booking::STATUS_CANCELLED, 'notes' => 'Dibatalkan, pindah ke kota asal mempelai.'],
+        ];
+
+        foreach ($samples as $sample) {
+            $hall = $venue->halls()->where('slug', $sample['hall'])->first();
+            if (! $hall) {
+                continue;
+            }
+
+            $date = now()->startOfDay()->addWeeks($sample['weeks'])->next(Carbon::SATURDAY);
+            $inventory = HallInventory::where('hall_id', $hall->id)->whereDate('event_date', $date)->first();
+            $total = (float) ($inventory?->price ?? $hall->base_price);
+
+            Booking::updateOrCreate(
+                ['reference' => $sample['reference']],
+                [
+                    'venue_id' => $venue->id,
+                    'hall_id' => $hall->id,
+                    'client_name' => $sample['client_name'],
+                    'client_email' => $sample['client_email'],
+                    'client_phone' => $sample['client_phone'],
+                    'contact_type' => $sample['contact_type'],
+                    'locale' => 'id',
+                    'event_date' => $date,
+                    'event_type' => $sample['event_type'],
+                    'guest_count' => $sample['guest_count'],
+                    'extra_hours' => 0,
+                    'total_price' => $total,
+                    'deposit_amount' => round($total * $venue->deposit_percent / 100, 2),
+                    'status' => $sample['status'],
+                    'notes' => $sample['notes'],
+                ]
+            );
+
+            if ($inventory && $sample['status'] !== Booking::STATUS_CANCELLED) {
+                $inventory->update(['booked_slots' => max(1, $inventory->booked_slots)]);
+            }
         }
     }
 

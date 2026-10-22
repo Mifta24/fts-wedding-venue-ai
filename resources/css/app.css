@@ -162,8 +162,12 @@
 .lobby-content:focus { outline: none; }
 .lobby-content > .lobby-eyebrow, .hall-scene .lobby-eyebrow { color: var(--muted); }
 .lobby-content h2 { margin-top: 10px; font-family: var(--font-serif); font-size: clamp(34px, 3.4vw, 52px); font-weight: 500; line-height: 1.04; letter-spacing: -.01em; }
-.stage:has(.hall-directory) .lobby-content { right: calc(var(--col) + var(--gap) * 2); }
-.stage:has(.stage-chat.is-open) .lobby-content { right: calc(var(--col) + var(--gap) * 2); }
+/* Desktop only: on a phone the panel always spans the screen, and the minifier would otherwise merge these two rules
+   into one :is() that outranks the phone override and squeezes the panel to a sliver. */
+@media (min-width: 900px) {
+    .stage:has(.hall-directory) .lobby-content { right: calc(var(--col) + var(--gap) * 2); }
+    .stage:has(.stage-chat.is-open) .lobby-content { right: calc(var(--col) + var(--gap) * 2); }
+}
 .panel-close { position: sticky; top: 0; z-index: 2; float: right; display: grid; place-items: center; width: 40px; height: 40px; margin: -10px -12px 0 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); font-size: 22px; line-height: 1; transition: background .2s; }
 .panel-close:hover { background: white; }
 .lobby-action { display: inline-flex; align-items: center; gap: 18px; border-radius: 999px; background: var(--ink); color: white; padding: 13px 18px; font-size: 13.5px; font-weight: 500; cursor: pointer; transition: background .2s, color .2s; }

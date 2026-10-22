@@ -70,6 +70,7 @@ function initConcierge() {
     const draftDiscard = root.querySelector('[data-draft-discard]');
     const chatLog = root.querySelector('#concierge-chat-log');
     const closeButton = widget.querySelector('[data-chat-close]');
+    const newChatButton = widget.querySelector('[data-chat-new]');
     const launcher = widget.querySelector('[data-chat-launcher]');
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
 
@@ -592,6 +593,7 @@ function initConcierge() {
         inputEl.disabled = disabled;
         submitEl.disabled = disabled;
         if (launcher) launcher.disabled = busy || !ready;
+        if (newChatButton) newChatButton.disabled = busy || !ready;
         root.setAttribute('aria-busy', String(busy));
         document.body.classList.toggle('is-thinking', busy);
         if (thinkingIndicator) {
@@ -889,6 +891,40 @@ function initConcierge() {
 
         scrollToBottom();
     }
+
+    /** Drops the stored conversation and starts a fresh one with the intro and quick menu. */
+    async function startNewChat() {
+        if (busy || !ready) return;
+
+        ready = false;
+        setBusy(true);
+        closeShowcase();
+        hideDraftDialog();
+        stopPolling();
+
+        localStorage.removeItem(config.storageKey);
+        messagesEl.replaceChildren();
+        inputEl.value = '';
+        knownMessageCount = 0;
+        handedOver = false;
+        statusBanner.classList.add('hidden');
+        setChatStatus('');
+
+        try {
+            await boot();
+        } catch {
+            statusBanner.textContent = root.dataset.labelConnectionError;
+            statusBanner.classList.remove('hidden');
+            messagesEl.appendChild(bubble('assistant', config.labels.intro));
+        } finally {
+            ready = true;
+            setBusy(false);
+            scrollToBottom();
+            inputEl.focus();
+        }
+    }
+
+    newChatButton?.addEventListener('click', startNewChat);
 
     formEl.addEventListener('submit', (event) => {
         event.preventDefault();

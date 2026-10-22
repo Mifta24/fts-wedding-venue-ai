@@ -14,10 +14,12 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\ConciergeChatController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\VenuePageController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [VenuePageController::class, 'index'])->name('home');
+Route::get('sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('guest')->group(function () {
@@ -64,6 +66,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 Route::prefix('{venueSlug}')->group(function () {
     Route::get('/', [VenuePageController::class, 'show'])->name('venue.show');
+    Route::get('sitemap.xml', [SitemapController::class, 'venue'])->name('venue.sitemap');
     Route::get('halls', [VenuePageController::class, 'halls'])->name('venue.halls');
     Route::get('halls/{hallSlug}', [VenuePageController::class, 'hall'])->name('venue.hall');
     Route::get('services', [VenuePageController::class, 'services'])->name('venue.services');

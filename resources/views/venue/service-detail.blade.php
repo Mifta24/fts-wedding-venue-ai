@@ -1,4 +1,4 @@
-<x-venue-stage :venue="$venue" :locale="$locale" :supported-locales="$supportedLocales" :labels="$labels" :lobby="$lobby" :narration="$narration" :scene="$scene" :chapter="$chapter" :backdrop="$backdrop" :menu-items="$menuItems" :title="$service->translatedTitle($locale).' · '.$venue->name">
+<x-venue-stage :venue="$venue" :locale="$locale" :supported-locales="$supportedLocales" :labels="$labels" :lobby="$lobby" :narration="$narration" :scene="$scene" :chapter="$chapter" :backdrop="$backdrop" :menu-items="$menuItems" :title="$service->translatedTitle($locale).' · '.$venue->name" :description="$service->translatedBody($locale)" :og-image="$service->image_url">
     @php
         $title = $service->translatedTitle($locale);
         $serviceUrl = fn ($item) => route('venue.service', ['venueSlug' => $venue->slug, 'serviceId' => $item->id, 'lang' => $locale]);

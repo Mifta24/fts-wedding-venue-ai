@@ -1,9 +1,13 @@
-@props(['venue', 'locale', 'supportedLocales', 'labels', 'lobby', 'narration', 'scene', 'chapter', 'backdrop', 'menuItems', 'title' => null, 'welcome' => null, 'sidebar' => null])
+@props(['venue', 'locale', 'supportedLocales', 'labels', 'lobby', 'narration', 'scene', 'chapter', 'backdrop', 'menuItems', 'title' => null, 'welcome' => null, 'sidebar' => null, 'description' => null, 'ogImage' => null])
 {{-- The fixed full-screen stage every chapter shares: photo, velvet curtains, chapter display, order-of-the-day panel and the concierge chat dock. --}}
 @php
     $lobbyUrl = route('venue.show', ['venueSlug' => $venue->slug, 'lang' => $locale]);
     $currentKey = ['hall' => 'halls', 'service' => 'services'][$scene] ?? $scene;
     $currentLabel = collect($menuItems)->firstWhere('key', $currentKey)['label'] ?? $lobby['home'];
+    $pageTitle = $title ?? $venue->name.' · AI Wedding Concierge';
+    $pageDescription = \Illuminate\Support\Str::limit(strip_tags((string) ($description ?: $venue->translatedDescription($locale) ?: $venue->name)), 160);
+    $pageImage = $ogImage ?: ($venue->cover_path ?: $backdrop['image']);
+    $ogLocales = ['id' => 'id_ID', 'en' => 'en_US', 'ja' => 'ja_JP'];
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', $locale) }}">
@@ -11,7 +15,23 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $title ?? $venue->name.' · AI Wedding Concierge' }}</title>
+    <title>{{ $pageTitle }}</title>
+    <meta name="description" content="{{ $pageDescription }}">
+    <link rel="canonical" href="{{ url()->current() }}?lang={{ $locale }}">
+    @foreach ($supportedLocales as $code)
+        <link rel="alternate" hreflang="{{ $code }}" href="{{ url()->current() }}?lang={{ $code }}">
+    @endforeach
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{ $venue->name }}">
+    <meta property="og:title" content="{{ $pageTitle }}">
+    <meta property="og:description" content="{{ $pageDescription }}">
+    <meta property="og:url" content="{{ url()->current() }}?lang={{ $locale }}">
+    <meta property="og:image" content="{{ $pageImage }}">
+    <meta property="og:locale" content="{{ $ogLocales[$locale] ?? 'id_ID' }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $pageTitle }}">
+    <meta name="twitter:description" content="{{ $pageDescription }}">
+    <meta name="twitter:image" content="{{ $pageImage }}">
     @fonts
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

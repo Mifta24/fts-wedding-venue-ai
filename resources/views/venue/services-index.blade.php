@@ -14,7 +14,7 @@
                     <a href="{{ route('venue.service', ['venueSlug' => $venue->slug, 'serviceId' => $item->id, 'lang' => $locale]) }}" data-stage-exit class="service-card">
                         <span class="service-card-photo">
                             @if ($item->image_url)
-                                <img src="{{ $item->image_url }}" alt="" loading="lazy">
+                                <img src="{{ $item->image_url }}" alt="{{ $title }}" loading="lazy">
                             @endif
                             <span class="service-card-icon"><x-service-icon :name="$item->iconName()" /></span>
                         </span>

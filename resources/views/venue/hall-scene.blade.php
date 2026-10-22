@@ -25,7 +25,7 @@
             <div data-hall-gallery>
                 <div class="hall-scene-photo">
                     @if ($primaryImage)
-                        <img src="{{ $primaryImage->image_source }}" alt="{{ $primaryImage->alt_text }}" data-hall-gallery-main>
+                        <img src="{{ $primaryImage->image_source }}" alt="{{ $primaryImage->alt_text ?: $hallName }}" data-hall-gallery-main>
                     @else
                         <div class="grid h-full place-items-center text-sm">{{ $lobby['no_photo'] }}</div>
                     @endif
@@ -35,7 +35,7 @@
                     <ul class="mt-2 grid grid-cols-4 gap-2" aria-label="{{ $lobby['gallery'] }}">
                         @foreach ($hall->images as $imageIndex => $image)
                             <li>
-                                <button type="button" class="hall-scene-thumb" data-hall-thumb data-src="{{ $image->image_source }}" data-alt="{{ $image->alt_text }}" aria-label="{{ $lobby['photo'] }} {{ $imageIndex + 1 }}" @if($imageIndex === 0) aria-current="true" @endif>
+                                <button type="button" class="hall-scene-thumb" data-hall-thumb data-src="{{ $image->image_source }}" data-alt="{{ $image->alt_text ?: $hallName }}" aria-label="{{ $lobby['photo'] }} {{ $imageIndex + 1 }}" @if($imageIndex === 0) aria-current="true" @endif>
                                     <img src="{{ $image->image_source }}" alt="" class="h-full w-full object-cover" loading="lazy">
                                 </button>
                             </li>

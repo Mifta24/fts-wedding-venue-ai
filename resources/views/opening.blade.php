@@ -4,6 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Wedding Venue AI</title>
+    <meta name="description" content="{{ $opening['tagline'] }}">
+    <link rel="canonical" href="{{ url()->current() }}?lang={{ $locale }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Wedding Venue AI">
+    <meta property="og:title" content="Wedding Venue AI">
+    <meta property="og:description" content="{{ $opening['tagline'] }}">
+    <meta property="og:url" content="{{ url()->current() }}?lang={{ $locale }}">
+    <meta property="og:image" content="{{ $openingImage }}">
+    <meta name="twitter:card" content="summary_large_image">
     @fonts
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

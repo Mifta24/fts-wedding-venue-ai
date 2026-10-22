@@ -258,7 +258,12 @@ function initConcierge() {
 
         const inner = document.createElement('div');
         inner.className = role === 'client' ? 'chat-bubble is-client' : 'chat-bubble is-host';
-        inner.textContent = text;
+        if (role === 'client') {
+            inner.textContent = text;
+        } else {
+            // The local model writes **bold**; escape everything first, then turn only that into <strong>.
+            inner.innerHTML = esc(text).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        }
 
         wrap.appendChild(inner);
         return wrap;

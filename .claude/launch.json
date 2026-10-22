@@ -1,0 +1,17 @@
+{
+    "version": "0.0.1",
+    "configurations": [
+        {
+            "name": "wedding-venue-ai-dev",
+            "runtimeExecutable": "php",
+            "runtimeArgs": ["artisan", "dev"],
+            "port": 8000
+        },
+        {
+            "name": "wedding-venue-ai-preview",
+            "runtimeExecutable": "php",
+            "runtimeArgs": ["artisan", "serve", "--port=8030"],
+            "port": 8030
+        }
+    ]
+}

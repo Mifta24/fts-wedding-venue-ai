@@ -109,6 +109,35 @@ class AdminAccessTest extends TestCase
         $this->post(route('admin.login.store'), ['email' => $this->staff->email, 'password' => 'wrong'])->assertTooManyRequests();
     }
 
+    public function test_hall_photo_links_must_be_https_urls(): void
+    {
+        $form = [
+            'name' => 'Garden', 'setting' => 'outdoor', 'min_guests' => 50, 'max_guests' => 200,
+            'base_price' => 1000000, 'is_active' => 1,
+        ];
+
+        foreach (['javascript:alert(1)', 'http://example.test/a.jpg', 'not a url', 'https://example.test/'.str_repeat('a', 2100)] as $bad) {
+            $this->actingAs($this->staff)
+                ->post(route('admin.halls.store'), [...$form, 'new_images' => [['url' => $bad]]])
+                ->assertSessionHasErrors('new_images.0.url');
+        }
+
+        $this->assertSame(0, $this->venue->halls()->count());
+
+        $this->actingAs($this->staff)
+            ->post(route('admin.halls.store'), [...$form, 'new_images' => [['url' => 'https://example.test/a.jpg', 'alt' => 'Aisle'], ['url' => '']]])
+            ->assertSessionHasNoErrors();
+
+        $this->assertSame(['https://example.test/a.jpg'], $this->venue->halls()->firstOrFail()->images()->pluck('image_url')->all());
+    }
+
+    public function test_hall_validation_message_is_in_indonesian(): void
+    {
+        $this->actingAs($this->staff)
+            ->post(route('admin.halls.store'), ['name' => 'Garden', 'setting' => 'outdoor', 'min_guests' => 100, 'max_guests' => 50, 'base_price' => 1])
+            ->assertSessionHasErrors(['max_guests' => __('admin.halls.max_guests_gte', [], 'id')]);
+    }
+
     public function test_staff_can_give_a_service_a_photo_and_only_a_real_url_is_accepted(): void
     {
         $item = $this->venue->knowledgeItems()->create(['category' => 'services', 'title' => 'Garden pool', 'body' => 'Open until 8pm.', 'is_active' => true]);

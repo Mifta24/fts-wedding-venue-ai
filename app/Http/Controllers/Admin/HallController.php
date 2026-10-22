@@ -108,8 +108,13 @@ class HallController extends Controller
             'amenities' => ['nullable', 'string'],
             'is_active' => ['sometimes', 'boolean'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
+            'new_images' => ['nullable', 'array', 'max:20'],
+            'new_images.*.url' => ['nullable', 'url:https', 'max:2048'],
+            'new_images.*.alt' => ['nullable', 'string', 'max:255'],
+            'new_images.*.tags' => ['nullable', 'string', 'max:255'],
         ], [
-            'max_guests.gte' => 'The maximum cannot be smaller than the minimum number of guests.',
+            'max_guests.gte' => __('admin.halls.max_guests_gte', [], 'id'),
+            'new_images.*.url.url' => __('admin.halls.image_url', [], 'id'),
         ]);
 
         $codes = fn (?string $list) => collect(explode(',', (string) $list))

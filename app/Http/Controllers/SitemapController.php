@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Hall;
 use App\Models\Venue;
 use App\Models\VenueKnowledgeItem;
 use App\Services\VenueContentCache;
@@ -30,8 +31,8 @@ class SitemapController extends Controller
 
         abort_unless($venue->isPublished(), 404);
 
-        $halls = $this->content->remember($venue, 'sitemap-halls', fn () => $venue->halls()->where('is_active', true)->orderBy('sort_order')->get(['id', 'slug', 'updated_at']));
-        $services = $this->content->remember($venue, 'sitemap-services', fn () => $venue->knowledgeItems()->where('is_active', true)
+        $halls = $this->content->rememberModels($venue, 'sitemap-halls', Hall::class, fn () => $venue->halls()->where('is_active', true)->orderBy('sort_order')->get(['id', 'slug', 'updated_at']));
+        $services = $this->content->rememberModels($venue, 'sitemap-services', VenueKnowledgeItem::class, fn () => $venue->knowledgeItems()->where('is_active', true)
             ->whereIn('category', [VenueKnowledgeItem::CATEGORY_SERVICES, VenueKnowledgeItem::CATEGORY_CATERING])
             ->orderBy('sort_order')->get(['id', 'updated_at']));
 

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Venue;
 use App\Models\VenueKnowledgeItem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -19,6 +20,10 @@ class VenueContentCacheTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        // The array store keeps objects as they are; production stores serialize and refuse to rebuild objects.
+        config(['cache.stores.array.serialize' => true]);
+        Cache::purge('array');
 
         $this->venue = Venue::create(['name' => 'Demo', 'slug' => 'demo', 'public_status' => 'published', 'currency' => 'IDR']);
     }

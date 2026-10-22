@@ -60,3 +60,82 @@ jobs:
       - run: npm ci && npm run build
 
       - run: php artisan test --compact
+
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: composer install --no-interaction --prefer-dist --no-progress
+
+      # Known vulnerabilities in the PHP packages that run on the server.
+      - run: composer audit
+
+      # Only runtime packages: build tools never reach the server.
+      - run: npm audit --omit=dev --audit-level=high
+
+  # Ships master to the Plesk server once everything above is green, with the same
+  # script used by hand. Skipped until the DEPLOY_* secrets exist, so it is safe to
+  # merge before the server side is ready.
+  deploy:
+    needs: [lint, tests, audit]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency:
+      group: deploy
+      cancel-in-progress: false
+    env:
+      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+    steps:
+      - name: Check the deploy secrets
+        id: configured
+        run: |
+          if [ -n "$DEPLOY_HOST" ]; then echo "enabled=true" >> "$GITHUB_OUTPUT"; else echo "enabled=false" >> "$GITHUB_OUTPUT"; fi
+
+      - uses: actions/checkout@v4
+        if: steps.configured.outputs.enabled == 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.configured.outputs.enabled == 'true'
+        with:
+          node-version: 22
+          cache: npm
+
+      # deploy.sh insists on being on master and level with origin/master.
+      - name: Check out master
+        if: steps.configured.outputs.enabled == 'true'
+        run: git checkout -B master origin/master
+
+      - name: Set up SSH
+        if: steps.configured.outputs.enabled == 'true'
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          SSH_USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          {
+            echo "Host plesk"
+            echo "  HostName $DEPLOY_HOST"
+            echo "  User $SSH_USER"
+            echo "  IdentityFile ~/.ssh/deploy_key"
+            echo "  StrictHostKeyChecking yes"
+          } > ~/.ssh/config
+
+      - name: Deploy
+        if: steps.configured.outputs.enabled == 'true'
+        run: ./deploy.sh

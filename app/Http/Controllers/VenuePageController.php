@@ -18,7 +18,7 @@ class VenuePageController extends Controller
     private const SUPPORTED_LOCALES = ['id', 'en', 'ja'];
 
     /** The concierge's face for the chat and narrator avatars. */
-    private const AVATAR_IMAGE = 'images/character/character avatar.jpg';
+    private const AVATAR_IMAGE = 'images/character/avatar.webp';
 
     /**
      * The concierge's poses, transparent cut-outs shown in front of the scene photo.
@@ -26,9 +26,9 @@ class VenuePageController extends Controller
      * @var array<string, string>
      */
     private const CHARACTER_POSES = [
-        'standing' => 'images/character/character standing.png',
-        'presenting' => 'images/character/character right hand.png',
-        'consulting' => 'images/character/character grateful.png',
+        'standing' => 'images/character/standing.webp',
+        'presenting' => 'images/character/presenting.webp',
+        'consulting' => 'images/character/consulting.webp',
     ];
 
     /**

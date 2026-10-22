@@ -6,6 +6,7 @@ use App\Http\Controllers\Concerns\ResolvesCurrentVenue;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Hall;
+use App\Services\ActivityLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -15,6 +16,8 @@ use Illuminate\View\View;
 class HallController extends Controller
 {
     use ResolvesCurrentVenue;
+
+    public function __construct(private readonly ActivityLogger $activity) {}
 
     public function index(Request $request): View
     {
@@ -42,6 +45,7 @@ class HallController extends Controller
 
         $hall = $venue->halls()->create($data);
         $this->syncImages($hall, $request);
+        $this->activity->record($venue, $request->user(), 'hall.created', "Hall \"{$hall->name}\" ditambahkan.", $hall);
 
         return redirect()->route('admin.halls.index')->with('status', "Hall \"{$hall->name}\" berhasil ditambahkan.");
     }
@@ -63,6 +67,7 @@ class HallController extends Controller
 
         $hall->update($this->validated($request, $hall));
         $this->syncImages($hall, $request);
+        $this->activity->record($venue, $request->user(), 'hall.updated', "Hall \"{$hall->name}\" diperbarui.", $hall);
 
         return redirect()->route('admin.halls.index')->with('status', "Hall \"{$hall->name}\" berhasil diperbarui.");
     }
@@ -82,6 +87,7 @@ class HallController extends Controller
         }
 
         $hall->delete();
+        $this->activity->record($venue, $request->user(), 'hall.deleted', "Hall \"{$hall->name}\" dihapus.", $hall);
 
         return redirect()->route('admin.halls.index')->with('status', 'Hall dihapus.');
     }
@@ -165,7 +171,7 @@ class HallController extends Controller
     {
         $deleteIds = collect($request->input('delete_images', []))->map(fn ($id) => (int) $id);
         if ($deleteIds->isNotEmpty()) {
-            $hall->images()->whereIn('id', $deleteIds)->delete();
+            $hall->images()->whereIn('id', $deleteIds)->get()->each->delete();
         }
 
         $newImages = collect($request->input('new_images', []))

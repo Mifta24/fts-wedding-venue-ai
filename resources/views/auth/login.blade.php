@@ -12,6 +12,12 @@
         <h1 class="font-serif text-3xl font-medium text-stone-900">Admin Wedding Venue</h1>
         <p class="mt-1 text-sm text-stone-500">Masuk untuk mengelola hall, tanggal, dan AI Wedding Concierge Anda.</p>
 
+        @if (session('status'))
+            <div class="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+                {{ session('status') }}
+            </div>
+        @endif
+
         @if ($errors->any())
             <div class="mt-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
                 {{ $errors->first() }}
@@ -37,6 +43,7 @@
             <button type="submit" class="w-full rounded-lg bg-ink px-3 py-2 text-sm font-medium text-white hover:bg-gold hover:text-gold-ink">
                 Masuk
             </button>
+            <p class="text-center text-sm"><a href="{{ route('admin.password.request') }}" class="text-stone-500 hover:underline">Lupa kata sandi?</a></p>
         </form>
     </div>
 </body>

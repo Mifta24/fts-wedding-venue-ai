@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Concerns\ResolvesCurrentVenue;
 use App\Http\Controllers\Controller;
 use App\Models\VenueKnowledgeItem;
+use App\Services\ActivityLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -12,6 +13,8 @@ use Illuminate\View\View;
 class KnowledgeItemController extends Controller
 {
     use ResolvesCurrentVenue;
+
+    public function __construct(private readonly ActivityLogger $activity) {}
 
     public function index(Request $request): View
     {
@@ -38,6 +41,7 @@ class KnowledgeItemController extends Controller
         $venue = $this->currentVenue($request);
 
         $item = $venue->knowledgeItems()->create($this->validated($request));
+        $this->activity->record($venue, $request->user(), 'knowledge.created', "Entri \"{$item->title}\" ditambahkan.", $item);
 
         return redirect()->route('admin.knowledge-items.index')->with('status', "Entri \"{$item->title}\" berhasil ditambahkan.");
     }
@@ -60,6 +64,7 @@ class KnowledgeItemController extends Controller
         abort_if($knowledgeItem->venue_id !== $venue->id, 404);
 
         $knowledgeItem->update($this->validated($request));
+        $this->activity->record($venue, $request->user(), 'knowledge.updated', "Entri \"{$knowledgeItem->title}\" diperbarui.", $knowledgeItem);
 
         return redirect()->route('admin.knowledge-items.index')->with('status', "Entri \"{$knowledgeItem->title}\" berhasil diperbarui.");
     }
@@ -70,6 +75,7 @@ class KnowledgeItemController extends Controller
         abort_if($knowledgeItem->venue_id !== $venue->id, 404);
 
         $knowledgeItem->delete();
+        $this->activity->record($venue, $request->user(), 'knowledge.deleted', "Entri \"{$knowledgeItem->title}\" dihapus.", $knowledgeItem);
 
         return redirect()->route('admin.knowledge-items.index')->with('status', 'Entri dihapus.');
     }

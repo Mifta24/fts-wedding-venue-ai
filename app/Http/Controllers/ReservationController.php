@@ -244,6 +244,7 @@ class ReservationController extends Controller
         $alternatives = $venue->halls()
             ->where('is_active', true)
             ->whereKeyNot($requested->id)
+            ->with('venue')
             ->orderBy('sort_order')
             ->get()
             ->filter(fn (Hall $hall) => $hall->fitsGuests($guests))

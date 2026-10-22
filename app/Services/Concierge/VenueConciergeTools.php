@@ -193,6 +193,7 @@ class VenueConciergeTools
 
         $candidates = $this->venue->halls()
             ->where('is_active', true)
+            ->with(['venue', 'images'])
             ->get()
             ->filter(fn (Hall $hall) => $hall->fitsGuests($guests))
             ->when($setting, fn ($c) => $c->filter(fn (Hall $hall) => $hall->setting === $setting))

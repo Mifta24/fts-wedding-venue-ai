@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\FlushesVenueContentCache;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -31,7 +32,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 ])]
 class Hall extends Model
 {
-    use HasFactory, SoftDeletes;
+    use FlushesVenueContentCache, HasFactory, SoftDeletes;
 
     public const SETTING_INDOOR = 'indoor';
 

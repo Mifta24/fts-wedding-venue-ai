@@ -1,13 +1,17 @@
 <?php
 
+use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HallController;
 use App\Http\Controllers\Admin\HallInventoryController;
 use App\Http\Controllers\Admin\HandoverController;
 use App\Http\Controllers\Admin\KnowledgeItemController;
+use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\VenueSettingController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\ConciergeChatController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\VenuePageController;
@@ -19,6 +23,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('guest')->group(function () {
         Route::get('login', [LoginController::class, 'create'])->name('login');
         Route::post('login', [LoginController::class, 'store'])->middleware('throttle:5,1')->name('login.store');
+
+        Route::get('forgot-password', [PasswordResetController::class, 'request'])->name('password.request');
+        Route::post('forgot-password', [PasswordResetController::class, 'email'])->middleware('throttle:5,1')->name('password.email');
+        Route::get('reset-password/{token}', [PasswordResetController::class, 'edit'])->name('password.reset');
+        Route::post('reset-password', [PasswordResetController::class, 'update'])->middleware('throttle:5,1')->name('password.update');
     });
 
     Route::middleware('auth')->group(function () {
@@ -35,6 +44,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('settings', [VenueSettingController::class, 'edit'])->name('settings.edit');
         Route::put('settings', [VenueSettingController::class, 'update'])->name('settings.update');
+
+        Route::get('account', [AccountController::class, 'edit'])->name('account.edit');
+        Route::put('account/password', [AccountController::class, 'updatePassword'])->middleware('throttle:5,1')->name('account.password');
+
+        Route::get('staff', [StaffController::class, 'index'])->name('staff.index');
+        Route::post('staff', [StaffController::class, 'store'])->name('staff.store');
+        Route::put('staff/{user}', [StaffController::class, 'update'])->name('staff.update');
+        Route::delete('staff/{user}', [StaffController::class, 'destroy'])->name('staff.destroy');
+
+        Route::get('activity', [ActivityLogController::class, 'index'])->name('activity.index');
 
         Route::get('handovers', [HandoverController::class, 'index'])->name('handovers.index');
         Route::get('handovers/{handover}', [HandoverController::class, 'show'])->name('handovers.show');

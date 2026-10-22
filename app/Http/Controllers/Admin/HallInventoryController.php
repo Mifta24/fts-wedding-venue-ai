@@ -6,6 +6,7 @@ use App\Http\Controllers\Concerns\ResolvesCurrentVenue;
 use App\Http\Controllers\Controller;
 use App\Models\Hall;
 use App\Models\HallInventory;
+use App\Services\ActivityLogger;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\RedirectResponse;
@@ -21,6 +22,8 @@ use Illuminate\View\View;
 class HallInventoryController extends Controller
 {
     use ResolvesCurrentVenue;
+
+    public function __construct(private readonly ActivityLogger $activity) {}
 
     /** The longest range one submit may open, so a typo cannot create years of rows. */
     private const MAX_RANGE_DAYS = 366;
@@ -102,6 +105,8 @@ class HallInventoryController extends Controller
                 ]);
             }
         });
+
+        $this->activity->record($venue, $request->user(), 'inventory.updated', "Kalender \"{$hall->name}\" diperbarui dari {$data['from']} sampai {$data['to']}.", $hall);
 
         return redirect()
             ->route('admin.halls.inventory.index', [$hall, 'month' => substr($data['from'], 0, 7)])

@@ -35,6 +35,10 @@ return [
         ],
     ],
 
+    'concierge' => [
+        'retention_days' => (int) env('CONCIERGE_RETENTION_DAYS', 90),
+    ],
+
     'local_llm' => [
         'base_url' => env('LOCAL_LLM_BASE_URL'),
         'api_key' => env('LOCAL_LLM_API_KEY'),

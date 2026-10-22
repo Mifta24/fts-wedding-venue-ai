@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\FlushesVenueContentCache;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -25,6 +26,8 @@ use Illuminate\Support\Str;
 ])]
 class VenueKnowledgeItem extends Model
 {
+    use FlushesVenueContentCache;
+
     public const CATEGORY_GENERAL = 'general';
 
     public const CATEGORY_SERVICES = 'services';

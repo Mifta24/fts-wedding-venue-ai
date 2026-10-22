@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Concerns\ResolvesCurrentVenue;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Services\ActivityLogger;
 use App\Services\Reservation\ReservationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ class BookingController extends Controller
 {
     use ResolvesCurrentVenue;
 
-    public function __construct(private readonly ReservationService $reservations) {}
+    public function __construct(private readonly ReservationService $reservations, private readonly ActivityLogger $activity) {}
 
     public function index(Request $request): View
     {
@@ -46,6 +47,8 @@ class BookingController extends Controller
         if (! $this->reservations->changeStatus($booking, $data['status'])) {
             return back()->with('error', "Reservasi {$booking->reference} berstatus ".Booking::statusLabel($booking->status).' dan tidak bisa diubah menjadi '.Booking::statusLabel($data['status']).'.');
         }
+
+        $this->activity->record($venue, $request->user(), 'booking.'.$data['status'], "Reservasi {$booking->reference} ditandai ".Booking::statusLabel($data['status']).'.', $booking);
 
         return back()->with('status', "Reservasi {$booking->reference} ditandai ".Booking::statusLabel($data['status']).'.');
     }

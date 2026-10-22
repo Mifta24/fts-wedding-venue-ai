@@ -26,6 +26,14 @@ class LoginController extends Controller
             return back()->withErrors(['email' => 'Email atau kata sandi salah.'])->onlyInput('email');
         }
 
+        if (! $request->user()->currentVenue()) {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return back()->withErrors(['email' => 'Akun ini tidak aktif atau belum terhubung ke gedung mana pun.'])->onlyInput('email');
+        }
+
         $request->session()->regenerate();
 
         return redirect()->intended(route('admin.dashboard'));

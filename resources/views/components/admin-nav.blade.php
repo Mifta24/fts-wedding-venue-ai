@@ -10,8 +10,12 @@
     ];
 
     if ($isOwner) {
+        $navItems[] = ['route' => 'admin.staff.index', 'label' => 'Tim'];
+        $navItems[] = ['route' => 'admin.activity.index', 'label' => 'Log aktivitas'];
         $navItems[] = ['route' => 'admin.settings.edit', 'label' => 'Pengaturan'];
     }
+
+    $navItems[] = ['route' => 'admin.account.edit', 'label' => 'Akun saya'];
 @endphp
 <nav class="space-y-1 px-2 py-4 text-sm" aria-label="Admin">
     @foreach ($navItems as $item)

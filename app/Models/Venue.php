@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\FlushesVenueContentCache;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -40,7 +41,12 @@ use Illuminate\Support\Str;
 ])]
 class Venue extends Model
 {
-    use HasFactory, SoftDeletes;
+    use FlushesVenueContentCache, HasFactory, SoftDeletes;
+
+    public function venueIdForContentCache(): ?int
+    {
+        return $this->id;
+    }
 
     /** Events on these ISO weekdays (Monday to Thursday) earn the weekday discount. */
     public const WEEKDAY_DISCOUNT_DAYS = [1, 2, 3, 4];
@@ -95,6 +101,11 @@ class Venue extends Model
     public function conversations(): HasMany
     {
         return $this->hasMany(Conversation::class);
+    }
+
+    public function activityLogs(): HasMany
+    {
+        return $this->hasMany(ActivityLog::class);
     }
 
     public function bookings(): HasMany

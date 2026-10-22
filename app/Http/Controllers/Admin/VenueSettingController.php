@@ -6,6 +6,7 @@ use App\Http\Controllers\Concerns\ResolvesCurrentVenue;
 use App\Http\Controllers\Controller;
 use App\Models\Venue;
 use App\Models\VenueUser;
+use App\Services\ActivityLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -18,6 +19,8 @@ use Illuminate\View\View;
 class VenueSettingController extends Controller
 {
     use ResolvesCurrentVenue;
+
+    public function __construct(private readonly ActivityLogger $activity) {}
 
     public function edit(Request $request): View
     {
@@ -58,6 +61,8 @@ class VenueSettingController extends Controller
                 'ja' => [...($venue->translations['ja'] ?? []), 'description' => $data['translations']['ja']['description'] ?? null],
             ],
         ]);
+
+        $this->activity->record($venue, $request->user(), 'settings.updated', 'Pengaturan gedung diperbarui.', $venue);
 
         return redirect()->route('admin.settings.edit')->with('status', 'Pengaturan gedung disimpan.');
     }

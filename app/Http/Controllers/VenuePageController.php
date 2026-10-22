@@ -8,6 +8,7 @@ use App\Models\Venue;
 use App\Models\VenueKnowledgeItem;
 use App\Services\Reservation\ReservationHandover;
 use App\Services\Reservation\ReservationService;
+use App\Services\VenueContentCache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -75,7 +76,7 @@ class VenuePageController extends Controller
         'staff' => 'VI',
     ];
 
-    public function __construct(private readonly ReservationHandover $handover) {}
+    public function __construct(private readonly ReservationHandover $handover, private readonly VenueContentCache $content) {}
 
     /**
      * What the AI concierge says when the client steps into a chapter.
@@ -303,16 +304,16 @@ class VenuePageController extends Controller
      */
     private function stageData(Venue $venue, string $locale, string $scene): array
     {
-        $halls = $venue->halls()
+        $halls = $this->content->remember($venue, 'halls', fn () => $venue->halls()
             ->where('is_active', true)
             ->with(['images' => fn ($q) => $q->orderBy('sort_order')])
             ->orderBy('sort_order')
             ->get()
-            ->values();
+            ->values());
 
-        $services = $venue->knowledgeItems()->where('is_active', true)
+        $services = $this->content->remember($venue, 'services', fn () => $venue->knowledgeItems()->where('is_active', true)
             ->whereIn('category', [VenueKnowledgeItem::CATEGORY_SERVICES, VenueKnowledgeItem::CATEGORY_CATERING])
-            ->orderBy('sort_order')->get()->values();
+            ->orderBy('sort_order')->get()->values());
 
         $labels = [
             ...$this->labels($locale),
@@ -339,9 +340,9 @@ class VenuePageController extends Controller
             'hallNarrations' => $this->hallNarrations($venue, $halls, $locale),
             'staffLinks' => $this->handover->forStaff($venue, $locale),
             'today' => now($venue->timezone)->toDateString(),
-            'infoItems' => $venue->knowledgeItems()->where('is_active', true)
+            'infoItems' => $this->content->remember($venue, 'info', fn () => $venue->knowledgeItems()->where('is_active', true)
                 ->whereIn('category', [VenueKnowledgeItem::CATEGORY_GENERAL, VenueKnowledgeItem::CATEGORY_POLICIES, VenueKnowledgeItem::CATEGORY_ACCESS, VenueKnowledgeItem::CATEGORY_FAQ])
-                ->orderBy('sort_order')->get()->groupBy('category'),
+                ->orderBy('sort_order')->get()->groupBy('category')),
             'services' => $services,
             'sceneNarrations' => $this->sceneNarrations($venue, $services, $locale),
             'maxExtraHours' => Hall::MAX_EXTRA_HOURS,

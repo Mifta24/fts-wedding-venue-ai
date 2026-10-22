@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Conversation;
 use App\Models\ConversationMessage;
 use App\Models\HandoverRequest;
+use App\Services\ActivityLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -14,6 +15,8 @@ use Illuminate\View\View;
 class HandoverController extends Controller
 {
     use ResolvesCurrentVenue;
+
+    public function __construct(private readonly ActivityLogger $activity) {}
 
     public function index(Request $request): View
     {
@@ -53,6 +56,8 @@ class HandoverController extends Controller
             'content' => $data['message'],
         ]);
 
+        $this->activity->record($venue, $request->user(), 'handover.replied', 'Membalas pasangan pada serah terima #'.$handover->id.'.', $handover);
+
         return back()->with('status', 'Balasan terkirim ke pasangan.');
     }
 
@@ -63,6 +68,8 @@ class HandoverController extends Controller
 
         $handover->update(['status' => HandoverRequest::STATUS_RESOLVED, 'resolved_at' => now(), 'assigned_to' => $request->user()->id]);
         $handover->conversation->update(['status' => Conversation::STATUS_ACTIVE]);
+
+        $this->activity->record($venue, $request->user(), 'handover.resolved', 'Serah terima #'.$handover->id.' diselesaikan.', $handover);
 
         return redirect()->route('admin.handovers.index')->with('status', 'Serah terima selesai — AI Concierge kembali menangani percakapan.');
     }

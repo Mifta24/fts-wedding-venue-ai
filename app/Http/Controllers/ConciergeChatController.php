@@ -69,7 +69,7 @@ class ConciergeChatController extends Controller
 
             return response()->json([
                 'error' => 'concierge_unavailable',
-                'message' => 'The AI Concierge is temporarily unavailable. Please try again in a moment.',
+                'message' => __('concierge.unavailable', [], $conversation->locale),
             ], 503);
         }
 
@@ -117,7 +117,7 @@ class ConciergeChatController extends Controller
 
         if (! $conversation) {
             throw ValidationException::withMessages([
-                'client_token' => 'This conversation no longer exists. Please start a new one.',
+                'client_token' => __('concierge.conversation_missing', [], $venue->default_locale),
             ]);
         }
 

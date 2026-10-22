@@ -333,6 +333,18 @@ class ConciergeChatTest extends TestCase
         $this->assertStringNotContainsString('ignore previous instructions', $this->systemPromptOfLastRequest());
     }
 
+    public function test_the_unavailable_message_follows_the_conversation_language(): void
+    {
+        Http::fake(['llm.test/*' => Http::response([], 500)]);
+        $token = $this->startConversation('id');
+
+        $this->postJson('/demo/concierge/message', ['client_token' => $token, 'message' => 'Halo'])
+            ->assertStatus(503)
+            ->assertJsonPath('message', __('concierge.unavailable', [], 'id'));
+
+        $this->assertNotSame(__('concierge.unavailable', [], 'id'), __('concierge.unavailable', [], 'en'));
+    }
+
     public function test_a_failing_model_returns_a_retryable_error_without_leaving_a_duplicate_message(): void
     {
         Http::fake(['llm.test/*' => Http::sequence()->pushStatus(500)->push($this->completion('Back online!'))]);
@@ -340,7 +352,8 @@ class ConciergeChatTest extends TestCase
 
         $this->postJson('/demo/concierge/message', ['client_token' => $token, 'message' => 'Hello'])
             ->assertStatus(503)
-            ->assertJsonPath('error', 'concierge_unavailable');
+            ->assertJsonPath('error', 'concierge_unavailable')
+            ->assertJsonPath('message', __('concierge.unavailable', [], 'en'));
 
         $this->assertSame(0, ConversationMessage::count());
 

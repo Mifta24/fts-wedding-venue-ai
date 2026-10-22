@@ -99,7 +99,7 @@ class ConciergeService
         if ($conversation->isHandedOver()) {
             return $conversation->messages()->create([
                 'role' => ConversationMessage::ROLE_SYSTEM,
-                'content' => 'This conversation is with the wedding team now. A team member will respond shortly.',
+                'content' => __('concierge.handed_over', [], $conversation->locale),
             ]);
         }
 

@@ -80,6 +80,10 @@ function initConcierge() {
     let pollTimer = null;
     let isOpen = false;
     let draftDialogOpen = false;
+    let showcaseEl = null;
+    let showcaseReturnFocus = null;
+    let showcaseTimer = null;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     function setChatStatus(text, tone = '') {
         if (!chatStatus) return;
@@ -149,6 +153,16 @@ function initConcierge() {
         finishClosePanel();
     });
     document.addEventListener('keydown', (event) => {
+        if (showcaseEl) {
+            if (event.key === 'Escape') {
+                closeShowcase();
+                event.stopImmediatePropagation();
+            } else if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+                showcaseEl._step?.(event.key === 'ArrowRight' ? 1 : -1);
+            }
+            return;
+        }
+
         if (event.key !== 'Escape') return;
 
         if (draftDialogOpen) {
@@ -164,6 +178,31 @@ function initConcierge() {
         const n = Number(value) || 0;
         const numberLocale = config.locale === 'ja' ? 'ja-JP' : config.locale === 'en' ? 'en-US' : 'id-ID';
         return `${config.currency} ${new Intl.NumberFormat(numberLocale, { maximumFractionDigits: 0 }).format(n)}`;
+    }
+
+    const moneyCount = (value) => `<span data-count="${Number(value) || 0}">${money(value)}</span>`;
+
+    /** Numbers climb from zero to their value; skipped for people who asked for less motion. */
+    function animateCounts(scope) {
+        if (reduceMotion.matches) return;
+
+        scope.querySelectorAll('[data-count]').forEach((el) => {
+            const target = Number(el.dataset.count) || 0;
+            const started = performance.now();
+            el.textContent = money(0);
+
+            const tick = (now) => {
+                const progress = Math.min(1, (now - started) / 1000);
+                el.textContent = money(Math.round(target * (1 - Math.pow(1 - progress, 3))));
+                if (progress < 1) {
+                    requestAnimationFrame(tick);
+                } else {
+                    delete el.dataset.count;
+                }
+            };
+
+            requestAnimationFrame(tick);
+        });
     }
 
     // Cloudflare drops a request that is still unanswered after 100s, so give
@@ -251,7 +290,7 @@ function initConcierge() {
             <div class="p-3">
                 <p class="chat-card-tag">${esc(facts)}</p>
                 <p class="mt-1 font-semibold">${esc(hall.name)}</p>
-                <p class="mt-1 text-sm font-semibold">${money(hall.total_price)} <span class="font-normal opacity-60">${esc(config.labels.perEvent)}</span></p>
+                <p class="mt-1 text-sm font-semibold">${moneyCount(hall.total_price)} <span class="font-normal opacity-60">${esc(config.labels.perEvent)}</span></p>
                 ${hall.discount_percent > 0 ? `<p class="chat-card-tag mt-1">−${hall.discount_percent}% ${esc(config.labels.discount)}</p>` : ''}
                 <p class="mt-1 text-xs opacity-70">${esc(config.labels.deposit)}: ${money(hall.deposit_total)}</p>
                 <button type="button" class="chat-card-button" data-detail-slug="${esc(hall.hall_slug)}">
@@ -301,10 +340,15 @@ function initConcierge() {
 
         const q = payload.quote;
         el.innerHTML = `
-            <p class="font-semibold">${esc(q.name)}</p>
-            <p class="chat-card-tag mt-1">${esc(longDate(q.event_date))}</p>
+            <div class="avail-date">
+                <span class="avail-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span>
+                <div class="min-w-0">
+                    <p class="font-semibold">${esc(q.name)}</p>
+                    <p class="chat-card-tag mt-0.5">${esc(longDate(q.event_date))}</p>
+                </div>
+            </div>
             ${q.discount_percent > 0 ? `<p class="mt-1 text-xs opacity-70"><s>${money(q.subtotal)}</s> · −${q.discount_percent}% ${esc(config.labels.discount)}</p>` : ''}
-            <p class="mt-1 text-base font-semibold">${money(q.grand_total)}</p>
+            <p class="mt-1 text-base font-semibold">${moneyCount(q.grand_total)}</p>
             <p class="mt-1 text-xs opacity-70">${esc(config.labels.deposit)} (${q.deposit_percent}%): ${money(q.deposit_total)}</p>
         `;
         return el;
@@ -315,11 +359,12 @@ function initConcierge() {
         const el = document.createElement('div');
         el.className = 'chat-card p-3';
         el.style.borderLeft = '3px solid var(--gold-deep)';
+        el.classList.add('is-celebrating');
         el.innerHTML = `
             <p class="text-sm font-semibold">${esc(config.labels.bookingReceived)}</p>
             <p class="chat-card-tag mt-1">${esc(config.labels.reference)}: ${esc(b.booking_reference)}</p>
             <p class="mt-1 text-xs opacity-70">${esc(b.name)} · ${esc(longDate(b.event_date))}${config.eventTypes[b.event_type] ? ' · ' + esc(config.eventTypes[b.event_type]) : ''}</p>
-            <p class="mt-1 text-sm font-semibold">${money(b.total_price)}</p>
+            <p class="mt-1 text-sm font-semibold">${moneyCount(b.total_price)}</p>
             <p class="mt-1 text-xs opacity-70">${esc(config.labels.deposit)}: ${money(b.deposit_amount)}</p>
         `;
         return el;
@@ -333,22 +378,208 @@ function initConcierge() {
         return el;
     }
 
-    function renderUiPayload(uiPayload) {
+    const hallUrl = (slug) => config.hallUrlTemplate.replace('__SLUG__', encodeURIComponent(slug));
+    const reservationUrl = (slug) => config.reservationUrlTemplate.replace('__SLUG__', encodeURIComponent(slug));
+
+    /** Another page: walk there the way the menu does; a hash change is left to the browser. */
+    function followLink(link, event) {
+        closeShowcase();
+        closePanel({ confirmDraft: false, restoreFocus: false });
+
+        if (link.pathname !== window.location.pathname && window.venueStage) {
+            event.preventDefault();
+            window.venueStage.leave(link.href);
+        }
+    }
+
+    function closeShowcase() {
+        if (!showcaseEl) return;
+
+        const el = showcaseEl;
+        showcaseEl = null;
+        clearInterval(showcaseTimer);
+        el.classList.add('is-closing');
+        window.setTimeout(() => el.remove(), reduceMotion.matches ? 0 : 340);
+        showcaseReturnFocus?.focus?.({ preventScroll: true });
+    }
+
+    function openShowcase(label, body) {
+        closeShowcase();
+
+        const wrap = document.createElement('div');
+        wrap.className = 'showcase';
+        wrap.setAttribute('role', 'dialog');
+        wrap.setAttribute('aria-modal', 'true');
+        wrap.setAttribute('aria-label', label);
+        wrap.innerHTML = `
+            <div class="showcase-backdrop" data-showcase-close></div>
+            <div class="showcase-panel">
+                <button type="button" class="showcase-close" data-showcase-close aria-label="${esc(config.labels.close)}">×</button>
+            </div>
+        `;
+        wrap.querySelector('.showcase-panel').appendChild(body);
+        wrap.addEventListener('click', (event) => {
+            if (event.target.closest('[data-showcase-close]')) closeShowcase();
+        });
+
+        showcaseReturnFocus = document.activeElement;
+        (root.closest('.stage') || document.body).appendChild(wrap);
+        showcaseEl = wrap;
+        wrap.querySelector('.showcase-close').focus({ preventScroll: true });
+        animateCounts(wrap);
+    }
+
+    /** Every photo of a hall, big in the middle of the screen, drifting slowly like a film still. */
+    function showcaseGallery(hall) {
+        const images = hall.images || [];
+        const facts = [config.settings[hall.setting] || '', hall.size_sqm ? `${hall.size_sqm} m²` : '', `${hall.min_guests}–${hall.max_guests} ${config.labels.maxGuests}`].filter(Boolean).join(' · ');
+        const el = document.createElement('div');
+        el.className = 'showcase-gallery';
+        el.innerHTML = `
+            <div class="showcase-media">
+                <div class="showcase-stage">
+                    <img class="showcase-photo" src="${esc(images[0].url)}" alt="${esc(images[0].alt || hall.name)}">
+                    <span class="showcase-badge">${esc(hall.name)}</span>
+                </div>
+                ${images.length > 1 ? `<div class="showcase-thumbs">${images.map((img, index) => `
+                    <button type="button" class="showcase-thumb" data-index="${index}" ${index === 0 ? 'aria-current="true"' : ''} aria-label="${esc(img.alt || `${hall.name} ${index + 1}`)}">
+                        <img src="${esc(img.url)}" alt="" loading="lazy">
+                    </button>`).join('')}</div>` : ''}
+            </div>
+            <div class="showcase-info">
+                <p class="chat-card-tag" style="--i:0">${esc(facts)}</p>
+                <h2 class="showcase-title" style="--i:1">${esc(hall.name)}</h2>
+                <p class="showcase-text" style="--i:2">${esc(hall.description || '')}</p>
+                <p class="showcase-price" style="--i:3">${moneyCount(hall.starting_price)} <span>${esc(config.labels.perEvent)}</span></p>
+                <div class="showcase-actions" style="--i:4">
+                    <a class="showcase-action is-primary" href="${esc(reservationUrl(hall.hall_slug))}">${esc(config.labels.bookNow)}</a>
+                    <a class="showcase-action" href="${esc(hallUrl(hall.hall_slug))}">${esc(config.labels.viewDetails)}</a>
+                </div>
+            </div>
+        `;
+
+        const photo = el.querySelector('.showcase-photo');
+        const thumbs = [...el.querySelectorAll('.showcase-thumb')];
+        let current = 0;
+
+        const show = (index) => {
+            if (!thumbs.length) return;
+            current = (index + images.length) % images.length;
+            photo.style.animation = 'none';
+            void photo.offsetWidth;
+            photo.style.animation = '';
+            photo.src = images[current].url;
+            photo.alt = images[current].alt || hall.name;
+            thumbs.forEach((thumb, i) => thumb.toggleAttribute('aria-current', i === current));
+        };
+
+        thumbs.forEach((thumb) => thumb.addEventListener('click', () => {
+            clearInterval(showcaseTimer);
+            show(Number(thumb.dataset.index));
+        }));
+        el.querySelectorAll('a.showcase-action').forEach((link) => link.addEventListener('click', (event) => followLink(link, event)));
+
+        el._step = (direction) => {
+            clearInterval(showcaseTimer);
+            show(current + direction);
+        };
+        if (thumbs.length && !reduceMotion.matches) {
+            window.setTimeout(() => {
+                if (showcaseEl) showcaseTimer = setInterval(() => show(current + 1), 4800);
+            }, 0);
+        }
+
+        return el;
+    }
+
+    /** The halls the concierge picked, dealt out like cards on the table. */
+    function showcaseResults(halls) {
+        const el = document.createElement('div');
+        el.className = 'showcase-results';
+        el.innerHTML = `<div class="showcase-grid">${halls.map((hall, index) => {
+            const facts = [config.settings[hall.setting] || '', hall.size_sqm ? `${hall.size_sqm} m²` : '', `${hall.min_guests}–${hall.max_guests} ${config.labels.maxGuests}`].filter(Boolean).join(' · ');
+
+            return `
+                <article class="showcase-card" style="--i:${index}">
+                    <div class="showcase-card-photo">${hall.thumbnail_url ? `<img src="${esc(hall.thumbnail_url)}" alt="${esc(hall.name)}">` : ''}</div>
+                    <div class="showcase-card-body">
+                        <p class="chat-card-tag">${esc(facts)}</p>
+                        <h3 class="showcase-card-title">${esc(hall.name)}</h3>
+                        <p class="showcase-card-price">${moneyCount(hall.total_price)} <span>${esc(config.labels.perEvent)}</span></p>
+                        ${hall.discount_percent > 0 ? `<p class="chat-card-tag">−${hall.discount_percent}% ${esc(config.labels.discount)}</p>` : ''}
+                        <button type="button" class="chat-card-button" data-showcase-slug="${esc(hall.hall_slug)}">${esc(config.labels.viewDetails)}</button>
+                    </div>
+                </article>`;
+        }).join('')}</div>`;
+
+        el.querySelectorAll('[data-showcase-slug]').forEach((button, index) => button.addEventListener('click', () => {
+            closeShowcase();
+            sendMessage(config.labels.hallDetailsQuestion.replace(':hall', halls[index].name));
+        }));
+
+        return el;
+    }
+
+    /** A short shower of petals when a date is held. */
+    function petalShower() {
+        if (reduceMotion.matches) return;
+
+        const layer = document.createElement('div');
+        layer.className = 'petals';
+        layer.setAttribute('aria-hidden', 'true');
+
+        const count = window.innerWidth < 700 ? 16 : 30;
+        for (let i = 0; i < count; i += 1) {
+            const petal = document.createElement('i');
+            petal.className = `petal${i % 4 === 0 ? ' is-gold' : ''}`;
+            petal.style.cssText = `--x:${Math.random() * 100}%;--s:${9 + Math.random() * 10}px;--d:${3.2 + Math.random() * 2.2}s;--delay:${Math.random() * 1.1}s;--drift:${(Math.random() - 0.5) * 180}px;--spin:${240 + Math.random() * 420}deg`;
+            layer.appendChild(petal);
+        }
+
+        (root.closest('.stage') || document.body).appendChild(layer);
+        window.setTimeout(() => layer.remove(), 7000);
+    }
+
+    function renderUiPayload(uiPayload, live = false) {
         if (!uiPayload || !uiPayload.length) return;
 
         uiPayload.forEach((payload) => {
+            let wrapper = null;
+
             if (payload.type === 'hall_results') {
-                messagesEl.appendChild(card(payload.halls.map(hallResultCard)));
+                wrapper = card(payload.halls.map(hallResultCard));
             } else if (payload.type === 'hall_detail') {
-                messagesEl.appendChild(card([hallDetailCard(payload.hall)]));
+                wrapper = card([hallDetailCard(payload.hall)]);
             } else if (payload.type === 'availability') {
-                messagesEl.appendChild(card([availabilityCard(payload)]));
+                wrapper = card([availabilityCard(payload)]);
             } else if (payload.type === 'booking_confirmation') {
-                messagesEl.appendChild(card([bookingConfirmationCard(payload)]));
+                wrapper = card([bookingConfirmationCard(payload)]);
             } else if (payload.type === 'handover') {
-                messagesEl.appendChild(card([handoverCard(payload)]));
+                wrapper = card([handoverCard(payload)]);
             }
+
+            if (!wrapper) return;
+
+            messagesEl.appendChild(wrapper);
+            if (live) animateCounts(wrapper);
         });
+
+        if (!live) return;
+
+        const stageful = uiPayload.find((payload) => (payload.type === 'hall_detail' && payload.hall.images?.length) || (payload.type === 'hall_results' && payload.halls?.length));
+        if (stageful) {
+            window.setTimeout(() => {
+                if (stageful.type === 'hall_detail') {
+                    openShowcase(stageful.hall.name, showcaseGallery(stageful.hall));
+                } else {
+                    openShowcase(config.labels.viewDetails, showcaseResults(stageful.halls));
+                }
+            }, 320);
+        }
+
+        if (uiPayload.some((payload) => payload.type === 'booking_confirmation')) {
+            window.setTimeout(petalShower, 250);
+        }
     }
 
     function scrollToBottom() {
@@ -414,7 +645,7 @@ function initConcierge() {
 
             if (data.messages.length > knownMessageCount) {
                 const newMessages = data.messages.slice(knownMessageCount);
-                newMessages.forEach(renderMessage);
+                newMessages.forEach((message) => renderMessage(message));
                 if (newMessages.some((message) => message.role === 'staff')) {
                     setChatStatus(config.labels.statusReplied, 'replied');
                 }
@@ -431,14 +662,14 @@ function initConcierge() {
         }
     }
 
-    function renderMessage(message) {
+    function renderMessage(message, live = false) {
         if (message.role === 'client') {
             messagesEl.appendChild(bubble('client', message.content));
         } else if (message.role === 'assistant') {
             if (message.content) {
                 messagesEl.appendChild(bubble('assistant', message.content));
             }
-            renderUiPayload(message.ui_payload);
+            renderUiPayload(message.ui_payload, live);
             const chips = actionChips(message.suggested_actions);
             if (chips) messagesEl.appendChild(chips);
         } else if (message.role === 'staff') {
@@ -515,8 +746,6 @@ function initConcierge() {
     function actionChips(actions) {
         if (!actions || !actions.length) return null;
 
-        const hallUrl = (slug) => config.hallUrlTemplate.replace('__SLUG__', encodeURIComponent(slug));
-        const reservationUrl = (slug) => config.reservationUrlTemplate.replace('__SLUG__', encodeURIComponent(slug));
         const targets = {
             view_hall: [config.labels.viewDetails, (action) => hallUrl(action.hall)],
             reserve: [config.labels.bookNow, (action) => reservationUrl(action.hall)],
@@ -601,7 +830,7 @@ function initConcierge() {
 
         try {
             const data = await api(config.messageUrl, { client_token: clientToken, message: text, ...uiContext() });
-            renderMessage(data.message);
+            renderMessage(data.message, true);
             setChatStatus(config.labels.statusSent, 'sent');
             window.venueSound?.play('incoming');
             knownMessageCount += 2; // the client message just sent + the reply just rendered
@@ -643,7 +872,7 @@ function initConcierge() {
                 const menu = quickMenuCard();
                 if (menu) messagesEl.appendChild(card([menu]));
             } else {
-                data.messages.forEach(renderMessage);
+                data.messages.forEach((message) => renderMessage(message));
             }
             knownMessageCount = data.messages.length;
 

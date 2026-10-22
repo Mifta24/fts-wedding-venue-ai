@@ -2,7 +2,7 @@
     $currentVenue = auth()->user()?->currentVenue();
 @endphp
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,7 +19,7 @@
                 <summary class="flex cursor-pointer list-none items-center justify-between px-4 py-3 [&::-webkit-details-marker]:hidden">
                     <span class="min-w-0">
                         <span class="block truncate text-sm font-semibold">{{ $currentVenue?->name }}</span>
-                        <span class="block truncate font-label text-[11px] uppercase tracking-[.14em] text-white/70">Admin · {{ $title ?? 'Dashboard' }}</span>
+                        <span class="block truncate font-label text-[11px] uppercase tracking-[.14em] text-white/70">Admin · {{ $title ?? 'Dasbor' }}</span>
                     </span>
                     <span class="ml-3 grid size-10 shrink-0 place-items-center rounded border border-white/25 group-open:bg-white/10" aria-label="Menu">
                         <svg class="size-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 5.5h14M3 10h14M3 14.5h14"/></svg>
@@ -47,7 +47,7 @@
 
                 @if ($errors->any())
                     <div class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-                        <p class="font-medium">Please fix the following:</p>
+                        <p class="font-medium">Mohon perbaiki hal berikut:</p>
                         <ul class="mt-1 list-inside list-disc">
                             @foreach ($errors->all() as $message)
                                 <li>{{ $message }}</li>
@@ -63,7 +63,7 @@
                 @endif
 
                 <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
-                    <h1 class="font-serif text-3xl font-medium text-stone-900">{{ $title ?? 'Dashboard' }}</h1>
+                    <h1 class="font-serif text-3xl font-medium text-stone-900">{{ $title ?? 'Dasbor' }}</h1>
                     {{ $actions ?? '' }}
                 </div>
 

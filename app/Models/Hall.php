@@ -44,6 +44,19 @@ class Hall extends Model
     /** The most overtime hours a request may add to one event. */
     public const MAX_EXTRA_HOURS = 4;
 
+    /**
+     * Indonesian label for a hall setting, as shown in the admin panel.
+     */
+    public static function settingLabel(string $setting): string
+    {
+        return match ($setting) {
+            self::SETTING_INDOOR => 'Dalam ruangan',
+            self::SETTING_OUTDOOR => 'Luar ruangan',
+            self::SETTING_SEMI_OUTDOOR => 'Semi terbuka',
+            default => ucfirst(str_replace('_', ' ', $setting)),
+        };
+    }
+
     protected function casts(): array
     {
         return [

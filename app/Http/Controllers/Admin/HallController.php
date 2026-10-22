@@ -20,7 +20,7 @@ class HallController extends Controller
     {
         $venue = $this->currentVenue($request);
 
-        $halls = $venue->halls()->withCount('images')->orderBy('sort_order')->get();
+        $halls = $venue->halls()->withCount('images')->with('images')->orderBy('sort_order')->get();
 
         return view('admin.halls.index', compact('venue', 'halls'));
     }
@@ -43,7 +43,7 @@ class HallController extends Controller
         $hall = $venue->halls()->create($data);
         $this->syncImages($hall, $request);
 
-        return redirect()->route('admin.halls.index')->with('status', "Hall \"{$hall->name}\" created.");
+        return redirect()->route('admin.halls.index')->with('status', "Hall \"{$hall->name}\" berhasil ditambahkan.");
     }
 
     public function edit(Request $request, Hall $hall): View
@@ -64,7 +64,7 @@ class HallController extends Controller
         $hall->update($this->validated($request, $hall));
         $this->syncImages($hall, $request);
 
-        return redirect()->route('admin.halls.index')->with('status', "Hall \"{$hall->name}\" updated.");
+        return redirect()->route('admin.halls.index')->with('status', "Hall \"{$hall->name}\" berhasil diperbarui.");
     }
 
     public function destroy(Request $request, Hall $hall): RedirectResponse
@@ -78,12 +78,12 @@ class HallController extends Controller
             ->count();
 
         if ($openBookings > 0) {
-            return back()->with('error', "\"{$hall->name}\" still has {$openBookings} pending or confirmed booking(s). Cancel them first, or hide the hall instead.");
+            return back()->with('error', "\"{$hall->name}\" masih punya {$openBookings} reservasi yang menunggu atau terkonfirmasi. Batalkan dulu, atau sembunyikan hall ini saja.");
         }
 
         $hall->delete();
 
-        return redirect()->route('admin.halls.index')->with('status', 'Hall deleted.');
+        return redirect()->route('admin.halls.index')->with('status', 'Hall dihapus.');
     }
 
     private function validated(Request $request, ?Hall $hall = null): array

@@ -59,7 +59,7 @@ class VenueSettingController extends Controller
             ],
         ]);
 
-        return redirect()->route('admin.settings.edit')->with('status', 'Venue settings saved.');
+        return redirect()->route('admin.settings.edit')->with('status', 'Pengaturan gedung disimpan.');
     }
 
     private function ownedVenue(Request $request): Venue

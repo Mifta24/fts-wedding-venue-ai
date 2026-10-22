@@ -152,9 +152,9 @@ class HallInventoryAdminTest extends TestCase
             ->get(route('admin.halls.inventory.index', [$this->hall, 'month' => $day->format('Y-m')]))
             ->assertOk()
             ->assertSee('data-day="'.$day->toDateString().'"', false)
-            ->assertSee($day->format('l j F').': 3 of 4 free', false)
+            ->assertSee($day->locale('id')->translatedFormat('l j F').': 3 dari 4 tersedia', false)
             ->assertSee('750.000')
-            ->assertSee($closedDay->format('l j F').': not open for booking', false);
+            ->assertSee($closedDay->locale('id')->translatedFormat('l j F').': belum dibuka untuk reservasi', false);
     }
 
     public function test_a_malformed_month_falls_back_to_the_current_month(): void
@@ -162,7 +162,7 @@ class HallInventoryAdminTest extends TestCase
         $this->actingAs($this->staff)
             ->get(route('admin.halls.inventory.index', [$this->hall, 'month' => 'banana']))
             ->assertOk()
-            ->assertSee($this->today->format('F Y'));
+            ->assertSee($this->today->locale('id')->translatedFormat('F Y'));
     }
 
     public function test_new_inventory_is_what_the_reservation_quote_uses(): void

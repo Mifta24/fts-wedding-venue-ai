@@ -39,7 +39,7 @@ class KnowledgeItemController extends Controller
 
         $item = $venue->knowledgeItems()->create($this->validated($request));
 
-        return redirect()->route('admin.knowledge-items.index')->with('status', "Knowledge item \"{$item->title}\" created.");
+        return redirect()->route('admin.knowledge-items.index')->with('status', "Entri \"{$item->title}\" berhasil ditambahkan.");
     }
 
     public function edit(Request $request, VenueKnowledgeItem $knowledgeItem): View
@@ -61,7 +61,7 @@ class KnowledgeItemController extends Controller
 
         $knowledgeItem->update($this->validated($request));
 
-        return redirect()->route('admin.knowledge-items.index')->with('status', "Knowledge item \"{$knowledgeItem->title}\" updated.");
+        return redirect()->route('admin.knowledge-items.index')->with('status', "Entri \"{$knowledgeItem->title}\" berhasil diperbarui.");
     }
 
     public function destroy(Request $request, VenueKnowledgeItem $knowledgeItem): RedirectResponse
@@ -71,7 +71,7 @@ class KnowledgeItemController extends Controller
 
         $knowledgeItem->delete();
 
-        return redirect()->route('admin.knowledge-items.index')->with('status', 'Knowledge item deleted.');
+        return redirect()->route('admin.knowledge-items.index')->with('status', 'Entri dihapus.');
     }
 
     private function validated(Request $request): array

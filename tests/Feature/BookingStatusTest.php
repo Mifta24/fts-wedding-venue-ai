@@ -120,8 +120,8 @@ class BookingStatusTest extends TestCase
 
         $this->actingAs($this->staff)->get(route('admin.bookings.index'))
             ->assertOk()
-            ->assertDontSee('>Confirm</button>', false)
-            ->assertSee('>Cancel</button>', false);
+            ->assertDontSee('>Konfirmasi</button>', false)
+            ->assertSee('>Batalkan</button>', false);
     }
 
     public function test_a_hall_with_open_bookings_cannot_be_deleted(): void

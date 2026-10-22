@@ -53,7 +53,7 @@ class HandoverController extends Controller
             'content' => $data['message'],
         ]);
 
-        return back()->with('status', 'Reply sent to the client.');
+        return back()->with('status', 'Balasan terkirim ke pasangan.');
     }
 
     public function resolve(Request $request, HandoverRequest $handover): RedirectResponse
@@ -64,6 +64,6 @@ class HandoverController extends Controller
         $handover->update(['status' => HandoverRequest::STATUS_RESOLVED, 'resolved_at' => now(), 'assigned_to' => $request->user()->id]);
         $handover->conversation->update(['status' => Conversation::STATUS_ACTIVE]);
 
-        return redirect()->route('admin.handovers.index')->with('status', 'Handover resolved — the AI Concierge is back in the conversation.');
+        return redirect()->route('admin.handovers.index')->with('status', 'Serah terima selesai — AI Concierge kembali menangani percakapan.');
     }
 }

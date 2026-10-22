@@ -97,6 +97,46 @@ class Booking extends Model
         return $reference;
     }
 
+    /**
+     * Indonesian label for a booking status, as shown in the admin panel.
+     */
+    public static function statusLabel(string $status): string
+    {
+        return match ($status) {
+            self::STATUS_PENDING => 'Menunggu',
+            self::STATUS_CONFIRMED => 'Dikonfirmasi',
+            self::STATUS_CANCELLED => 'Dibatalkan',
+            default => ucfirst($status),
+        };
+    }
+
+    /**
+     * Label for how a couple prefers to be contacted, as shown in the admin panel.
+     */
+    public static function contactTypeLabel(string $contactType): string
+    {
+        return match ($contactType) {
+            'whatsapp' => 'WhatsApp',
+            'phone' => 'Telepon',
+            'email' => 'Email',
+            default => ucfirst($contactType),
+        };
+    }
+
+    /**
+     * Indonesian label for an event type, as shown in the admin panel.
+     */
+    public static function eventTypeLabel(string $eventType): string
+    {
+        return match ($eventType) {
+            self::EVENT_AKAD => 'Akad',
+            self::EVENT_RECEPTION => 'Resepsi',
+            self::EVENT_AKAD_RECEPTION => 'Akad & Resepsi',
+            self::EVENT_ENGAGEMENT => 'Lamaran',
+            default => ucwords(str_replace('_', ' ', $eventType)),
+        };
+    }
+
     public function canTransitionTo(string $status): bool
     {
         return in_array($status, self::TRANSITIONS[$this->status] ?? [], true);

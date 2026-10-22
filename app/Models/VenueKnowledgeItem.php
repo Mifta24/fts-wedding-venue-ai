@@ -37,6 +37,22 @@ class VenueKnowledgeItem extends Model
 
     public const CATEGORY_FAQ = 'faq';
 
+    /**
+     * Indonesian label for a category, as shown in the admin panel.
+     */
+    public static function categoryLabel(string $category): string
+    {
+        return match ($category) {
+            self::CATEGORY_GENERAL => 'Umum',
+            self::CATEGORY_SERVICES => 'Layanan',
+            self::CATEGORY_POLICIES => 'Kebijakan',
+            self::CATEGORY_CATERING => 'Katering',
+            self::CATEGORY_ACCESS => 'Akses',
+            self::CATEGORY_FAQ => 'FAQ',
+            default => ucfirst($category),
+        };
+    }
+
     protected function casts(): array
     {
         return [

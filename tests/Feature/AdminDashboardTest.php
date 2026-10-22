@@ -63,14 +63,14 @@ class AdminDashboardTest extends TestCase
         $this->booking(Booking::STATUS_PENDING, 6, now()->subHours(25));
         $this->booking(Booking::STATUS_CONFIRMED, 7, now()->subDays(3));
 
-        $this->dashboard()->assertOk()->assertSee('1 waiting over 24h')->assertSee('border-amber-300', false);
+        $this->dashboard()->assertOk()->assertSee('1 menunggu lebih dari 24 jam')->assertSee('border-amber-300', false);
     }
 
     public function test_nothing_is_flagged_when_every_pending_request_is_recent(): void
     {
         $this->booking(Booking::STATUS_PENDING, 5);
 
-        $this->dashboard()->assertOk()->assertSee('None waiting over 24h')->assertDontSee('border-amber-300', false);
+        $this->dashboard()->assertOk()->assertSee('Tidak ada yang menunggu lebih dari 24 jam')->assertDontSee('border-amber-300', false);
     }
 
     public function test_weddings_count_and_list_only_confirmed_bookings_in_the_next_thirty_days(): void
@@ -82,7 +82,7 @@ class AdminDashboardTest extends TestCase
         $this->booking(Booking::STATUS_PENDING, 2);
         $this->booking(Booking::STATUS_CANCELLED, 2);
 
-        $response = $this->dashboard()->assertOk()->assertSee('Weddings · 30 days')->assertSee($soon->client_name);
+        $response = $this->dashboard()->assertOk()->assertSee('Pernikahan · 30 hari')->assertSee($soon->client_name);
 
         $this->assertCount(2, $response->viewData('upcoming'));
         $this->assertSame(2, $response->viewData('stats')['upcoming_events']);
@@ -95,14 +95,14 @@ class AdminDashboardTest extends TestCase
             HallInventory::create(['hall_id' => $hall->id, 'event_date' => $this->today->addDays($offset)->toDateString(), 'total_slots' => $total, 'booked_slots' => $booked, 'price' => 1]);
         }
 
-        $response = $this->dashboard()->assertOk()->assertSee('Dates booked · 30 days')->assertSee('50%');
+        $response = $this->dashboard()->assertOk()->assertSee('Tanggal terisi · 30 hari')->assertSee('50%');
 
         $this->assertSame(50, $response->viewData('stats')['booked_percent']);
     }
 
     public function test_dates_booked_is_a_dash_until_dates_are_open(): void
     {
-        $this->dashboard()->assertOk()->assertSee('No dates open yet');
+        $this->dashboard()->assertOk()->assertSee('Belum ada tanggal dibuka');
 
         $this->assertNull($this->dashboard()->viewData('stats')['booked_percent']);
     }

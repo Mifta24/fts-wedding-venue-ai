@@ -1,47 +1,47 @@
-<x-admin-layout :title="'Calendar — '.$hall->name">
+<x-admin-layout :title="'Kalender — '.$hall->name">
     <x-slot name="actions">
-        <a href="{{ route('admin.halls.index') }}" class="text-sm text-stone-600 hover:underline">Back to halls</a>
+        <a href="{{ route('admin.halls.index') }}" class="text-sm text-stone-600 hover:underline">Kembali ke daftar hall</a>
     </x-slot>
 
     <form method="POST" action="{{ route('admin.halls.inventory.store', $hall) }}" class="rounded-xl border border-stone-200 bg-white p-5">
         @csrf
-        <h2 class="text-sm font-semibold text-stone-900">Open wedding dates and set the price</h2>
-        <p class="mt-1 text-xs text-stone-500">Applies to every date from the first to the last. Leave the price empty to keep current prices (new dates use the base rate of {{ $venue->currency }} {{ number_format((float) $hall->base_price, 0, ',', '.') }}).</p>
+        <h2 class="text-sm font-semibold text-stone-900">Buka tanggal pernikahan dan atur harganya</h2>
+        <p class="mt-1 text-xs text-stone-500">Berlaku untuk setiap tanggal dari awal sampai akhir. Kosongkan harga untuk mempertahankan harga saat ini (tanggal baru memakai tarif dasar {{ $venue->currency }} {{ number_format((float) $hall->base_price, 0, ',', '.') }}).</p>
 
         <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
             <div>
-                <label for="from" class="block text-sm font-medium text-stone-700">From</label>
+                <label for="from" class="block text-sm font-medium text-stone-700">Dari</label>
                 <input id="from" type="date" name="from" value="{{ old('from', $today) }}" min="{{ $today }}" required class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">
             </div>
             <div>
-                <label for="to" class="block text-sm font-medium text-stone-700">To (last date)</label>
+                <label for="to" class="block text-sm font-medium text-stone-700">Sampai (tanggal terakhir)</label>
                 <input id="to" type="date" name="to" value="{{ old('to') }}" min="{{ $today }}" required class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">
             </div>
             <div>
-                <label for="total_slots" class="block text-sm font-medium text-stone-700">Events per date</label>
+                <label for="total_slots" class="block text-sm font-medium text-stone-700">Acara per tanggal</label>
                 <input id="total_slots" type="number" name="total_slots" value="{{ old('total_slots', 1) }}" min="0" max="50" required class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">
             </div>
             <div>
-                <label for="price" class="block text-sm font-medium text-stone-700">Rate per event ({{ $venue->currency }})</label>
+                <label for="price" class="block text-sm font-medium text-stone-700">Tarif per acara ({{ $venue->currency }})</label>
                 <input id="price" type="number" name="price" value="{{ old('price') }}" min="0" step="1" class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">
             </div>
         </div>
 
         <div class="mt-4 flex justify-end">
-            <button type="submit" class="rounded-lg bg-ink px-4 py-2 text-sm font-medium text-white hover:bg-gold hover:text-gold-ink">Save calendar</button>
+            <button type="submit" class="rounded-lg bg-ink px-4 py-2 text-sm font-medium text-white hover:bg-gold hover:text-gold-ink">Simpan kalender</button>
         </div>
     </form>
 
     <div class="mt-8 mb-3 flex items-center justify-between gap-2 text-sm">
-        <a href="{{ route('admin.halls.inventory.index', [$hall, 'month' => $month->subMonth()->format('Y-m')]) }}" class="rounded-lg border border-stone-300 bg-white px-3 py-2 text-stone-700 hover:bg-stone-100" aria-label="{{ $month->subMonth()->format('F Y') }}">← <span class="hidden sm:inline">{{ $month->subMonth()->format('F Y') }}</span></a>
-        <h2 class="font-semibold text-stone-900">{{ $month->format('F Y') }}</h2>
-        <a href="{{ route('admin.halls.inventory.index', [$hall, 'month' => $month->addMonth()->format('Y-m')]) }}" class="rounded-lg border border-stone-300 bg-white px-3 py-2 text-stone-700 hover:bg-stone-100" aria-label="{{ $month->addMonth()->format('F Y') }}"><span class="hidden sm:inline">{{ $month->addMonth()->format('F Y') }}</span> →</a>
+        <a href="{{ route('admin.halls.inventory.index', [$hall, 'month' => $month->subMonth()->format('Y-m')]) }}" class="rounded-lg border border-stone-300 bg-white px-3 py-2 text-stone-700 hover:bg-stone-100" aria-label="{{ $month->subMonth()->locale('id')->translatedFormat('F Y') }}">← <span class="hidden sm:inline">{{ $month->subMonth()->locale('id')->translatedFormat('F Y') }}</span></a>
+        <h2 class="font-semibold text-stone-900">{{ $month->locale('id')->translatedFormat('F Y') }}</h2>
+        <a href="{{ route('admin.halls.inventory.index', [$hall, 'month' => $month->addMonth()->format('Y-m')]) }}" class="rounded-lg border border-stone-300 bg-white px-3 py-2 text-stone-700 hover:bg-stone-100" aria-label="{{ $month->addMonth()->locale('id')->translatedFormat('F Y') }}"><span class="hidden sm:inline">{{ $month->addMonth()->locale('id')->translatedFormat('F Y') }}</span> →</a>
     </div>
 
-    <p class="mb-2 text-xs text-stone-500">Tap a day to fill the form above, then tap a later day to choose the end of the range.</p>
+    <p class="mb-2 text-xs text-stone-500">Ketuk satu hari untuk mengisi formulir di atas, lalu ketuk hari berikutnya untuk menentukan akhir rentang.</p>
 
     <div class="grid grid-cols-7 gap-1 text-center font-label text-[11px] uppercase tracking-wider text-stone-500">
-        @foreach (['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as $weekday)
+        @foreach (['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'] as $weekday)
             <span class="py-1">{{ $weekday }}</span>
         @endforeach
     </div>
@@ -69,7 +69,7 @@
                 @disabled($isPast)
                 data-day="{{ $date }}"
                 @if ($slot) data-total="{{ $slot->total_slots }}" data-price="{{ (int) $slot->price }}" @endif
-                aria-label="{{ $day->format('l j F') }}: {{ $slot ? $free.' of '.$slot->total_slots.' free' : 'not open for booking' }}"
+                aria-label="{{ $day->locale('id')->translatedFormat('l j F') }}: {{ $slot ? $free.' dari '.$slot->total_slots.' tersedia' : 'belum dibuka untuk reservasi' }}"
                 class="flex min-h-14 flex-col items-start justify-between rounded-lg border p-1.5 text-left transition sm:min-h-20 sm:p-2 {{ $tone }} {{ $isPast ? 'opacity-40' : 'hover:ring-2 hover:ring-ink/40' }} data-[picked]:ring-2 data-[picked]:ring-ink"
             >
                 <span class="text-xs font-semibold sm:text-sm">{{ $day->day }}</span>
@@ -84,11 +84,11 @@
     </div>
 
     <ul class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-stone-500">
-        <li><span class="mr-1 inline-block size-2.5 rounded-sm border border-emerald-200 bg-emerald-50 align-middle"></span>Open</li>
-        <li><span class="mr-1 inline-block size-2.5 rounded-sm border border-amber-200 bg-amber-50 align-middle"></span>Almost full</li>
-        <li><span class="mr-1 inline-block size-2.5 rounded-sm border border-red-200 bg-red-50 align-middle"></span>Full</li>
-        <li><span class="mr-1 inline-block size-2.5 rounded-sm border border-stone-200 bg-stone-100 align-middle"></span>Not open</li>
-        <li class="font-label">free / events per date</li>
+        <li><span class="mr-1 inline-block size-2.5 rounded-sm border border-emerald-200 bg-emerald-50 align-middle"></span>Terbuka</li>
+        <li><span class="mr-1 inline-block size-2.5 rounded-sm border border-amber-200 bg-amber-50 align-middle"></span>Hampir penuh</li>
+        <li><span class="mr-1 inline-block size-2.5 rounded-sm border border-red-200 bg-red-50 align-middle"></span>Penuh</li>
+        <li><span class="mr-1 inline-block size-2.5 rounded-sm border border-stone-200 bg-stone-100 align-middle"></span>Belum dibuka</li>
+        <li class="font-label">tersedia / acara per tanggal</li>
     </ul>
 
     <script>

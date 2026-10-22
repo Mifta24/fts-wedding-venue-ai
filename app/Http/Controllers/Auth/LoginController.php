@@ -23,7 +23,7 @@ class LoginController extends Controller
         ]);
 
         if (! Auth::attempt($credentials, $request->boolean('remember'))) {
-            return back()->withErrors(['email' => 'Invalid credentials.'])->onlyInput('email');
+            return back()->withErrors(['email' => 'Email atau kata sandi salah.'])->onlyInput('email');
         }
 
         $request->session()->regenerate();

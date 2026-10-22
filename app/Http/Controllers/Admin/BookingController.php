@@ -44,9 +44,9 @@ class BookingController extends Controller
         ]);
 
         if (! $this->reservations->changeStatus($booking, $data['status'])) {
-            return back()->with('error', "Booking {$booking->reference} is {$booking->status} and cannot be marked as {$data['status']}.");
+            return back()->with('error', "Reservasi {$booking->reference} berstatus ".Booking::statusLabel($booking->status).' dan tidak bisa diubah menjadi '.Booking::statusLabel($data['status']).'.');
         }
 
-        return back()->with('status', "Booking {$booking->reference} marked as {$data['status']}.");
+        return back()->with('status', "Reservasi {$booking->reference} ditandai ".Booking::statusLabel($data['status']).'.');
     }
 }

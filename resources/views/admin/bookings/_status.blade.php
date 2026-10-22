@@ -3,4 +3,4 @@
     'bg-amber-100 text-amber-700' => $booking->status === 'pending',
     'bg-emerald-100 text-emerald-700' => $booking->status === 'confirmed',
     'bg-stone-100 text-stone-500' => $booking->status === 'cancelled',
-])>{{ ucfirst($booking->status) }}</span>
+])>{{ \App\Models\Booking::statusLabel($booking->status) }}</span>

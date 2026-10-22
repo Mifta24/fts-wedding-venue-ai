@@ -105,7 +105,7 @@ class HallInventoryController extends Controller
 
         return redirect()
             ->route('admin.halls.inventory.index', [$hall, 'month' => substr($data['from'], 0, 7)])
-            ->with('status', "Calendar for \"{$hall->name}\" updated from {$data['from']} to {$data['to']}.");
+            ->with('status', "Kalender \"{$hall->name}\" diperbarui dari {$data['from']} sampai {$data['to']}.");
     }
 
     private function month(Request $request, string $timezone): CarbonImmutable

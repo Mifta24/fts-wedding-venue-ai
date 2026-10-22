@@ -118,7 +118,7 @@
 /* Welcome: set big and in serif, like the cover of an invitation */
 .stage-welcome { position: absolute; z-index: 1; left: calc(var(--content-left) + 20px); bottom: calc(var(--dock) + 8px); width: min(640px, calc(100% - var(--content-left) - var(--col) - 80px)); }
 .stage-welcome .lobby-eyebrow { color: var(--gold); }
-.stage-welcome h1 { margin-top: 16px; font-size: clamp(44px, 5.4vw, 86px); font-weight: 500; line-height: .98; letter-spacing: -.015em; }
+.stage-welcome h1 { margin-top: 16px; text-wrap: balance; font-size: clamp(40px, 4.4vw, 72px); font-weight: 500; line-height: .98; letter-spacing: -.015em; }
 .stage-welcome h1 em { display: block; font-style: italic; color: var(--gold); }
 .stage-welcome > p { margin-top: 18px; max-width: 500px; font-size: 16px; line-height: 1.7; color: #ffffffd1; }
 .lobby-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 24px; }
@@ -579,7 +579,8 @@ a.info-fact:hover { border-color: var(--text); }
     .stage { --header: 60px; --gap: 12px; --strip: 58px; --dock: 84px; }
     .stage-header { grid-template-columns: minmax(0, 1fr) auto auto; gap: 10px; padding: 0 12px; }
     .stage-brand-city, .chapter-display-label { display: none; }
-    .stage-character, .stage-character[data-pose] { right: -6%; height: 56%; max-width: 78%; opacity: .92; }
+    /* The welcome text spans the screen, so she stands in the empty space above it and fades out at the waist. */
+    .stage-character, .stage-character[data-pose] { top: calc(var(--header) + var(--strip) + 6px); bottom: auto; right: -2%; height: 31%; max-width: 60%; opacity: .95; -webkit-mask-image: linear-gradient(#000 72%, transparent); mask-image: linear-gradient(#000 72%, transparent); }
     .stage:has(.lobby-content) .stage-character, .stage:has(.hall-directory) .stage-character { display: none; }
     .stage-character[data-pose="consulting"], .stage:has(.stage-chat.is-open) .stage-character[data-pose="consulting"] { right: 0; height: 40%; }
     .chapter-display { height: 36px; padding: 0 10px; gap: 8px; }

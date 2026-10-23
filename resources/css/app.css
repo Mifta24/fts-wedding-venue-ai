@@ -537,7 +537,7 @@ a.info-fact:hover { border-color: var(--text); }
 .journey-buttons li:nth-child(n+5), .hall-nav a:nth-child(n+5), .opening-links li:nth-child(n+5) { --i: 4; }
 .chat-log-messages > * { animation: bubble-in .32s var(--ease-cine) backwards; }
 @keyframes panel-slide { from { opacity: 0; translate: 0 16px; } to { opacity: 1; translate: 0 0; } }
-@keyframes bubble-in { from { opacity: 0; translate: 0 8px; } to { opacity: 1; translate: 0 0; } }
+@keyframes bubble-in { from { opacity: 0; translate: 0 8px; scale: .96; } to { opacity: 1; translate: 0 0; scale: 1; } }
 @keyframes stage-rise { from { opacity: 0; translate: 0 12px; } to { opacity: 1; translate: 0 0; } }
 @keyframes stage-fade { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
@@ -545,6 +545,78 @@ a.info-fact:hover { border-color: var(--text); }
     .journey-panel, .stage-welcome, .hall-directory, .opening-panel, .opening-directory, .lobby-content:not([hidden]), .chat-launcher, .journey-buttons li, .hall-nav a, .opening-links li, .lobby-stats > div, .chat-log-messages > *, .hall-scene:not([hidden]) { animation: none; }
     .narrator.is-speaking .narrator-avatar::after, .narrator.is-speaking .narrator-wave i, .narrator.is-speaking .narrator-typed::after, .stage-tour.is-visible { animation: none; }
     .stage-tour.is-visible { opacity: 1; }
+}
+
+/* Soft motion: staggered cards, panel headings, wizard steps, press feedback. Gentle by design: short distances, ~.5s. */
+.lobby-content:not([hidden]) > .lobby-eyebrow, .lobby-content:not([hidden]) > h2, .lobby-content:not([hidden]) > .narrator-inline { animation: stage-rise .5s var(--ease-cine) backwards; animation-delay: .5s; }
+.lobby-content:not([hidden]) > h2 { animation-delay: .58s; }
+.lobby-content:not([hidden]) > .narrator-inline { animation-delay: .66s; }
+.service-grid > *, .hall-scene-amenities li, .info-fact, .staff-location > * { animation: card-rise .5s var(--ease-cine) backwards; animation-delay: calc(.6s + var(--i, 0) * 70ms); }
+.service-grid > :nth-child(2), .hall-scene-amenities li:nth-child(2), .info-fact:nth-child(2), .staff-location > :nth-child(2) { --i: 1; }
+.service-grid > :nth-child(3), .hall-scene-amenities li:nth-child(3), .info-fact:nth-child(3), .staff-location > :nth-child(3) { --i: 2; }
+.service-grid > :nth-child(4), .hall-scene-amenities li:nth-child(4), .info-fact:nth-child(4) { --i: 3; }
+.service-grid > :nth-child(5), .hall-scene-amenities li:nth-child(5) { --i: 4; }
+.service-grid > :nth-child(n+6), .hall-scene-amenities li:nth-child(n+6) { --i: 5; }
+.service-card-photo img { transition: transform .8s var(--ease-cine), filter .4s ease; }
+.service-card:hover .service-card-photo img { transform: scale(1.06); filter: saturate(1.05); }
+.service-card-icon { transition: transform .35s var(--ease-cine); }
+.service-card:hover .service-card-icon { transform: translateY(-3px) rotate(-6deg); }
+.hall-scene-facts > div, .hall-scene-rate { animation: card-rise .5s var(--ease-cine) .5s backwards; }
+.hall-scene-photo img { transition: transform .8s var(--ease-cine), opacity .3s ease; }
+.hall-scene-photo:hover img { transform: scale(1.03); }
+.hall-scene-thumb { transition: opacity .2s, border-color .2s, transform .25s var(--ease-cine); }
+.hall-scene-thumb:hover { transform: translateY(-2px); }
+.hall-nav a[aria-current]::before { transform-origin: 50% 50%; animation: bar-grow .5s var(--ease-cine) .6s backwards; }
+.hall-nav-thumb { transition: transform .5s var(--ease-cine); }
+.hall-nav a:hover .hall-nav-thumb { transform: scale(1.06); }
+.journey-button[aria-current] .journey-key { animation: key-glow 3.2s ease-in-out 1s infinite; }
+.journey-button:hover .journey-key { transform: scale(1.06); }
+.journey-key { transition: border-color .2s, box-shadow .2s, background .2s, color .2s, transform .3s var(--ease-cine); }
+.panel-close { transition: background .2s, transform .35s var(--ease-cine); }
+.panel-close:hover { transform: rotate(90deg); }
+.chat-launcher-avatar::after { animation: status-pulse 2.4s ease-in-out infinite; }
+.chat-launcher-arrow { transition: transform .25s var(--ease-cine); }
+.chat-launcher:hover .chat-launcher-arrow { transform: translateX(3px); }
+.chat-chip, .chat-mini-button, .chat-bar button { transition: border-color .2s, transform .2s var(--ease-cine), background .2s; }
+.chat-chip:hover, .chat-mini-button:hover { transform: translateY(-1px); }
+.lobby-action, .lobby-action-ghost, .wizard-secondary, .hall-scene-step, .chat-card-button, .sound-toggle { transition-property: background, color, border-color, box-shadow, transform; transition-duration: .2s; }
+.lobby-action:active, .lobby-action-ghost:active, .wizard-secondary:active, .hall-scene-step:active, .opening-button:active, .showcase-action:active, .chat-card-button:active, .chat-bar button:active, .sound-toggle:active { transform: scale(.96); }
+.lobby-cta .lobby-action-signal { position: relative; overflow: hidden; }
+.lobby-cta .lobby-action-signal::after { content: ''; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 35%, #ffffff66 50%, transparent 65%); transform: translateX(-120%); animation: shine-sweep 4.5s ease-in-out 1.6s infinite; pointer-events: none; }
+.wizard-step:not([hidden]) { animation: step-in .45s var(--ease-cine) backwards; }
+.wizard-progress li::before { transition: background .4s ease, transform .4s var(--ease-cine); transform-origin: left; }
+.wizard-progress li.is-current::before { animation: bar-fill .5s var(--ease-cine) backwards; }
+.wizard-hall-body { transition: border-color .2s, box-shadow .25s, transform .25s var(--ease-cine); }
+.wizard-hall:not(.is-disabled):hover .wizard-hall-body { transform: translateY(-2px); }
+.wizard-pills span { transition: background .2s, color .2s, border-color .2s, transform .2s var(--ease-cine); }
+.wizard-pills label:hover span { transform: translateY(-1px); }
+.wizard-slot { transition: border-color .2s, box-shadow .25s; }
+.wizard-cal-day { transition: background .15s, color .15s, transform .2s var(--ease-cine); }
+.wizard-cal-day:not(:disabled):hover { transform: scale(1.08); }
+.wizard-cal-day.is-start, .wizard-cal-day.is-end { animation: check-pop .35s var(--ease-cine); }
+.wizard-error:not([hidden]), .wizard-deal, .wizard-discount:not([hidden]), .wizard-alternatives:not([hidden]) { animation: step-in .4s var(--ease-cine) backwards; }
+.wizard-done:not([hidden]) { animation: step-in .6s var(--ease-cine) backwards; }
+.wizard-reference { animation: check-pop .6s var(--ease-cine) .25s backwards; }
+.info-tabpanel { animation: step-in .35s var(--ease-cine) backwards; }
+.info-row[open] > p { animation: step-in .35s var(--ease-cine) backwards; }
+.chat-bubble.is-client { transform-origin: 100% 100%; }
+.chat-bubble.is-host { transform-origin: 0 100%; }
+@keyframes card-rise { from { opacity: 0; translate: 0 14px; scale: .97; } to { opacity: 1; translate: 0 0; scale: 1; } }
+@keyframes step-in { from { opacity: 0; translate: 14px 0; } to { opacity: 1; translate: 0 0; } }
+@keyframes bar-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes bar-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes key-glow { 50% { box-shadow: 0 0 0 5px #e3c27c1f, 0 0 26px #e3c27c8c; } }
+@keyframes shine-sweep { 0%, 55% { transform: translateX(-120%); } 85%, 100% { transform: translateX(120%); } }
+@media (prefers-reduced-motion: reduce) {
+    .lobby-content:not([hidden]) > .lobby-eyebrow, .lobby-content:not([hidden]) > h2, .lobby-content:not([hidden]) > .narrator-inline,
+    .service-grid > *, .hall-scene-amenities li, .info-fact, .staff-location > *,
+    .hall-scene-facts > div, .hall-scene-rate, .hall-nav a[aria-current]::before, .journey-button[aria-current] .journey-key,
+    .chat-launcher-avatar::after, .lobby-cta .lobby-action-signal::after, .wizard-step:not([hidden]), .wizard-progress li.is-current::before,
+    .wizard-cal-day.is-start, .wizard-cal-day.is-end, .wizard-error:not([hidden]), .wizard-deal, .wizard-discount:not([hidden]),
+    .wizard-alternatives:not([hidden]), .wizard-done:not([hidden]), .wizard-reference, .info-tabpanel, .info-row[open] > p { animation: none; }
+    .service-card-photo img, .service-card-icon, .hall-scene-photo img, .hall-scene-thumb, .hall-nav-thumb, .journey-key, .panel-close,
+    .chat-launcher-arrow, .chat-chip, .chat-mini-button, .wizard-hall-body, .wizard-pills span, .wizard-cal-day, .wizard-progress li::before { transition: none; transform: none; }
+    :is(.lobby-action, .lobby-action-ghost, .wizard-secondary, .hall-scene-step, .opening-button, .showcase-action, .chat-card-button, .chat-bar button, .sound-toggle):active { transform: none; }
 }
 
 /* Opening: the order of the day beside the welcome, over a wedding photograph */

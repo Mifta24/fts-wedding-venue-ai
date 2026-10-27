@@ -193,6 +193,17 @@ vendor/bin/pint --dirty
 - Jalankan queue worker dan isi `MAIL_*` dengan SMTP asli, atau notifikasi email tidak akan terkirim.
 - Karena ada batas 100 detik dari Cloudflare, jangan menaikkan batas waktu respons concierge melebihi 85 detik.
 
+### Server Plesk (`wedding-venue-ai.fts-tech.co.id`)
+
+- **Alur deploy:** `git push` ke `master` memicu webhook GitHub ke Plesk Git (mode Automatic). Post-deployment actions di Plesk menjalankan `composer install`, `npm ci` dan `npm run build`, `migrate --force`, cache config/route/view, lalu `queue:restart`. Tidak perlu deploy manual.
+- **Deployment path:** harus root aplikasi (`/wedding-venue-ai.fts-tech.co.id`), bukan `public/`. Kalau diarahkan ke `public/`, seluruh isi repo tersalin ke webroot dan source code terekspos.
+- **Stack:** PHP 8.4 (`/opt/plesk/php/8.4/bin/php`), Node 24 (`/opt/plesk/node/24`), Postgres lokal (`DB_CONNECTION=pgsql`), SSL Cloudflare Origin.
+- **Cron (Plesk Scheduler, tiap menit):** `artisan schedule:run` dan `artisan queue:work --stop-when-empty --max-time=55 --tries=3`.
+- **Mail:** mailbox `wedding-venue-ai@fts-tech.co.id`, SMTP `mail.fts-tech.co.id` port 465 (`MAIL_SCHEME=smtps`). Password hanya ada di `.env` server.
+- **`.env`:** milik user situs dengan mode 640. Kalau dimiliki user lain dengan mode 600, aplikasi tidak bisa membacanya dan jatuh ke SQLite.
+- **Force-push:** jika history GitHub di-force-push, pull di server gagal. Perbaiki di server dengan `git reset --hard origin/master` sebagai user situs.
+- **`deploy.sh`:** jalur manual dari laptop (build lokal, rsync `public/build`, lalu `git pull --ff-only`). Hanya dipakai sebagai cadangan.
+
 ## Lisensi
 
 Project ini dibangun di atas [Laravel](https://laravel.com), yang berlisensi [MIT](https://opensource.org/licenses/MIT).

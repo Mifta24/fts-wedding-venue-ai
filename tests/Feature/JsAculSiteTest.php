@@ -31,7 +31,8 @@ class JsAculSiteTest extends TestCase
         $this->assertSame(['aizu' => 10, 'nasu' => 4, 'nikko' => 7], $counts);
         $this->assertTrue($venue->isPlanCatalog());
         $this->assertSame('jsacul', $venue->theme);
-        $this->assertSame('unlisted', $venue->public_status);
+        $this->assertSame('published', $venue->public_status);
+        $this->assertFalse($venue->isGated());
         $this->assertNotEmpty($venue->knowledgeItems()->count());
         foreach ($venue->halls()->with('images')->get() as $hall) {
             $this->assertCount(4, $hall->price_options);
@@ -50,12 +51,12 @@ class JsAculSiteTest extends TestCase
         $this->assertFileExists(public_path($venue->cover_path));
     }
 
-    public function test_without_a_code_configured_the_site_is_open_by_link_but_never_listed_or_indexed(): void
+    public function test_without_a_code_the_site_is_public_indexable_and_in_the_sitemap(): void
     {
         $this->seedSite();
 
-        $this->get('/jsacul?lang=ja')->assertOk()->assertSee('noindex', false);
-        $this->get('/sitemap.xml')->assertDontSee('jsacul');
+        $this->get('/jsacul?lang=ja')->assertOk()->assertDontSee('noindex', false);
+        $this->get('/sitemap.xml')->assertSee('jsacul');
     }
 
     public function test_with_a_code_visitors_are_sent_to_the_gate_and_cannot_use_the_api(): void
@@ -78,14 +79,17 @@ class JsAculSiteTest extends TestCase
         $this->get('/jsacul/halls?lang=ja')->assertOk();
     }
 
-    public function test_code_is_stored_hashed_and_a_reseed_without_env_keeps_it(): void
+    public function test_code_makes_it_private_and_is_stored_hashed_and_reseeding_without_it_opens_the_site(): void
     {
         $venue = $this->seedSite('team-secret');
         $this->assertNotSame('team-secret', $venue->access_code_hash);
+        $this->assertSame('unlisted', $venue->public_status);
+        $this->get('/jsacul?lang=ja')->assertRedirect();
 
-        $hash = $venue->access_code_hash;
         $venue = $this->seedSite(null);
-        $this->assertSame($hash, $venue->access_code_hash);
+        $this->assertNull($venue->access_code_hash);
+        $this->assertSame('published', $venue->public_status);
+        $this->get('/jsacul?lang=ja')->assertOk();
     }
 
     public function test_area_board_defaults_to_aizu_and_only_the_hall_board_has_area_tabs(): void

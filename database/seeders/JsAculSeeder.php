@@ -13,8 +13,9 @@ use Illuminate\Support\Facades\Hash;
  * (Tochigi) selling flat-rate packages at locations in Aizu, Nikko and Nasu.
  *
  * Content comes from the company's public website, used with the owner's
- * permission. The venue is private: unlisted, noindex, and (when
- * JSACUL_ACCESS_CODE is set) behind an access code. Re-running updates in place.
+ * permission. The site is public (published, indexable) unless JSACUL_ACCESS_CODE
+ * is set: then it is private (unlisted, noindex, behind that access code).
+ * Re-running updates in place.
  *
  * Each package is a "hall" in the data model; the three areas group them. The
  * base price is the Western-attire plan; the other costume plans are
@@ -96,13 +97,12 @@ class JsAculSeeder extends Seeder
             'theme' => 'jsacul',
             'hall_groups' => $groups,
             'plan_info' => $info,
-            'public_status' => 'unlisted',
         ];
 
-        // Set once; running the seeder again keeps whatever code is already in place.
+        // No code: public and open. With a code: private (unlisted + noindex + gate).
         $code = $this->accessCode ?? env('JSACUL_ACCESS_CODE');
-        $existing = Venue::where('slug', self::SLUG)->value('access_code_hash');
-        $venueData['access_code_hash'] = filled($code) ? Hash::make($code) : $existing;
+        $venueData['access_code_hash'] = filled($code) ? Hash::make($code) : null;
+        $venueData['public_status'] = filled($code) ? 'unlisted' : 'published';
 
         $venue = Venue::updateOrCreate(['slug' => self::SLUG], $venueData);
 

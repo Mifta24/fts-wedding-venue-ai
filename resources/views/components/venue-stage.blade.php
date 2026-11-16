@@ -32,6 +32,7 @@
     <meta name="twitter:title" content="{{ $pageTitle }}">
     <meta name="twitter:description" content="{{ $pageDescription }}">
     <meta name="twitter:image" content="{{ $pageImage }}">
+    <script>try{var d=JSON.parse(sessionStorage.getItem('venue_direct')||'null');sessionStorage.removeItem('venue_direct');if(d&&d.path===location.pathname&&Date.now()-d.at<8000)document.documentElement.classList.add('stage-direct')}catch(e){}</script>
     @fonts
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

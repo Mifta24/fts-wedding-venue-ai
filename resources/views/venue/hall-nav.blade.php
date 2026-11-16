@@ -4,7 +4,7 @@
     <nav class="hall-nav">
         @foreach ($halls as $item)
             <a href="{{ route('venue.hall', ['venueSlug' => $venue->slug, 'hallSlug' => $item->slug, 'lang' => $locale]) }}"
-                data-stage-exit
+                data-stage-exit data-stage-inner
                 @if (($hall ?? null)?->slug === $item->slug) aria-current="page" @endif>
                 @if ($item->images->first())
                     <img class="hall-nav-thumb" src="{{ $item->images->first()->image_source }}" alt="" loading="lazy">

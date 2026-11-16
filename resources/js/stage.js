@@ -11,6 +11,7 @@
  */
 const TOPIC_KEY = 'concierge_pending_topic';
 const CHAPTER_KEY = 'venue_last_chapter';
+const DIRECT_KEY = 'venue_direct';
 const CHAPTER_ORDER = ['I', 'II', 'III', 'IV', 'V', 'VI'];
 
 /**
@@ -105,6 +106,19 @@ function initStage() {
         window.setTimeout(() => { window.location.href = href; }, hold);
     }
 
+    /** Move to `link` with no curtain on either side. */
+    function go(link) {
+        if (leaving) return;
+        leaving = true;
+
+        try {
+            sessionStorage.removeItem(TOPIC_KEY);
+            sessionStorage.setItem(DIRECT_KEY, JSON.stringify({ path: link.pathname, at: Date.now() }));
+        } catch { /* private mode: the next page just opens its curtain as usual */ }
+
+        window.location.href = link.href;
+    }
+
     document.querySelectorAll('[data-stage-exit]').forEach((link) => {
         link.addEventListener('click', (event) => {
             const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0;
@@ -120,6 +134,14 @@ function initStage() {
                 return;
             }
             if (samePlace) return;
+
+            // Content inside the menu the client is already in (a hall, a service,
+            // prev/next): no curtain. The next page is told to skip its opening
+            // curtain too, so the choice simply appears.
+            if (link.hasAttribute('data-stage-inner')) {
+                go(link);
+                return;
+            }
 
             leave(link.href, link.dataset.tourLine, link.dataset.topic);
         });

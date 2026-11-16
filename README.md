@@ -202,6 +202,7 @@ vendor/bin/pint --dirty
 - **Mail:** mailbox `wedding-venue-ai@fts-tech.co.id`, SMTP `mail.fts-tech.co.id` port 465 (`MAIL_SCHEME=smtps`). Password hanya ada di `.env` server.
 - **`.env`:** milik user situs dengan mode 640. Kalau dimiliki user lain dengan mode 600, aplikasi tidak bisa membacanya dan jatuh ke SQLite.
 - **Force-push:** jika history GitHub di-force-push, pull di server gagal. Perbaiki di server dengan `git reset --hard origin/master` sebagai user situs.
+- **Pemilik `public/build`:** harus user situs Plesk. Kalau berisi file milik user lain (mis. uid macOS dari `rsync -a`), `npm run build` di post-deployment gagal `Permission denied` dan seluruh skrip berhenti. `deploy.sh` memakai `--no-owner --no-group` supaya ini tidak terulang. Perbaikan manual: `chown -R <user-situs>:psacln public/build`.
 - **`deploy.sh`:** jalur manual dari laptop (build lokal, rsync `public/build`, lalu `git pull --ff-only`). Hanya dipakai sebagai cadangan.
 
 ## Lisensi

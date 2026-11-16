@@ -88,7 +88,7 @@ else
 fi
 
 step "Uploading public/build"
-run rsync -az --delete public/build/ "$SSH_HOST:$APP_DIR/public/build/"
+run rsync -az --no-owner --no-group --delete public/build/ "$SSH_HOST:$APP_DIR/public/build/"
 
 step "Updating the server"
 

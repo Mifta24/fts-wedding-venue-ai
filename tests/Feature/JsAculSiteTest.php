@@ -3,7 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\Venue;
+use Database\Seeders\DatabaseSeeder;
 use Database\Seeders\JsAculSeeder;
+use Illuminate\Console\Command;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -13,9 +15,9 @@ class JsAculSiteTest extends TestCase
 
     private function seedSite(?string $code = null): Venue
     {
-        putenv('JSACUL_ACCESS_CODE'.($code ? "=$code" : ''));
-        $_ENV['JSACUL_ACCESS_CODE'] = $code ?? '';
-        $this->seed(JsAculSeeder::class);
+        $seeder = new JsAculSeeder;
+        $seeder->accessCode = $code;
+        $seeder->setContainer(app())->setCommand(new Command)->__invoke();
 
         return Venue::where('slug', 'jsacul')->firstOrFail();
     }
@@ -110,7 +112,7 @@ class JsAculSiteTest extends TestCase
 
     public function test_other_venues_keep_the_plain_hall_board_without_area_tabs(): void
     {
-        $this->seed(\Database\Seeders\DatabaseSeeder::class);
+        $this->seed(DatabaseSeeder::class);
         $slug = Venue::where('slug', '!=', 'jsacul')->value('slug');
 
         $this->get("/$slug/halls")->assertOk()->assertDontSee('data-area-tab=', false);

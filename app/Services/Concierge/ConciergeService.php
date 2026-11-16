@@ -5,6 +5,7 @@ namespace App\Services\Concierge;
 use App\Models\Conversation;
 use App\Models\ConversationMessage;
 use App\Models\Venue;
+use App\Services\CurrencyConverter;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use RuntimeException;
@@ -330,7 +331,7 @@ class ConciergeService
         $locale = $conversation->locale;
         $localeNames = ['id' => 'Bahasa Indonesia', 'en' => 'English', 'ja' => '日本語 (Japanese)', 'th' => 'Thai (ภาษาไทย)', 'zh' => 'Traditional Chinese for Taiwan (繁體中文)'];
         $localeName = $localeNames[$locale] ?? "the client's language";
-        $currencyName = app(\App\Services\CurrencyConverter::class)->currencyFor($venue, $locale);
+        $currencyName = app(CurrencyConverter::class)->currencyFor($venue, $locale);
         $today = now($venue->timezone)->toDateString();
 
         $weekday = $venue->weekday_discount_percent;
@@ -372,7 +373,7 @@ class ConciergeService
             return '';
         }
 
-        return <<<NOTE
+        return <<<'NOTE'
         IMPORTANT FOR THIS VENUE: it is a photo-wedding producer, not a hall rental. Every "hall" in the tools is a photo-wedding PLAN at one location, grouped into the areas Aizu, Nikko and Nasu. Plans have no guest capacity, no room size and no seating. The tool price is the base price of the Western-outfit plan (1 outfit each); the same flat price applies at every location, and other outfit combinations cost more (kimono 1 each JPY 420,000; Western 2 each JPY 580,000; Western + kimono JPY 620,000). The venue fee, bouquet, accessories, travel fees and a JPY 30,000 weekend/holiday surcharge are charged separately. Payment is made after the photo session, so there is no deposit. The office is closed on Tuesdays. Talk about plans, locations and dates, never about "guests" or "halls".
 
         NOTE;

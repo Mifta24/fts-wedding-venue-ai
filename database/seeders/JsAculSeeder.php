@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Hall;
 use App\Models\HallInventory;
 use App\Models\Venue;
-use App\Models\VenueKnowledgeItem;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -23,6 +22,9 @@ use Illuminate\Support\Facades\Hash;
  */
 class JsAculSeeder extends Seeder
 {
+    /** Set by tests; production passes the code through JSACUL_ACCESS_CODE. */
+    public ?string $accessCode = null;
+
     public const SLUG = 'jsacul';
 
     private const INVENTORY_DAYS = 540;
@@ -98,7 +100,7 @@ class JsAculSeeder extends Seeder
         ];
 
         // Set once; running the seeder again keeps whatever code is already in place.
-        $code = env('JSACUL_ACCESS_CODE');
+        $code = $this->accessCode ?? env('JSACUL_ACCESS_CODE');
         $existing = Venue::where('slug', self::SLUG)->value('access_code_hash');
         $venueData['access_code_hash'] = filled($code) ? Hash::make($code) : $existing;
 

@@ -9,6 +9,7 @@ use App\Models\HandoverRequest;
 use App\Models\Venue;
 use App\Models\VenueKnowledgeItem;
 use App\Notifications\NewHandoverRequest;
+use App\Services\CurrencyConverter;
 use App\Services\Reservation\ReservationService;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Str;
@@ -259,7 +260,7 @@ class VenueConciergeTools
             $images = $images->filter(fn ($img) => $img->hasTag($tag));
         }
 
-        $currency = new \App\Services\CurrencyConverter;
+        $currency = new CurrencyConverter;
         $shown = $currency->currencyFor($this->venue, $this->locale);
         $detail = [
             'hall_slug' => $hall->slug,

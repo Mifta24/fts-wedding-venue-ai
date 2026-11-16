@@ -7,6 +7,7 @@ use App\Models\Conversation;
 use App\Models\Hall;
 use App\Models\HallInventory;
 use App\Models\Venue;
+use App\Services\CurrencyConverter;
 use App\Services\Reservation\ReservationHandover;
 use App\Services\Reservation\ReservationService;
 use Carbon\CarbonImmutable;
@@ -283,7 +284,7 @@ class ReservationController extends Controller
             'message' => $message,
             'errors' => ['hall_slug' => [$message]],
             'alternatives' => $alternatives,
-            'currency' => app(\App\Services\CurrencyConverter::class)->currencyFor($venue, $locale),
+            'currency' => app(CurrencyConverter::class)->currencyFor($venue, $locale),
         ], 422);
     }
 

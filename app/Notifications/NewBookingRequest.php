@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\Booking;
+use App\Services\CurrencyConverter;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -31,7 +32,7 @@ class NewBookingRequest extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         $booking = $this->booking->loadMissing(['venue', 'hall']);
-        $fx = app(\App\Services\CurrencyConverter::class);
+        $fx = app(CurrencyConverter::class);
         $contact = $booking->client_phone ?? $booking->client_email;
 
         return (new MailMessage)

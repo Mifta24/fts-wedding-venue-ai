@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification as NotificationFacade;
 use Illuminate\Support\Str;
 
@@ -167,7 +168,7 @@ class Venue extends Model
 
     public function checkAccessCode(string $code): bool
     {
-        return $this->isGated() && \Illuminate\Support\Facades\Hash::check($code, $this->access_code_hash);
+        return $this->isGated() && Hash::check($code, $this->access_code_hash);
     }
 
     /** @return list<array{key: string, label: string}> */

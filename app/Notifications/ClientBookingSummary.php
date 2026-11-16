@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\Booking;
+use App\Services\CurrencyConverter;
 use App\Services\Reservation\ReservationHandover;
 
 /**
@@ -27,7 +28,7 @@ class ClientBookingSummary
 
         $dateFormat = in_array($locale, ['ja', 'zh'], true) ? 'Y年n月j日 (D)' : 'l, j F Y';
         $carbonLocale = $locale === 'zh' ? 'zh_TW' : $locale;
-        $money = fn ($value) => app(\App\Services\CurrencyConverter::class)->format((float) $value, $booking->billedCurrency());
+        $money = fn ($value) => app(CurrencyConverter::class)->format((float) $value, $booking->billedCurrency());
 
         return [
             "{$labels[0]}: {$booking->reference}",

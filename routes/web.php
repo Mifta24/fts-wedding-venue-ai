@@ -16,8 +16,8 @@ use App\Http\Controllers\ConciergeChatController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\VenueAccessController;
-use App\Http\Middleware\VenueAccessGate;
 use App\Http\Controllers\VenuePageController;
+use App\Http\Middleware\VenueAccessGate;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [VenuePageController::class, 'index'])->name('home');

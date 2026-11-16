@@ -195,14 +195,14 @@ vendor/bin/pint --dirty
 
 ### Server Plesk (`wedding-venue-ai.fts-tech.co.id`)
 
-- **Alur deploy:** `git push` ke `master` memicu webhook GitHub ke Plesk Git (mode Automatic). Post-deployment actions di Plesk menjalankan `composer install`, `npm ci` dan `npm run build`, `migrate --force`, cache config/route/view, lalu `queue:restart`. Tidak perlu deploy manual. Webhook GitHub harus menunjuk ke server Plesk yang melayani domain (sekarang `srv2088216.hstgr.cloud`, bukan server lama `srv1142454`). Cek lewat `plesk ext git --info`.
+- **Alur deploy:** `git push` ke `master` menjalankan GitHub Actions (`.github/workflows/ci.yml`): lint, test, audit, lalu job `deploy` masuk lewat SSH ke server. Kunci deploy hanya boleh menjalankan satu perintah terkunci, `/usr/local/bin/wedding-venue-ai-deploy` (milik root): `git reset --hard origin/master`, composer, `npm ci` + build, `migrate`, cache, `queue:restart`, lalu uji asap. Hook Plesk Git tidak dipakai lagi (Plesk hanya menyalin file, tidak memajukan HEAD, dan lognya tidak terlihat). Seeder tidak dijalankan otomatis; untuk data baru jalankan `db:seed --class=...` manual. Secret GitHub: `DEPLOY_HOST`, `DEPLOY_USER`, `DEPLOY_SSH_KEY`, `DEPLOY_KNOWN_HOSTS`.
 - **Deployment path:** harus root aplikasi (`/wedding-venue-ai.fts-tech.co.id`), bukan `public/`. Kalau diarahkan ke `public/`, seluruh isi repo tersalin ke webroot dan source code terekspos.
 - **Stack:** PHP 8.4 (`/opt/plesk/php/8.4/bin/php`), Node 24 (`/opt/plesk/node/24`), Postgres lokal (`DB_CONNECTION=pgsql`), SSL Cloudflare Origin.
 - **Cron (Plesk Scheduler, tiap menit):** `artisan schedule:run` dan `artisan queue:work --stop-when-empty --max-time=55 --tries=3`.
 - **Mail:** mailbox `wedding-venue-ai@fts-tech.co.id`, SMTP `mail.fts-tech.co.id` port 465 (`MAIL_SCHEME=smtps`). Password hanya ada di `.env` server.
 - **`.env`:** milik user situs dengan mode 640. Kalau dimiliki user lain dengan mode 600, aplikasi tidak bisa membacanya dan jatuh ke SQLite.
 - **Force-push:** jika history GitHub di-force-push, pull di server gagal. Perbaiki di server dengan `git reset --hard origin/master` sebagai user situs.
-- **Pemilik `public/build`:** harus user situs Plesk. Kalau berisi file milik user lain (mis. uid macOS dari `rsync -a`), `npm run build` di post-deployment gagal `Permission denied` dan seluruh skrip berhenti. `deploy.sh` memakai `--no-owner --no-group` supaya ini tidak terulang. Perbaikan manual: `chown -R <user-situs>:psacln public/build`.
+- **Pemilik `public/build`:** harus user situs Plesk (deploy otomatis berjalan sebagai user itu, jadi aman). Hindari `rsync -a` dari mesin lain; `deploy.sh` manual memakai `--no-owner --no-group`.
 - **`deploy.sh`:** jalur manual dari laptop (build lokal, rsync `public/build`, lalu `git pull --ff-only`). Hanya dipakai sebagai cadangan.
 
 ## Lisensi

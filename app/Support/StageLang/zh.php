@@ -87,7 +87,7 @@ return [
         'loading' => '布幕緩緩拉開…',
         'sound_on' => '開啟聲音', 'sound_off' => '關閉聲音',
         'hall_scene' => '宴會廳詳情', 'hall_counter' => '宴會廳', 'gallery' => '相片集', 'photo' => '相片',
-        'no_photo' => '相片即將上傳', 'zoom_photo' => '放大相片', 'detail' => '詳情', 'photo_info' => '相片資訊', 'photo_of' => '相片', 'hall_label' => '宴會廳', 'close' => '關閉', 'prev_photo' => '上一張相片', 'next_photo' => '下一張相片', 'prev_hall' => '上一間', 'next_hall' => '下一間',
+        'no_photo' => '相片即將上傳', 'zoom_photo' => '放大相片', 'watch_video' => '觀看影片', 'video_label' => '場地影片', 'detail' => '詳情', 'photo_info' => '相片資訊', 'photo_of' => '相片', 'hall_label' => '宴會廳', 'close' => '關閉', 'prev_photo' => '上一張相片', 'next_photo' => '下一張相片', 'prev_hall' => '上一間', 'next_hall' => '下一間',
         'ask_hall' => '詢問此宴會廳', 'reserve_hall' => '預約此處的日期',
         'size' => '面積', 'capacity' => '容納人數', 'guests_unit' => '位賓客', 'setting' => '場地環境', 'view' => '景觀', 'seating' => '座位形式', 'catering' => '餐飲', 'extra_hours' => '延長時數',
         'catering_included' => '含餐飲', 'catering_excluded' => '可自備餐飲廠商，或選用本場地合作餐飲',

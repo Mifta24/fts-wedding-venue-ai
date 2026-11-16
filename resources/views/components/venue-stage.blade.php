@@ -7,6 +7,7 @@
     $pageTitle = $title ?? $venue->name.' · AI Wedding Concierge';
     $pageDescription = \Illuminate\Support\Str::limit(strip_tags((string) ($description ?: $venue->translatedDescription($locale) ?: $venue->name)), 160);
     $pageImage = $ogImage ?: ($venue->cover_path ?: $backdrop['image']);
+    $pageImage = str_starts_with((string) $pageImage, '/') ? asset(ltrim($pageImage, '/')) : $pageImage;
     $ogLocales = ['id' => 'id_ID', 'en' => 'en_US', 'ja' => 'ja_JP', 'th' => 'th_TH', 'zh' => 'zh_TW'];
     $currency = app(\App\Services\CurrencyConverter::class)->currencyFor($venue, $locale);
 @endphp
@@ -18,6 +19,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $pageDescription }}">
+    @if ($venue->isUnlisted())
+        <meta name="robots" content="noindex, nofollow">
+    @endif
     <link rel="canonical" href="{{ url()->current() }}?lang={{ $locale }}">
     @foreach ($supportedLocales as $code)
         <link rel="alternate" hreflang="{{ $code }}" href="{{ url()->current() }}?lang={{ $code }}">

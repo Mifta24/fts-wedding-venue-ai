@@ -34,6 +34,12 @@
                     <textarea id="description_zh" name="translations[zh][description]" rows="2" class="{{ $field }}">{{ old('translations.zh.description', $venue->translations['zh']['description'] ?? '') }}</textarea>
                 </div>
                 <div class="col-span-2">
+                    <label for="video_url" class="block text-sm font-medium text-stone-700">Video gedung (YouTube)</label>
+                    <input id="video_url" type="url" name="video_url" value="{{ old('video_url', $venue->video_url) }}" placeholder="https://www.youtube.com/watch?v=..." class="{{ $field }}">
+                    <p class="mt-1 text-xs text-stone-500">Opsional. Jika diisi, tombol putar video muncul di halaman depan.</p>
+                    @error('video_url')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
+                </div>
+                <div class="col-span-2">
                     <label for="address" class="block text-sm font-medium text-stone-700">Alamat</label>
                     <input id="address" type="text" name="address" value="{{ old('address', $venue->address) }}" class="{{ $field }}">
                 </div>
@@ -119,6 +125,7 @@
                 <label for="public_status" class="block text-sm font-medium text-stone-700">Halaman publik</label>
                 <select id="public_status" name="public_status" class="{{ $field }} sm:w-60">
                     <option value="published" @selected(old('public_status', $venue->public_status) === 'published')>Terbit — terlihat oleh pasangan</option>
+                    <option value="unlisted" @selected(old('public_status', $venue->public_status) === 'unlisted')>Tersembunyi — hanya lewat tautan langsung</option>
                     <option value="draft" @selected(old('public_status', $venue->public_status) === 'draft')>Draf — disembunyikan dari pasangan</option>
                 </select>
             </div>

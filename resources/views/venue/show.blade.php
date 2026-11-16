@@ -17,6 +17,17 @@
                 </div>
             @endif
 
+            @if ($videoId = $venue->videoId())
+                <button type="button" class="lobby-video-btn" data-video-open aria-haspopup="dialog">
+                    <span class="lobby-video-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.52.85l10.4-6.5a1 1 0 0 0 0-1.7L9.52 4.65A1 1 0 0 0 8 5.5Z"/></svg></span>
+                    <span>{{ $lobby['watch_video'] }}</span>
+                </button>
+                <dialog class="video-modal" data-video-modal data-video-id="{{ $videoId }}" aria-label="{{ $lobby['video_label'] }}">
+                    <button type="button" class="video-modal-close" data-video-close aria-label="{{ $lobby['close'] }}"><span aria-hidden="true">×</span></button>
+                    <div class="video-modal-frame" data-video-frame></div>
+                </dialog>
+            @endif
+
             <dl class="lobby-stats">
                 @if ($halls->isNotEmpty())
                     <div><dt>{{ $lobby['stat_from'] }}</dt><dd>{{ $money($halls->min('base_price')) }}</dd></div>

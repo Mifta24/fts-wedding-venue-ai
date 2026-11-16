@@ -87,7 +87,7 @@ return [
         'loading' => 'กำลังเปิดม่าน…',
         'sound_on' => 'เปิดเสียง', 'sound_off' => 'ปิดเสียง',
         'hall_scene' => 'รายละเอียดฮอลล์', 'hall_counter' => 'ฮอลล์', 'gallery' => 'แกลเลอรีภาพ', 'photo' => 'ภาพ',
-        'no_photo' => 'ภาพถ่ายจะมาเร็วๆ นี้', 'zoom_photo' => 'ขยายภาพ', 'detail' => 'รายละเอียด', 'photo_info' => 'ข้อมูลภาพ', 'photo_of' => 'ภาพ', 'hall_label' => 'ฮอลล์', 'close' => 'ปิด', 'prev_photo' => 'ภาพก่อนหน้า', 'next_photo' => 'ภาพถัดไป', 'prev_hall' => 'ก่อนหน้า', 'next_hall' => 'ถัดไป',
+        'no_photo' => 'ภาพถ่ายจะมาเร็วๆ นี้', 'zoom_photo' => 'ขยายภาพ', 'watch_video' => 'ชมวิดีโอ', 'video_label' => 'วิดีโอสถานที่', 'detail' => 'รายละเอียด', 'photo_info' => 'ข้อมูลภาพ', 'photo_of' => 'ภาพ', 'hall_label' => 'ฮอลล์', 'close' => 'ปิด', 'prev_photo' => 'ภาพก่อนหน้า', 'next_photo' => 'ภาพถัดไป', 'prev_hall' => 'ก่อนหน้า', 'next_hall' => 'ถัดไป',
         'ask_hall' => 'สอบถามเกี่ยวกับฮอลล์นี้', 'reserve_hall' => 'จองวันที่นี่',
         'size' => 'พื้นที่', 'capacity' => 'ความจุ', 'guests_unit' => 'ท่าน', 'setting' => 'บรรยากาศ', 'view' => 'วิว', 'seating' => 'รูปแบบการจัดที่นั่ง', 'catering' => 'การจัดเลี้ยง', 'extra_hours' => 'ชั่วโมงเพิ่ม',
         'catering_included' => 'รวมอยู่ในราคา', 'catering_excluded' => 'นำผู้จัดเลี้ยงมาเองหรือใช้บริการของเราก็ได้',

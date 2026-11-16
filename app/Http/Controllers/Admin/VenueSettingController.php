@@ -38,6 +38,7 @@ class VenueSettingController extends Controller
             'translations.ja.description' => ['nullable', 'string', 'max:2000'],
             'translations.th.description' => ['nullable', 'string', 'max:2000'],
             'translations.zh.description' => ['nullable', 'string', 'max:2000'],
+            'video_url' => ['nullable', 'url:https', 'max:255', 'regex:~^https://(www\.|m\.)?(youtube\.com/(watch\?|embed/|shorts/)|youtu\.be/)~'],
             'address' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:100'],
             'country' => ['nullable', 'string', 'max:100'],
@@ -50,8 +51,9 @@ class VenueSettingController extends Controller
             'event_end_time' => ['required', 'date_format:H:i', 'after:event_start_time'],
             'weekday_discount_percent' => ['required', 'integer', 'min:0', 'max:90'],
             'deposit_percent' => ['required', 'integer', 'min:0', 'max:100'],
-            'public_status' => ['required', Rule::in(['draft', 'published'])],
+            'public_status' => ['required', Rule::in(['draft', 'published', 'unlisted'])],
         ], [
+            'video_url.regex' => 'Gunakan tautan YouTube (youtube.com atau youtu.be).',
             'event_end_time.after' => 'The event must end after it starts.',
         ]);
 

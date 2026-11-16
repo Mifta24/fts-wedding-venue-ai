@@ -37,6 +37,7 @@ use Illuminate\Support\Str;
     'deposit_percent',
     'logo_path',
     'cover_path',
+    'video_url',
     'public_status',
 ])]
 class Venue extends Model
@@ -120,9 +121,34 @@ class Venue extends Model
         return filled($value) ? $value : $this->description;
     }
 
+    /**
+     * The YouTube video id of the venue film, or null when none is set or the
+     * link is not a YouTube address. Only the id reaches the page, never the URL.
+     */
+    public function videoId(): ?string
+    {
+        $url = trim((string) $this->video_url);
+
+        if ($url === '') {
+            return null;
+        }
+
+        if (preg_match('~^(?:https?://)?(?:www\.|m\.)?(?:youtube\.com/(?:watch\?(?:.*&)?v=|embed/|shorts/)|youtu\.be/)([A-Za-z0-9_-]{11})(?:[?&#/].*)?$~', $url, $m)) {
+            return $m[1];
+        }
+
+        return null;
+    }
+
+    /** Reachable by its link. Unlisted venues are not shown in the opening list or the sitemap. */
     public function isPublished(): bool
     {
-        return $this->public_status === 'published';
+        return in_array($this->public_status, ['published', 'unlisted'], true);
+    }
+
+    public function isUnlisted(): bool
+    {
+        return $this->public_status === 'unlisted';
     }
 
     public function publicUrl(): string

@@ -825,3 +825,15 @@ a.info-fact:hover { border-color: var(--text); }
     .hall-scene-zoom-icon, .hall-lightbox-close, .hall-lightbox-nav { transition: none; transform: none; }
 }
 .hall-scene-photo .hall-scene-badge { pointer-events: none; }
+
+/* Venue film button and pop-up */
+.lobby-video-btn { display: inline-flex; align-items: center; gap: 10px; margin-top: 14px; padding: 8px 18px 8px 8px; border: 1px solid #ffffff59; border-radius: 999px; background: #0000002e; color: white; font-size: 13.5px; font-weight: 500; cursor: pointer; backdrop-filter: blur(6px); transition: background .2s, border-color .2s; }
+.lobby-video-btn:hover, .lobby-video-btn:focus-visible { background: #ffffff1f; border-color: var(--gold); }
+.lobby-video-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.lobby-video-icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--gold); color: var(--gold-ink); padding-left: 2px; }
+.video-modal { width: min(960px, 94vw); max-height: 92dvh; margin: auto; padding: 0; border: 0; border-radius: 14px; background: #000; color: #fff; overflow: hidden; box-shadow: 0 24px 80px #000a; }
+.video-modal::backdrop { background: #000000d9; }
+.video-modal-frame { position: relative; aspect-ratio: 16 / 9; width: 100%; border-radius: 14px; overflow: hidden; background: #000; }
+.video-modal-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.video-modal-close { position: absolute; z-index: 2; top: 10px; right: 10px; display: grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 50%; background: #000000a6; color: white; font-size: 24px; line-height: 1; cursor: pointer; backdrop-filter: blur(4px); }
+.video-modal-close:hover, .video-modal-close:focus-visible { background: var(--gold); color: var(--gold-ink); }

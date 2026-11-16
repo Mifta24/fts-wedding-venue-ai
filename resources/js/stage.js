@@ -162,3 +162,35 @@ window.takePendingConciergeTopic = () => {
 };
 
 document.addEventListener('DOMContentLoaded', initStage);
+
+
+/* Venue film: the YouTube player is created on click and removed on close, so
+   nothing is fetched from YouTube until a visitor asks for it and the video
+   stops the moment the pop-up closes. */
+function initVenueVideo() {
+    const open = document.querySelector('[data-video-open]');
+    const modal = document.querySelector('[data-video-modal]');
+    if (!open || !modal || typeof modal.showModal !== 'function') return;
+
+    const frame = modal.querySelector('[data-video-frame]');
+    const id = modal.dataset.videoId;
+
+    const stop = () => frame.replaceChildren();
+
+    open.addEventListener('click', () => {
+        const player = document.createElement('iframe');
+        player.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0&playsinline=1`;
+        player.title = modal.getAttribute('aria-label') || '';
+        player.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+        player.allowFullscreen = true;
+        player.referrerPolicy = 'strict-origin-when-cross-origin';
+        frame.replaceChildren(player);
+        modal.showModal();
+    });
+
+    modal.querySelector('[data-video-close]')?.addEventListener('click', () => modal.close());
+    modal.addEventListener('click', (event) => { if (event.target === modal) modal.close(); });
+    modal.addEventListener('close', stop);
+}
+
+initVenueVideo();

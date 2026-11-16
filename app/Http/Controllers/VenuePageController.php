@@ -358,7 +358,7 @@ class VenuePageController extends Controller
             'locale' => $locale,
             'scene' => $scene,
             'chapter' => self::CHAPTERS[['hall' => 'halls', 'service' => 'services'][$scene] ?? $scene] ?? self::CHAPTERS['lobby'],
-            'backdrop' => $this->sceneBackdrop($scene),
+            'backdrop' => $this->sceneBackdrop($scene, $venue),
             'menuItems' => $this->stageMenu($venue, $locale, $labels, $lobby),
             'supportedLocales' => self::SUPPORTED_LOCALES,
             'labels' => $labels,
@@ -396,9 +396,17 @@ class VenuePageController extends Controller
      *
      * @return array{image: string, focus: string, focusMobile: string, character: string, pose: string, avatarImage: string, avatarZoom: string, avatarFocus: string}
      */
-    private function sceneBackdrop(string $scene): array
+    private function sceneBackdrop(string $scene, Venue $venue): array
     {
         $photo = self::SCENE_PHOTOS[['hall' => 'halls', 'service' => 'services'][$scene] ?? $scene] ?? self::SCENE_PHOTOS['lobby'];
+
+        // A venue with a cover photo of its own is shown against that photo in every
+        // chapter, instead of the stock wedding scenes.
+        $ownCover = filled($venue->cover_path) && $venue->cover_path !== self::SCENE_PHOTOS['lobby']['image'];
+        if ($ownCover) {
+            $cover = str_starts_with($venue->cover_path, '/') ? asset(ltrim($venue->cover_path, '/')) : $venue->cover_path;
+            $photo = [...self::SCENE_PHOTOS['lobby'], 'image' => $cover];
+        }
 
         $pose = self::SCENE_POSES[['hall' => 'halls'][$scene] ?? $scene] ?? 'standing';
 
@@ -659,7 +667,7 @@ class VenuePageController extends Controller
                 'loading' => 'Drawing the curtains…',
                 'sound_on' => 'Sound on', 'sound_off' => 'Sound off',
                 'hall_scene' => 'Hall details', 'hall_counter' => 'Hall', 'gallery' => 'Photo gallery', 'photo' => 'Photo',
-                'no_photo' => 'Photos coming soon', 'zoom_photo' => 'Enlarge photo', 'detail' => 'Detail', 'photo_info' => 'Photo information', 'photo_of' => 'Photo', 'hall_label' => 'Hall', 'close' => 'Close', 'prev_photo' => 'Previous photo', 'next_photo' => 'Next photo', 'prev_hall' => 'Previous', 'next_hall' => 'Next',
+                'no_photo' => 'Photos coming soon', 'zoom_photo' => 'Enlarge photo', 'watch_video' => 'Watch the film', 'video_label' => 'Venue film', 'detail' => 'Detail', 'photo_info' => 'Photo information', 'photo_of' => 'Photo', 'hall_label' => 'Hall', 'close' => 'Close', 'prev_photo' => 'Previous photo', 'next_photo' => 'Next photo', 'prev_hall' => 'Previous', 'next_hall' => 'Next',
                 'ask_hall' => 'Ask about this hall', 'reserve_hall' => 'Hold a date here',
                 'size' => 'Size', 'capacity' => 'Capacity', 'guests_unit' => 'guests', 'setting' => 'Setting', 'view' => 'View', 'seating' => 'Seating styles', 'catering' => 'Catering', 'extra_hours' => 'Extra hours',
                 'catering_included' => 'Included', 'catering_excluded' => 'Bring your caterer or book ours',
@@ -690,7 +698,7 @@ class VenuePageController extends Controller
                 'loading' => 'カーテンを開いています…',
                 'sound_on' => 'サウンドオン', 'sound_off' => 'サウンドオフ',
                 'hall_scene' => 'ホールのご案内', 'hall_counter' => 'ホール', 'gallery' => 'フォトギャラリー', 'photo' => '写真',
-                'no_photo' => '写真は準備中です', 'zoom_photo' => '写真を拡大', 'detail' => '詳細', 'photo_info' => '写真の情報', 'photo_of' => '写真', 'hall_label' => 'ホール', 'close' => '閉じる', 'prev_photo' => '前の写真', 'next_photo' => '次の写真', 'prev_hall' => '前へ', 'next_hall' => '次へ',
+                'no_photo' => '写真は準備中です', 'zoom_photo' => '写真を拡大', 'watch_video' => '映像を見る', 'video_label' => '会場の映像', 'detail' => '詳細', 'photo_info' => '写真の情報', 'photo_of' => '写真', 'hall_label' => 'ホール', 'close' => '閉じる', 'prev_photo' => '前の写真', 'next_photo' => '次の写真', 'prev_hall' => '前へ', 'next_hall' => '次へ',
                 'ask_hall' => 'このホールについて聞く', 'reserve_hall' => 'この会場で日程を仮予約',
                 'size' => '広さ', 'capacity' => '収容人数', 'guests_unit' => '名', 'setting' => '環境', 'view' => '眺望', 'seating' => '座席レイアウト', 'catering' => 'ケータリング', 'extra_hours' => '延長',
                 'catering_included' => '含まれます', 'catering_excluded' => '持ち込み可、または当会場のご利用も可能です',
@@ -722,7 +730,7 @@ class VenuePageController extends Controller
                 'loading' => 'Membuka tirai…',
                 'sound_on' => 'Suara aktif', 'sound_off' => 'Suara mati',
                 'hall_scene' => 'Detail hall', 'hall_counter' => 'Hall', 'gallery' => 'Galeri foto', 'photo' => 'Foto',
-                'no_photo' => 'Foto segera tersedia', 'zoom_photo' => 'Perbesar foto', 'detail' => 'Detail', 'photo_info' => 'Informasi foto', 'photo_of' => 'Foto', 'hall_label' => 'Hall', 'close' => 'Tutup', 'prev_photo' => 'Foto sebelumnya', 'next_photo' => 'Foto berikutnya', 'prev_hall' => 'Sebelumnya', 'next_hall' => 'Berikutnya',
+                'no_photo' => 'Foto segera tersedia', 'zoom_photo' => 'Perbesar foto', 'watch_video' => 'Tonton videonya', 'video_label' => 'Video gedung', 'detail' => 'Detail', 'photo_info' => 'Informasi foto', 'photo_of' => 'Foto', 'hall_label' => 'Hall', 'close' => 'Tutup', 'prev_photo' => 'Foto sebelumnya', 'next_photo' => 'Foto berikutnya', 'prev_hall' => 'Sebelumnya', 'next_hall' => 'Berikutnya',
                 'ask_hall' => 'Tanya tentang hall ini', 'reserve_hall' => 'Amankan tanggal di sini',
                 'size' => 'Luas', 'capacity' => 'Kapasitas', 'guests_unit' => 'tamu', 'setting' => 'Suasana', 'view' => 'Pemandangan', 'seating' => 'Tata tempat duduk', 'catering' => 'Katering', 'extra_hours' => 'Tambahan jam',
                 'catering_included' => 'Termasuk', 'catering_excluded' => 'Boleh bawa katering sendiri atau pakai katering kami',

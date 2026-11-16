@@ -195,7 +195,7 @@ vendor/bin/pint --dirty
 
 ### Server Plesk (`wedding-venue-ai.fts-tech.co.id`)
 
-- **Alur deploy:** `git push` ke `master` memicu webhook GitHub ke Plesk Git (mode Automatic). Post-deployment actions di Plesk menjalankan `composer install`, `npm ci` dan `npm run build`, `migrate --force`, cache config/route/view, lalu `queue:restart`. Tidak perlu deploy manual. Webhook GitHub harus menunjuk ke server Plesk yang melayani domain (sekarang `srv2088216.hstgr.cloud`, bukan server lama `srv1142454`).
+- **Alur deploy:** `git push` ke `master` memicu webhook GitHub ke Plesk Git (mode Automatic). Post-deployment actions di Plesk menjalankan `composer install`, `npm ci` dan `npm run build`, `migrate --force`, cache config/route/view, lalu `queue:restart`. Tidak perlu deploy manual. Webhook GitHub harus menunjuk ke server Plesk yang melayani domain (sekarang `srv2088216.hstgr.cloud`, bukan server lama `srv1142454`). Cek lewat `plesk ext git --info`.
 - **Deployment path:** harus root aplikasi (`/wedding-venue-ai.fts-tech.co.id`), bukan `public/`. Kalau diarahkan ke `public/`, seluruh isi repo tersalin ke webroot dan source code terekspos.
 - **Stack:** PHP 8.4 (`/opt/plesk/php/8.4/bin/php`), Node 24 (`/opt/plesk/node/24`), Postgres lokal (`DB_CONNECTION=pgsql`), SSL Cloudflare Origin.
 - **Cron (Plesk Scheduler, tiap menit):** `artisan schedule:run` dan `artisan queue:work --stop-when-empty --max-time=55 --tries=3`.

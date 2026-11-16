@@ -8,6 +8,7 @@ use App\Models\Venue;
 use App\Models\VenueKnowledgeItem;
 use App\Services\Reservation\ReservationHandover;
 use App\Services\Reservation\ReservationService;
+use App\Services\CurrencyConverter;
 use App\Services\VenueContentCache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -320,9 +321,13 @@ class VenuePageController extends Controller
             'event_labels_json' => json_encode($this->eventTypeLabels($locale), JSON_UNESCAPED_UNICODE),
         ];
         $lobby = $this->lobbyLabels($locale);
+        $fx = app(CurrencyConverter::class);
+        $currency = $fx->currencyFor($venue, $locale);
 
         return [
             'venue' => $venue,
+            'currency' => $currency,
+            'price' => fn ($value, string $space = ' ') => $fx->display((float) $value, $venue, $currency, $space),
             'halls' => $halls,
             'locale' => $locale,
             'scene' => $scene,
@@ -451,7 +456,9 @@ class VenuePageController extends Controller
     {
         $templates = self::NARRATION[$locale];
         $terms = self::HALL_TERMS[$locale];
-        $money = fn ($value) => $venue->currency.' '.number_format((float) $value, 0, ',', '.');
+        $fx = app(CurrencyConverter::class);
+        $shown = $fx->currencyFor($venue, $locale);
+        $money = fn ($value) => $fx->display((float) $value, $venue, $shown);
         $sentence = fn (string $text) => preg_match('/[.!?。！？]$/u', $text) ? $text : $text.($locale === 'ja' ? '。' : '.');
 
         if ($halls->isEmpty()) {

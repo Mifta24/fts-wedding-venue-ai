@@ -26,7 +26,7 @@ class BookingController extends Controller
             : null;
 
         $bookings = $venue->bookings()
-            ->with('hall')
+            ->with(['hall', 'venue'])
             ->when($status, fn ($q) => $q->where('status', $status))
             ->latest()
             ->paginate(20)

@@ -24,7 +24,7 @@ class ClientBookingSummary
         };
 
         $dateFormat = $locale === 'ja' ? 'Y年n月j日 (D)' : 'l, j F Y';
-        $money = fn ($value) => $booking->venue->currency.' '.number_format((float) $value, 0, ',', '.');
+        $money = fn ($value) => app(\App\Services\CurrencyConverter::class)->format((float) $value, $booking->billedCurrency());
 
         return [
             "{$labels[0]}: {$booking->reference}",

@@ -1,3 +1,4 @@
+import { formatMoney } from './money';
 /**
  * AI Concierge chat panel. Vanilla JS, no framework: sends client messages to
  * the Laravel backend and renders both plain text and the structured
@@ -175,10 +176,9 @@ function initConcierge() {
     });
     syncPanelState();
 
+    // Amounts from the server are already in the page language's currency.
     function money(value) {
-        const n = Number(value) || 0;
-        const numberLocale = config.locale === 'ja' ? 'ja-JP' : config.locale === 'en' ? 'en-US' : 'id-ID';
-        return `${config.currency} ${new Intl.NumberFormat(numberLocale, { maximumFractionDigits: 0 }).format(n)}`;
+        return formatMoney(value, config.currency);
     }
 
     const moneyCount = (value) => `<span data-count="${Number(value) || 0}">${money(value)}</span>`;

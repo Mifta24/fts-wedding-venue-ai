@@ -43,7 +43,7 @@
             data-label-error="{{ $labels['chat_error'] }}"
             data-label-slow="{{ $labels['chat_slow'] }}"
             data-label-retry="{{ $labels['chat_retry'] }}"
-            data-currency="{{ $venue->currency }}"
+            data-currency="{{ $currency }}"
             data-lobby-url="{{ route('venue.show', ['venueSlug' => $venue->slug, 'lang' => $locale]) }}"
             data-hall-url="{{ route('venue.hall', ['venueSlug' => $venue->slug, 'hallSlug' => '__SLUG__', 'lang' => $locale]) }}"
             data-staff-url="{{ route('venue.staff', ['venueSlug' => $venue->slug, 'lang' => $locale]) }}"

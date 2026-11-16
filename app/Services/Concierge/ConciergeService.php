@@ -330,6 +330,7 @@ class ConciergeService
         $locale = $conversation->locale;
         $localeNames = ['id' => 'Bahasa Indonesia', 'en' => 'English', 'ja' => '日本語 (Japanese)'];
         $localeName = $localeNames[$locale] ?? "the client's language";
+        $currencyName = app(\App\Services\CurrencyConverter::class)->currencyFor($venue, $locale);
         $today = now($venue->timezone)->toDateString();
 
         $weekday = $venue->weekday_discount_percent;
@@ -357,7 +358,7 @@ class ConciergeService
 
         A hall is rented per event date: the price is a per-event rental rate for the standard event window ({$this->eventWindow($venue)}), and a few halls sell extra hours. The venue asks for a {$venue->deposit_percent}% down payment to secure a date once the team confirms it. {$discount}
         The halls of this venue (names and slugs only, for calling get_hall_detail directly — never a source of price or availability): {$hallDirectory}.
-        Currency for all prices: {$venue->currency}. Today's date: {$today}.
+        Currency for all prices: {$currencyName} (the tools already return amounts in it; never convert or restate prices in another currency). Today's date: {$today}.
 
         {$this->buildUiContext($conversation)}
         PROMPT;

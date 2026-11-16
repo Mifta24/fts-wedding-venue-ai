@@ -45,4 +45,10 @@ return [
         'model' => env('LOCAL_LLM_MODEL'),
     ],
 
+
+    // Daily exchange rates for per-language pricing (ECB via Frankfurter). Empty disables conversion.
+    'fx' => [
+        'feed' => env('FX_FEED_URL', 'https://api.frankfurter.dev/v1/latest'),
+    ],
+
 ];

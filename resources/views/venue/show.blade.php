@@ -1,5 +1,5 @@
 @php
-    $money = fn ($value) => $venue->currency.' '.number_format((float) $value, 0, ',', '.');
+    $money = fn ($value) => $price($value);
     $hallsItem = collect($menuItems)->firstWhere('key', 'halls');
     $reservationItem = collect($menuItems)->firstWhere('key', 'reservation');
 @endphp

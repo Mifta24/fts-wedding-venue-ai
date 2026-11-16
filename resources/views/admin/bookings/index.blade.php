@@ -32,7 +32,7 @@
                         </td>
                         <td class="px-4 py-3">{{ $booking->hall->name }}<p class="text-xs text-stone-400">{{ $booking->guest_count }} tamu{{ $booking->extra_hours ? ' · +'.$booking->extra_hours.' h' : '' }}</p></td>
                         <td class="px-4 py-3 text-xs text-stone-500">{{ $booking->event_date->locale('id')->translatedFormat('D, j M Y') }}<p class="mt-0.5 text-stone-400">{{ \App\Models\Booking::eventTypeLabel($booking->event_type) }}</p></td>
-                        <td class="px-4 py-3">{{ $venue->currency }} {{ number_format((float) $booking->total_price, 0, ',', '.') }}<p class="text-xs text-stone-400">DP {{ number_format((float) $booking->deposit_amount, 0, ',', '.') }}</p></td>
+                        <td class="px-4 py-3">{{ app(\App\Services\CurrencyConverter::class)->format((float) $booking->total_price, $booking->billedCurrency()) }}<p class="text-xs text-stone-400">DP {{ app(\App\Services\CurrencyConverter::class)->format((float) $booking->deposit_amount, $booking->billedCurrency()) }}{{ $booking->totalInVenueCurrency() ? ' · ≈ '.app(\App\Services\CurrencyConverter::class)->format($booking->totalInVenueCurrency(), $venue->currency) : '' }}</p></td>
                         <td class="px-4 py-3">@include('admin.bookings._status')</td>
                         <td class="px-4 py-3 text-right">
                             @include('admin.bookings._actions')
@@ -57,7 +57,7 @@
                 </div>
                 <p class="mt-2 text-sm text-stone-700">{{ $booking->hall->name }} · {{ $booking->guest_count }} tamu{{ $booking->extra_hours ? ' · +'.$booking->extra_hours.' h' : '' }}</p>
                 <p class="mt-1 text-xs text-stone-500">{{ $booking->event_date->locale('id')->translatedFormat('D, j M Y') }} · {{ \App\Models\Booking::eventTypeLabel($booking->event_type) }}</p>
-                <p class="mt-1 text-sm font-medium text-stone-900">{{ $venue->currency }} {{ number_format((float) $booking->total_price, 0, ',', '.') }} <span class="text-xs font-normal text-stone-400">· DP {{ number_format((float) $booking->deposit_amount, 0, ',', '.') }}</span></p>
+                <p class="mt-1 text-sm font-medium text-stone-900">{{ app(\App\Services\CurrencyConverter::class)->format((float) $booking->total_price, $booking->billedCurrency()) }} <span class="text-xs font-normal text-stone-400">· DP {{ app(\App\Services\CurrencyConverter::class)->format((float) $booking->deposit_amount, $booking->billedCurrency()) }}{{ $booking->totalInVenueCurrency() ? ' · ≈ '.app(\App\Services\CurrencyConverter::class)->format($booking->totalInVenueCurrency(), $venue->currency) : '' }}</span></p>
                 <p class="mt-2 text-xs text-stone-500">{{ $booking->contact_type ? \App\Models\Booking::contactTypeLabel($booking->contact_type).': ' : '' }}{{ $booking->client_phone ?? $booking->client_email }}</p>
                 @if ($booking->notes)<p class="mt-1 text-xs italic text-stone-400">{{ $booking->notes }}</p>@endif
                 @if ($booking->canTransitionTo('confirmed') || $booking->canTransitionTo('cancelled'))

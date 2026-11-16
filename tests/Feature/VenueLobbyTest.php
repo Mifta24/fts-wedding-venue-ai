@@ -388,17 +388,17 @@ class VenueLobbyTest extends TestCase
         $this->get('/demo/halls?lang=en')
             ->assertOk()
             ->assertSee('data-narrator', false)
-            ->assertSee('We have 2 halls, from IDR 28.000.000 per event.');
+            ->assertSee('We have 2 halls, from Rp 28.000.000 per event.');
 
         $this->get('/demo/halls/garden-pavilion?lang=en')
             ->assertOk()
-            ->assertSee('Garden Pavilion. A calm hall under the trees. An open-air setting. It seats 150 to 500 guests across 1200 m². Garden view. Rental starts from IDR 55.000.000 per event. Final availability and rates are confirmed by our wedding team. Events from Monday to Thursday get 15% off.');
+            ->assertSee('Garden Pavilion. A calm hall under the trees. An open-air setting. It seats 150 to 500 guests across 1200 m². Garden view. Rental starts from Rp 55.000.000 per event. Final availability and rates are confirmed by our wedding team. Events from Monday to Thursday get 15% off.');
 
         $this->get('/demo/halls/salon?lang=en')
             ->assertOk()
-            ->assertSee('Salon. An air-conditioned indoor hall. It seats 40 to 120 guests. Rental starts from IDR 28.000.000 per event.');
+            ->assertSee('Salon. An air-conditioned indoor hall. It seats 40 to 120 guests. Rental starts from Rp 28.000.000 per event.');
 
-        $this->get('/demo/halls?lang=id')->assertOk()->assertSee('Ada 2 hall, mulai dari IDR 28.000.000 per acara.');
+        $this->get('/demo/halls?lang=id')->assertOk()->assertSee('Ada 2 hall, mulai dari Rp 28.000.000 per acara.');
     }
 
     public function test_no_hall_narration_is_shown_when_the_venue_has_no_halls(): void
@@ -469,7 +469,7 @@ class VenueLobbyTest extends TestCase
             ->assertOk()
             ->assertSee('class="hall-directory"', false)
             ->assertSee('class="hall-nav"', false)
-            ->assertSee('mulai dari IDR&nbsp;55.000.000 / acara', false)
+            ->assertSee("mulai dari Rp\u{00A0}55.000.000 / acara", false)
             ->assertDontSee('Retired Hall')
             ->assertSee('href="'.route('venue.show', ['venueSlug' => 'demo', 'lang' => 'id']).'" class="journey-button"', false);
 
@@ -582,6 +582,6 @@ class VenueLobbyTest extends TestCase
         $venue = $this->venue(['weekday_discount_percent' => 15]);
         $this->hall($venue, 'Garden Pavilion', ['base_price' => 28000000, 'max_guests' => 1000]);
 
-        $this->get('/demo?lang=en')->assertOk()->assertSee('IDR 28.000.000')->assertSee('1.000 guests')->assertSee('15% off');
+        $this->get('/demo?lang=en')->assertOk()->assertSee('Rp 28.000.000')->assertSee('1.000 guests')->assertSee('15% off');
     }
 }

@@ -1,4 +1,5 @@
 import { createDatePicker } from './date-picker';
+import { formatMoney } from './money';
 
 /**
  * Guided date request wizard: five short steps — wedding date, event and
@@ -51,7 +52,8 @@ function initReservationWizard() {
     let busy = false;
 
     const text = (template, values) => Object.entries(values).reduce((out, [key, value]) => out.replace(`:${key}`, value), template);
-    const money = (value) => `${config.currency} ${new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(Number(value) || 0)}`;
+    // The page, the quote and the booking are all priced in the currency of the page language.
+    const money = (value) => formatMoney(value, config.currency);
 
     function formatDate(iso) {
         const [year, month, day] = iso.split('-').map(Number);

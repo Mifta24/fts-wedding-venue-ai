@@ -8,6 +8,7 @@
     $pageDescription = \Illuminate\Support\Str::limit(strip_tags((string) ($description ?: $venue->translatedDescription($locale) ?: $venue->name)), 160);
     $pageImage = $ogImage ?: ($venue->cover_path ?: $backdrop['image']);
     $ogLocales = ['id' => 'id_ID', 'en' => 'en_US', 'ja' => 'ja_JP'];
+    $currency = app(\App\Services\CurrencyConverter::class)->currencyFor($venue, $locale);
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', $locale) }}">

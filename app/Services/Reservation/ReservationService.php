@@ -10,6 +10,7 @@ use App\Models\Venue;
 use App\Notifications\BookingRequestReceived;
 use App\Notifications\BookingStatusChanged;
 use App\Notifications\NewBookingRequest;
+use App\Services\CurrencyConverter;
 use Carbon\CarbonImmutable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\DB;
@@ -22,6 +23,8 @@ use Illuminate\Support\Facades\Notification as NotificationFacade;
  */
 class ReservationService
 {
+    public function __construct(private readonly CurrencyConverter $currency = new CurrencyConverter) {}
+
     /** The most guests one online request may carry; larger gatherings go to the team. */
     public const MAX_GUESTS = 3000;
 
@@ -38,6 +41,7 @@ class ReservationService
         CarbonImmutable $eventDate,
         int $extraHours = 0,
         bool $lockForUpdate = false,
+        ?string $locale = null,
     ): ?array {
         $query = HallInventory::where('hall_id', $hall->id)->whereDate('event_date', $eventDate->toDateString());
 
@@ -54,11 +58,13 @@ class ReservationService
         $venue = $hall->venue;
         $extraHours = $hall->extra_hour_available ? max(0, min($extraHours, Hall::MAX_EXTRA_HOURS)) : 0;
 
-        $hallTotal = (float) $day->price;
-        $extraHoursTotal = (float) $hall->extra_hour_price * $extraHours;
+        // Priced straight in the client's currency, so the lines on screen always add up.
+        $currency = $this->currency->currencyFor($venue, $locale);
+        $hallTotal = $this->currency->convert((float) $day->price, $venue, $currency);
+        $extraHoursTotal = $this->currency->convert((float) $hall->extra_hour_price, $venue, $currency) * $extraHours;
         $subtotal = $hallTotal + $extraHoursTotal;
         $discountPercent = $venue->weekdayDiscountPercent($eventDate);
-        $discountTotal = round($subtotal * $discountPercent / 100, 2);
+        $discountTotal = $this->currency->round($subtotal * $discountPercent / 100, $currency);
         $grandTotal = $subtotal - $discountTotal;
 
         return [
@@ -72,7 +78,9 @@ class ReservationService
             'discount_total' => $discountTotal,
             'grand_total' => $grandTotal,
             'deposit_percent' => $venue->deposit_percent,
-            'deposit_total' => round($grandTotal * $venue->deposit_percent / 100, 2),
+            'deposit_total' => $this->currency->round($grandTotal * $venue->deposit_percent / 100, $currency),
+            'currency' => $currency,
+            'exchange_rate' => $this->currency->rate($venue->currency, $currency) ?? 1.0,
         ];
     }
 
@@ -85,7 +93,7 @@ class ReservationService
     public function createRequest(Venue $venue, Hall $hall, array $data, ?Conversation $conversation = null): ?Booking
     {
         $booking = DB::transaction(function () use ($venue, $hall, $data, $conversation) {
-            $quote = $this->quote($hall, $data['event_date'], (int) ($data['extra_hours'] ?? 0), lockForUpdate: true);
+            $quote = $this->quote($hall, $data['event_date'], (int) ($data['extra_hours'] ?? 0), lockForUpdate: true, locale: $data['locale'] ?? null);
 
             if (! $quote) {
                 return null;
@@ -107,6 +115,8 @@ class ReservationService
                 'extra_hours' => $quote['extra_hours'],
                 'total_price' => $quote['grand_total'],
                 'deposit_amount' => $quote['deposit_total'],
+                'currency' => $quote['currency'],
+                'exchange_rate' => $quote['exchange_rate'],
                 'status' => Booking::STATUS_PENDING,
                 'notes' => $data['notes'] ?? null,
             ]);

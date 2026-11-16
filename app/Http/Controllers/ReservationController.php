@@ -102,7 +102,7 @@ class ReservationController extends Controller
         $data = $request->validate($this->eventRules($venue), $this->validationMessages($locale));
         [$hall, $eventDate, $extraHours] = $this->resolveEvent($venue, $data, $locale);
 
-        $quote = $this->reservations->quote($hall, $eventDate, $extraHours);
+        $quote = $this->reservations->quote($hall, $eventDate, $extraHours, locale: $locale);
 
         if (! $quote) {
             return $this->unavailable($venue, $hall, $data, $locale);
@@ -111,7 +111,6 @@ class ReservationController extends Controller
         return response()->json([
             'available' => true,
             ...$quote,
-            'currency' => $venue->currency,
         ]);
     }
 
@@ -168,7 +167,7 @@ class ReservationController extends Controller
             'status' => $booking->status,
             'total' => (float) $booking->total_price,
             'deposit' => (float) $booking->deposit_amount,
-            'currency' => $venue->currency,
+            'currency' => $booking->billedCurrency(),
             'handover' => $this->handover->forBooking($venue, $booking, $locale),
         ], 201);
     }
@@ -249,7 +248,7 @@ class ReservationController extends Controller
             ->get()
             ->filter(fn (Hall $hall) => $hall->fitsGuests($guests))
             ->map(function (Hall $hall) use ($eventDate, $locale) {
-                $quote = $this->reservations->quote($hall, $eventDate);
+                $quote = $this->reservations->quote($hall, $eventDate, locale: $locale);
 
                 return $quote ? [
                     'slug' => $hall->slug,
@@ -266,7 +265,7 @@ class ReservationController extends Controller
             'message' => $message,
             'errors' => ['hall_slug' => [$message]],
             'alternatives' => $alternatives,
-            'currency' => $venue->currency,
+            'currency' => app(\App\Services\CurrencyConverter::class)->currencyFor($venue, $locale),
         ], 422);
     }
 

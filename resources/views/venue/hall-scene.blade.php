@@ -1,6 +1,6 @@
 @php
     $hallName = $hall->translatedName($locale);
-    $money = fn ($value) => $venue->currency."\u{00A0}".number_format((float) $value, 0, ',', '.');
+    $money = fn ($value) => $price($value, "\u{00A0}");
     $seating = collect($hall->seating_styles ?? [])
         ->map(fn ($style) => $hallTerms['seating'][$style] ?? Str::headline($style))
         ->implode(', ');

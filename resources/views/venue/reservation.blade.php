@@ -9,7 +9,7 @@
         data-submit-url="{{ route('reservation.store', $venue->slug) }}"
         data-venue-slug="{{ $venue->slug }}"
         data-locale="{{ $locale }}"
-        data-currency="{{ $venue->currency }}"
+        data-currency="{{ $currency }}"
         data-today="{{ $today }}"
         data-weekday-deal="{{ $venue->weekday_discount_percent > 0 ? 1 : 0 }}"
         data-preselect-hall="{{ $preselectedHall ?? '' }}"
@@ -78,13 +78,13 @@
                                     data-min-guests="{{ $hall->min_guests }}"
                                     data-max-guests="{{ $hall->max_guests }}"
                                     data-extra-hours="{{ $hall->extra_hour_available ? 1 : 0 }}"
-                                    data-extra-hour-price="{{ (float) $hall->extra_hour_price }}"
+                                    data-extra-hour-price="{{ app(\App\Services\CurrencyConverter::class)->convert((float) $hall->extra_hour_price, $venue, $currency) }}"
                                 >
                                     <input type="radio" name="hall_slug" value="{{ $hall->slug }}">
                                     <span class="wizard-hall-body">
                                         <strong>{{ $hall->translatedName($locale) }}</strong>
                                         <span>{{ str_replace([':min', ':max'], [(string) $hall->min_guests, (string) $hall->max_guests], $wizard['fits']) }}</span>
-                                        <span class="wizard-hall-price">{{ $labels['from'] }} {{ $venue->currency }} {{ number_format((float) $hall->base_price, 0, ',', '.') }} {{ $labels['per_event'] }}</span>
+                                        <span class="wizard-hall-price">{{ $labels['from'] }} {{ $price($hall->base_price) }} {{ $labels['per_event'] }}</span>
                                         <span class="wizard-hall-hint" data-hall-hint></span>
                                     </span>
                                 </label>

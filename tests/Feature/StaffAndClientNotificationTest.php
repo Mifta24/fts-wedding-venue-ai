@@ -142,7 +142,7 @@ class StaffAndClientNotificationTest extends TestCase
         $this->assertContains('会場: スタジオ', $confirmed->introLines);
         $this->assertContains('ご希望の式: 挙式＋披露宴', $confirmed->introLines);
         $this->assertContains('ゲスト人数: 80', $confirmed->introLines);
-        $this->assertContains('手付金: IDR 3.000.000', $confirmed->introLines);
+        $this->assertContains('手付金: Rp 3.000.000', $confirmed->introLines);
         $this->assertTrue(collect($confirmed->introLines)->contains(fn (string $line) => str_starts_with($line, '挙式日: '.$this->eventDate->year.'年'.$this->eventDate->month.'月'.$this->eventDate->day.'日')));
 
         $booking->update(['status' => Booking::STATUS_CANCELLED, 'locale' => 'id']);

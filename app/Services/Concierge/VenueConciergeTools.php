@@ -201,7 +201,7 @@ class VenueConciergeTools
 
         $matches = [];
         foreach ($candidates as $hall) {
-            $quote = $this->reservations->quote($hall, $eventDate);
+            $quote = $this->reservations->quote($hall, $eventDate, locale: $this->locale);
             if (! $quote) {
                 continue;
             }
@@ -221,7 +221,7 @@ class VenueConciergeTools
                 'discount_percent' => $quote['discount_percent'],
                 'total_price' => $quote['grand_total'],
                 'deposit_total' => $quote['deposit_total'],
-                'currency' => $this->venue->currency,
+                'currency' => $quote['currency'],
                 'thumbnail_url' => $thumbnail?->image_source,
             ];
         }
@@ -259,6 +259,8 @@ class VenueConciergeTools
             $images = $images->filter(fn ($img) => $img->hasTag($tag));
         }
 
+        $currency = new \App\Services\CurrencyConverter;
+        $shown = $currency->currencyFor($this->venue, $this->locale);
         $detail = [
             'hall_slug' => $hall->slug,
             'name' => $hall->translatedName($this->locale),
@@ -271,10 +273,10 @@ class VenueConciergeTools
             'view_type' => $hall->view_type,
             'catering_included' => $hall->catering_included,
             'extra_hour_available' => $hall->extra_hour_available,
-            'extra_hour_price' => $hall->extra_hour_price,
+            'extra_hour_price' => $currency->convert((float) $hall->extra_hour_price, $this->venue, $shown),
             'amenities' => $hall->amenities,
-            'starting_price' => $hall->base_price,
-            'currency' => $this->venue->currency,
+            'starting_price' => $currency->convert((float) $hall->base_price, $this->venue, $shown),
+            'currency' => $shown,
             'event_window' => [
                 'from' => substr((string) $this->venue->event_start_time, 0, 5),
                 'until' => substr((string) $this->venue->event_end_time, 0, 5),
@@ -303,7 +305,7 @@ class VenueConciergeTools
         }
 
         $eventDate = $this->parseDate($input['event_date']);
-        $quote = $this->reservations->quote($hall, $eventDate, (int) ($input['extra_hours'] ?? 0));
+        $quote = $this->reservations->quote($hall, $eventDate, (int) ($input['extra_hours'] ?? 0), locale: $this->locale);
 
         if (! $quote) {
             return [
@@ -320,7 +322,6 @@ class VenueConciergeTools
             'available' => true,
             'hall_slug' => $hall->slug,
             'name' => $hall->translatedName($this->locale),
-            'currency' => $this->venue->currency,
             ...$quote,
         ];
 
@@ -372,7 +373,7 @@ class VenueConciergeTools
             'guests' => $guests,
             'total_price' => (float) $booking->total_price,
             'deposit_amount' => (float) $booking->deposit_amount,
-            'currency' => $this->venue->currency,
+            'currency' => $booking->billedCurrency(),
             'status' => 'pending_confirmation',
         ];
 

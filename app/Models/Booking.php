@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'extra_hours',
     'total_price',
     'deposit_amount',
+    'currency',
+    'exchange_rate',
     'status',
     'notes',
 ])]
@@ -63,7 +65,24 @@ class Booking extends Model
             'extra_hours' => 'integer',
             'total_price' => 'decimal:2',
             'deposit_amount' => 'decimal:2',
+            'exchange_rate' => 'float',
         ];
+    }
+
+    /** The currency this booking is billed in; older bookings use the venue's. */
+    public function billedCurrency(): string
+    {
+        return $this->currency ?? $this->venue->currency;
+    }
+
+    /** What the total is worth in the venue's own currency (for staff), or null when it is the same currency. */
+    public function totalInVenueCurrency(): ?float
+    {
+        if (! $this->currency || $this->currency === $this->venue->currency || ! $this->exchange_rate) {
+            return null;
+        }
+
+        return round((float) $this->total_price / $this->exchange_rate);
     }
 
     public function venue(): BelongsTo

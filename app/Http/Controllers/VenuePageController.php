@@ -17,7 +17,7 @@ use Illuminate\View\View;
 
 class VenuePageController extends Controller
 {
-    private const SUPPORTED_LOCALES = ['id', 'en', 'ja'];
+    private const SUPPORTED_LOCALES = ['id', 'en', 'ja', 'th', 'zh'];
 
     /** The concierge's face for the chat and narrator avatars. */
     private const AVATAR_IMAGE = 'images/character/avatar.webp';
@@ -183,6 +183,29 @@ class VenuePageController extends Controller
         ],
     ];
 
+    /**
+     * Thai and Traditional Chinese (Taiwan) texts live in app/Support/StageLang,
+     * one file per language, with the same shape as the arrays above.
+     *
+     * @return array<string, mixed>
+     */
+    private static function stageLang(string $locale): array
+    {
+        static $loaded = [];
+
+        return $loaded[$locale] ??= require app_path("Support/StageLang/{$locale}.php");
+    }
+
+    private static function narration(string $locale): array
+    {
+        return self::NARRATION[$locale] ?? self::stageLang($locale)['narration'];
+    }
+
+    private static function hallTerms(string $locale): array
+    {
+        return self::HALL_TERMS[$locale] ?? self::stageLang($locale)['hall_terms'];
+    }
+
     public function index(Request $request): View
     {
         $venues = Venue::where('public_status', 'published')->orderBy('name')->get();
@@ -320,7 +343,7 @@ class VenuePageController extends Controller
 
         $labels = [
             ...$this->labels($locale),
-            'setting_labels_json' => json_encode(self::HALL_TERMS[$locale]['setting'], JSON_UNESCAPED_UNICODE),
+            'setting_labels_json' => json_encode(self::hallTerms($locale)['setting'], JSON_UNESCAPED_UNICODE),
             'event_labels_json' => json_encode($this->eventTypeLabels($locale), JSON_UNESCAPED_UNICODE),
         ];
         $lobby = $this->lobbyLabels($locale);
@@ -340,10 +363,10 @@ class VenuePageController extends Controller
             'supportedLocales' => self::SUPPORTED_LOCALES,
             'labels' => $labels,
             'lobby' => $lobby,
-            'hallTerms' => self::HALL_TERMS[$locale],
+            'hallTerms' => self::hallTerms($locale),
             'eventTypes' => $this->eventTypeLabels($locale),
             'wizard' => $this->wizardLabels($venue, $locale),
-            'narration' => self::NARRATION[$locale],
+            'narration' => self::narration($locale),
             'hallNarrations' => $this->hallNarrations($venue, $halls, $locale),
             'staffLinks' => $this->handover->forStaff($venue, $locale),
             'today' => now($venue->timezone)->toDateString(),
@@ -399,7 +422,7 @@ class VenuePageController extends Controller
      */
     private function stageMenu(Venue $venue, string $locale, array $labels, array $lobby): array
     {
-        $tour = self::NARRATION[$locale];
+        $tour = self::narration($locale);
         $url = fn (string $name) => route("venue.{$name}", ['venueSlug' => $venue->slug, 'lang' => $locale]);
 
         return [
@@ -420,8 +443,8 @@ class VenuePageController extends Controller
      */
     private function sceneNarrations(Venue $venue, Collection $services, string $locale): array
     {
-        $templates = self::NARRATION[$locale];
-        $separator = $locale === 'ja' ? '、' : '; ';
+        $templates = self::narration($locale);
+        $separator = in_array($locale, ['ja', 'zh'], true) ? '、' : '; ';
         $time = fn (?string $value) => $value ? substr($value, 0, 5) : null;
 
         $intro = null;
@@ -435,7 +458,7 @@ class VenuePageController extends Controller
             );
         }
 
-        $location = collect([$venue->city, $venue->country])->filter()->implode($locale === 'ja' ? '、' : ', ');
+        $location = collect([$venue->city, $venue->country])->filter()->implode(in_array($locale, ['ja', 'zh'], true) ? '、' : ', ');
         $parts = [str_replace(':venue', $venue->name, $templates['info_welcome'])];
 
         if ($location !== '') {
@@ -457,12 +480,12 @@ class VenuePageController extends Controller
      */
     private function hallNarrations(Venue $venue, Collection $halls, string $locale): array
     {
-        $templates = self::NARRATION[$locale];
-        $terms = self::HALL_TERMS[$locale];
+        $templates = self::narration($locale);
+        $terms = self::hallTerms($locale);
         $fx = app(CurrencyConverter::class);
         $shown = $fx->currencyFor($venue, $locale);
         $money = fn ($value) => $fx->display((float) $value, $venue, $shown);
-        $sentence = fn (string $text) => preg_match('/[.!?。！？]$/u', $text) ? $text : $text.($locale === 'ja' ? '。' : '.');
+        $sentence = fn (string $text) => preg_match('/[.!?。！？]$/u', $text) ? $text : $text.(in_array($locale, ['ja', 'zh'], true) ? '。' : '.');
 
         if ($halls->isEmpty()) {
             return ['halls' => null, 'hall' => []];
@@ -519,6 +542,7 @@ class VenuePageController extends Controller
                 'loading' => 'カーテンを開いています…', 'sound_on' => 'サウンドオン', 'sound_off' => 'サウンドオフ', 'directory' => '本日の進行',
                 'halls' => 'ホール', 'services' => 'ウェディングサービス', 'reservation' => '日程を仮予約', 'staff' => 'ウェディングチーム',
             ],
+            'th', 'zh' => self::stageLang($locale)['opening'],
             default => [
                 'eyebrow' => 'Gedung pernikahan · AI concierge', 'welcome' => 'Kisah Anda,', 'welcome_em' => 'satu bab demi satu.',
                 'tagline' => 'Jelajahi gedung bersama AI Concierge yang hafal setiap hall, tanggal kosong, dan paket pernikahan — dari ikrar yang intim hingga perayaan megah.',
@@ -540,6 +564,7 @@ class VenuePageController extends Controller
             match ($locale) {
                 'en' => 'Weekday rate: :percent% off for events from Monday to Thursday.',
                 'ja' => '平日割引：月曜〜木曜の挙式は:percent%オフ。',
+                'th', 'zh' => self::stageLang($locale)['weekday'],
                 default => 'Tarif hari kerja: hemat :percent% untuk acara Senin sampai Kamis.',
             }
         );
@@ -585,6 +610,7 @@ class VenuePageController extends Controller
                 'error_generic' => 'エラーが発生しました。もう一度お試しいただくか、スタッフにご連絡ください。', 'select_hall' => 'ホールを選択してください。',
                 'contact_staff' => 'ウェディングチームに連絡', 'per_hour' => '/ 時間',
             ],
+            'th', 'zh' => self::stageLang($locale)['wizard'],
             default => [
                 'title' => 'Amankan tanggal', 'intro' => 'Hanya beberapa langkah singkat. Ketersediaan final dikonfirmasi oleh tim wedding kami. Belum ada pembayaran yang diambil.',
                 'step_of' => 'Langkah :current dari :total', 'steps' => ['Tanggal', 'Acara Anda', 'Hall', 'Data Anda', 'Ringkasan'],
@@ -676,6 +702,7 @@ class VenuePageController extends Controller
                 'ask_hall_q' => ':name について詳しく教えてください。',
                 'cta_halls' => 'ホールを見る', 'stat_from' => '会場費', 'stat_capacity' => '最大', 'stat_capacity_value' => ':count名', 'stat_weekday' => '平日の挙式', 'stat_weekday_value' => ':percent%オフ',
             ],
+            'th', 'zh' => self::stageLang($locale)['lobby'],
             default => [
                 'welcome' => 'Selamat datang di', 'lobby' => 'hari bahagia Anda',
                 'intro' => 'Gedung untuk ikrar dan perayaan segala ukuran. Lihat hall, temukan tanggal yang kosong, dan susun rencana bersama AI Concierge di sisi Anda.',
@@ -806,6 +833,7 @@ class VenuePageController extends Controller
                 'menu_staff' => 'スタッフに相談',
                 'menu_staff_q' => 'ウェディングチームと話したいです。',
             ],
+            'th', 'zh' => self::stageLang($locale)['labels'],
             default => [
                 'from' => 'mulai dari',
                 'per_event' => '/ acara',

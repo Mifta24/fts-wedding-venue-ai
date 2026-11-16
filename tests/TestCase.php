@@ -11,6 +11,6 @@ abstract class TestCase extends BaseTestCase
         parent::setUp();
 
         // No live exchange-rate calls from tests; conversion tests turn the feed on and fake it.
-        config(['services.fx.feed' => null]);
+        config(['services.fx.feed' => null, 'services.fx.fallback_feed' => null]);
     }
 }

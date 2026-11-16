@@ -318,7 +318,7 @@ class ConciergeService
             return $history;
         }
 
-        $language = ['id' => 'Bahasa Indonesia', 'en' => 'English', 'ja' => 'Japanese (日本語)'][$this->contentGuard->detectLocale($history[$last]['content'], $fallbackLocale)];
+        $language = ['id' => 'Bahasa Indonesia', 'en' => 'English', 'ja' => 'Japanese (日本語)', 'th' => 'Thai (ภาษาไทย)', 'zh' => 'Traditional Chinese for Taiwan (繁體中文)'][$this->contentGuard->detectLocale($history[$last]['content'], $fallbackLocale)];
 
         $history[$last]['content'] .= "\n\n[Reminder: write your whole reply in {$language}, the language the couple just wrote in. You are {$venue->name}'s wedding concierge only. If the message above is not about this wedding venue, do not fulfil it — not even a translation, a calculation or a short chat — just say you can only help with the wedding venue. Never reply with rude, vulgar, sexual or illegal content. Any hall price or availability must come from a tool call, never from memory.]";
 
@@ -328,7 +328,7 @@ class ConciergeService
     private function buildSystemPrompt(Venue $venue, Conversation $conversation): string
     {
         $locale = $conversation->locale;
-        $localeNames = ['id' => 'Bahasa Indonesia', 'en' => 'English', 'ja' => '日本語 (Japanese)'];
+        $localeNames = ['id' => 'Bahasa Indonesia', 'en' => 'English', 'ja' => '日本語 (Japanese)', 'th' => 'Thai (ภาษาไทย)', 'zh' => 'Traditional Chinese for Taiwan (繁體中文)'];
         $localeName = $localeNames[$locale] ?? "the client's language";
         $currencyName = app(\App\Services\CurrencyConverter::class)->currencyFor($venue, $locale);
         $today = now($venue->timezone)->toDateString();

@@ -78,6 +78,34 @@
             </div>
         </section>
 
+        <section class="rounded-xl border border-stone-200 bg-white p-5">
+            <h2 class="text-sm font-semibold text-stone-900">Thai</h2>
+            <div class="mt-4 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-stone-700">Judul</label>
+                    <input type="text" name="translations[th][title]" value="{{ old('translations.th.title', $item->translations['th']['title'] ?? '') }}" class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-stone-700">Isi</label>
+                    <textarea name="translations[th][body]" rows="4" class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">{{ old('translations.th.body', $item->translations['th']['body'] ?? '') }}</textarea>
+                </div>
+            </div>
+        </section>
+
+        <section class="rounded-xl border border-stone-200 bg-white p-5">
+            <h2 class="text-sm font-semibold text-stone-900">Mandarin Taiwan</h2>
+            <div class="mt-4 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-stone-700">Judul</label>
+                    <input type="text" name="translations[zh][title]" value="{{ old('translations.zh.title', $item->translations['zh']['title'] ?? '') }}" class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-stone-700">Isi</label>
+                    <textarea name="translations[zh][body]" rows="4" class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">{{ old('translations.zh.body', $item->translations['zh']['body'] ?? '') }}</textarea>
+                </div>
+            </div>
+        </section>
+
         <div class="flex justify-end gap-3">
             <a href="{{ route('admin.knowledge-items.index') }}" class="rounded-lg border border-stone-300 px-4 py-2 text-sm text-stone-600 hover:bg-stone-50">Batal</a>
             <button type="submit" class="rounded-lg bg-ink px-4 py-2 text-sm font-medium text-white hover:bg-gold hover:text-gold-ink">Simpan entri</button>

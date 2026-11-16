@@ -17,7 +17,7 @@ use Illuminate\Validation\ValidationException;
 
 class ReservationController extends Controller
 {
-    private const SUPPORTED_LOCALES = ['id', 'en', 'ja'];
+    private const SUPPORTED_LOCALES = ['id', 'en', 'ja', 'th', 'zh'];
 
     /** How far ahead the date picker looks for open dates: weddings are planned a year or two out. */
     private const AVAILABILITY_DAYS = 730;
@@ -56,6 +56,24 @@ class ReservationController extends Controller
             'unavailable' => 'この日程では、このホールはご利用いただけません。',
             'contact_email' => '有効なメールアドレスを入力してください。',
             'contact_phone' => '有効な電話番号またはWhatsApp番号を入力してください。',
+        ],
+        'th' => [
+            'invalid' => 'โปรดตรวจสอบข้อมูลในช่องนี้',
+            'date_past' => 'วันจัดงานแต่งงานต้องไม่เป็นวันที่ผ่านมาแล้ว',
+            'hall_unknown' => 'โปรดเลือกฮอลล์',
+            'capacity' => 'ฮอลล์นี้รองรับแขกได้สูงสุด :max ท่าน โปรดเลือกฮอลล์ที่ใหญ่กว่า หรือติดต่อทีมงานแต่งงานของเรา',
+            'unavailable' => 'ฮอลล์นี้ไม่ว่างในวันที่ดังกล่าว',
+            'contact_email' => 'โปรดกรอกที่อยู่อีเมลที่ถูกต้อง',
+            'contact_phone' => 'โปรดกรอกหมายเลขโทรศัพท์หรือ WhatsApp ที่ถูกต้อง',
+        ],
+        'zh' => [
+            'invalid' => '請檢查此欄位。',
+            'date_past' => '婚禮日期不可早於今天。',
+            'hall_unknown' => '請選擇宴會廳。',
+            'capacity' => '此宴會廳最多可容納 :max 位賓客，請選擇較大的宴會廳，或聯繫我們的婚禮團隊。',
+            'unavailable' => '此宴會廳在該日期無法預約。',
+            'contact_email' => '請輸入有效的電子郵件地址。',
+            'contact_phone' => '請輸入有效的電話或 WhatsApp 號碼。',
         ],
     ];
 

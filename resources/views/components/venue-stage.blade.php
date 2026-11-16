@@ -7,11 +7,11 @@
     $pageTitle = $title ?? $venue->name.' · AI Wedding Concierge';
     $pageDescription = \Illuminate\Support\Str::limit(strip_tags((string) ($description ?: $venue->translatedDescription($locale) ?: $venue->name)), 160);
     $pageImage = $ogImage ?: ($venue->cover_path ?: $backdrop['image']);
-    $ogLocales = ['id' => 'id_ID', 'en' => 'en_US', 'ja' => 'ja_JP'];
+    $ogLocales = ['id' => 'id_ID', 'en' => 'en_US', 'ja' => 'ja_JP', 'th' => 'th_TH', 'zh' => 'zh_TW'];
     $currency = app(\App\Services\CurrencyConverter::class)->currencyFor($venue, $locale);
 @endphp
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', $locale) }}">
+<html lang="{{ $locale === 'zh' ? 'zh-TW' : str_replace('_', '-', $locale) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -66,7 +66,7 @@
                 <x-sound-toggle :on="$lobby['sound_on']" :off="$lobby['sound_off']" />
                 <nav aria-label="Language" class="stage-lang">
                     @foreach ($supportedLocales as $code)
-                        <a href="?lang={{ $code }}" lang="{{ $code }}" aria-label="{{ ['id' => 'Bahasa Indonesia', 'en' => 'English', 'ja' => '日本語'][$code] }}" @if($code === $locale) aria-current="true" @endif>{{ $code }}</a>
+                        <a href="?lang={{ $code }}" lang="{{ $code }}" aria-label="{{ ['id' => 'Bahasa Indonesia', 'en' => 'English', 'ja' => '日本語', 'th' => 'ภาษาไทย', 'zh' => '繁體中文'][$code] }}" @if($code === $locale) aria-current="true" @endif>{{ $code }}</a>
                     @endforeach
                 </nav>
             </div>

@@ -49,6 +49,8 @@ return [
     // Daily exchange rates for per-language pricing (ECB via Frankfurter). Empty disables conversion.
     'fx' => [
         'feed' => env('FX_FEED_URL', 'https://api.frankfurter.dev/v1/latest'),
+        // Used only for currencies the first feed lacks (TWD).
+        'fallback_feed' => env('FX_FALLBACK_FEED_URL', 'https://open.er-api.com/v6/latest/{base}'),
     ],
 
 ];

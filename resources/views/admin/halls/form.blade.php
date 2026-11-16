@@ -30,12 +30,30 @@
                         class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">
                 </div>
                 <div>
+                    <label class="block text-sm font-medium text-stone-700">Nama (Thai)</label>
+                    <input type="text" name="translations[th][name]" value="{{ old('translations.th.name', $hall->translations['th']['name'] ?? '') }}"
+                        class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-stone-700">Nama (Mandarin Taiwan)</label>
+                    <input type="text" name="translations[zh][name]" value="{{ old('translations.zh.name', $hall->translations['zh']['name'] ?? '') }}"
+                        class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">
+                </div>
+                <div>
                     <label class="block text-sm font-medium text-stone-700">Deskripsi (Inggris)</label>
                     <textarea name="translations[en][description]" rows="2" class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">{{ old('translations.en.description', $hall->translations['en']['description'] ?? '') }}</textarea>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-stone-700">Deskripsi (Jepang)</label>
                     <textarea name="translations[ja][description]" rows="2" class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">{{ old('translations.ja.description', $hall->translations['ja']['description'] ?? '') }}</textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-stone-700">Deskripsi (Thai)</label>
+                    <textarea name="translations[th][description]" rows="2" class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">{{ old('translations.th.description', $hall->translations['th']['description'] ?? '') }}</textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-stone-700">Deskripsi (Mandarin Taiwan)</label>
+                    <textarea name="translations[zh][description]" rows="2" class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">{{ old('translations.zh.description', $hall->translations['zh']['description'] ?? '') }}</textarea>
                 </div>
             </div>
         </section>

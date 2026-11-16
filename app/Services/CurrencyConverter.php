@@ -18,14 +18,14 @@ use Illuminate\Support\Facades\Log;
 class CurrencyConverter
 {
     /** The currency each page language shows and bills in. */
-    public const LOCALE_CURRENCY = ['id' => 'IDR', 'ja' => 'JPY', 'en' => 'USD'];
+    public const LOCALE_CURRENCY = ['id' => 'IDR', 'ja' => 'JPY', 'en' => 'USD', 'th' => 'THB', 'zh' => 'TWD'];
 
     /** Amounts are rounded to this step: ¥1,000 and $10 keep large venue prices tidy. */
-    public const STEP = ['IDR' => 1, 'JPY' => 1000, 'USD' => 10];
+    public const STEP = ['IDR' => 1, 'JPY' => 1000, 'USD' => 10, 'THB' => 100, 'TWD' => 100];
 
-    private const SYMBOL = ['IDR' => 'Rp', 'JPY' => '¥', 'USD' => '$'];
+    private const SYMBOL = ['IDR' => 'Rp', 'JPY' => '¥', 'USD' => '$', 'THB' => '฿', 'TWD' => 'NT$'];
 
-    private const SEPARATORS = ['IDR' => [',', '.'], 'JPY' => ['.', ','], 'USD' => ['.', ',']];
+    private const SEPARATORS = ['IDR' => [',', '.'], 'JPY' => ['.', ','], 'USD' => ['.', ','], 'THB' => ['.', ','], 'TWD' => ['.', ',']];
 
     /** @var array<string, array<string, float>|null> */
     private array $memo = [];
@@ -120,8 +120,22 @@ class CurrencyConverter
             return null;
         }
 
+        // The ECB feed has no TWD; a second public feed fills in whatever it lacks.
+        $rates = $this->fromFeed($feed, ['base' => $base, 'symbols' => implode(',', $symbols)]) ?? [];
+        $missing = array_diff($symbols, array_keys($rates));
+
+        if ($missing !== [] && ($fallback = config('services.fx.fallback_feed'))) {
+            $rates += array_intersect_key($this->fromFeed(str_replace('{base}', $base, $fallback), []) ?? [], array_flip($missing));
+        }
+
+        return $rates === [] ? null : $rates;
+    }
+
+    /** @return array<string, float>|null */
+    private function fromFeed(string $url, array $query): ?array
+    {
         try {
-            $response = Http::timeout(5)->get($feed, ['base' => $base, 'symbols' => implode(',', $symbols)]);
+            $response = Http::timeout(5)->get($url, $query);
             $rates = $response->successful() ? $response->json('rates') : null;
         } catch (\Throwable $e) {
             Log::warning('Exchange rate feed failed: '.$e->getMessage());

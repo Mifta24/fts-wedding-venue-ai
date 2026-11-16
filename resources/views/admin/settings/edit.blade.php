@@ -25,6 +25,14 @@
                     <label for="description_ja" class="block text-sm font-medium text-stone-700">Deskripsi (Jepang)</label>
                     <textarea id="description_ja" name="translations[ja][description]" rows="2" class="{{ $field }}">{{ old('translations.ja.description', $venue->translations['ja']['description'] ?? '') }}</textarea>
                 </div>
+                <div>
+                    <label for="description_th" class="block text-sm font-medium text-stone-700">Deskripsi (Thai)</label>
+                    <textarea id="description_th" name="translations[th][description]" rows="2" class="{{ $field }}">{{ old('translations.th.description', $venue->translations['th']['description'] ?? '') }}</textarea>
+                </div>
+                <div>
+                    <label for="description_zh" class="block text-sm font-medium text-stone-700">Deskripsi (Mandarin Taiwan)</label>
+                    <textarea id="description_zh" name="translations[zh][description]" rows="2" class="{{ $field }}">{{ old('translations.zh.description', $venue->translations['zh']['description'] ?? '') }}</textarea>
+                </div>
                 <div class="col-span-2">
                     <label for="address" class="block text-sm font-medium text-stone-700">Alamat</label>
                     <input id="address" type="text" name="address" value="{{ old('address', $venue->address) }}" class="{{ $field }}">
@@ -73,7 +81,7 @@
                 <div>
                     <label for="default_locale" class="block text-sm font-medium text-stone-700">Bahasa bawaan</label>
                     <select id="default_locale" name="default_locale" class="{{ $field }}">
-                        @foreach (['id' => 'Indonesia', 'en' => 'Inggris', 'ja' => 'Jepang'] as $code => $label)
+                        @foreach (['id' => 'Indonesia', 'en' => 'Inggris', 'ja' => 'Jepang', 'th' => 'Thai', 'zh' => 'Mandarin Taiwan'] as $code => $label)
                             <option value="{{ $code }}" @selected(old('default_locale', $venue->default_locale) === $code)>{{ $label }}</option>
                         @endforeach
                     </select>

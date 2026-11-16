@@ -53,6 +53,8 @@ class ContentGuard
         'id' => 'Maaf, saya tidak bisa membantu dengan hal itu. Saya siap membantu soal hall, layanan pernikahan, pengajuan tanggal acara, atau menghubungkan Anda dengan tim gedung.',
         'en' => 'Sorry, I cannot help with that. I am happy to help with halls, wedding services, date requests, or connecting you with the venue team.',
         'ja' => '申し訳ございませんが、そのご依頼にはお応えできません。会場、ウェディングサービス、日程のご依頼、スタッフへのご連絡でしたらお手伝いいたします。',
+        'th' => 'ขออภัยค่ะ ดิฉันไม่สามารถช่วยเรื่องนั้นได้ แต่ยินดีช่วยเรื่องฮอลล์ บริการงานแต่งงาน คำขอวันจัดงาน หรือประสานงานกับทีมงานของสถานที่ค่ะ',
+        'zh' => '很抱歉，這件事我無法協助。若是宴會廳、婚禮服務、日期申請，或需要為您轉接場地團隊，我很樂意為您服務。',
     ];
 
     /**
@@ -87,8 +89,16 @@ class ContentGuard
      */
     public function detectLocale(string $text, string $fallback): string
     {
-        if (preg_match('/[\p{Hiragana}\p{Katakana}\p{Han}]/u', $text) === 1) {
+        if (preg_match('/[\p{Hiragana}\p{Katakana}]/u', $text) === 1) {
             return 'ja';
+        }
+
+        if (preg_match('/\p{Thai}/u', $text) === 1) {
+            return 'th';
+        }
+
+        if (preg_match('/\p{Han}/u', $text) === 1) {
+            return 'zh';
         }
 
         $words = preg_split('/[^\p{L}]+/u', mb_strtolower($text), -1, PREG_SPLIT_NO_EMPTY) ?: [];

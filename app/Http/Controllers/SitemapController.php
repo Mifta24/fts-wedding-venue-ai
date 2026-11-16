@@ -14,7 +14,7 @@ use Illuminate\Http\Response;
  */
 class SitemapController extends Controller
 {
-    private const LOCALES = ['id', 'en', 'ja'];
+    private const LOCALES = ['id', 'en', 'ja', 'th', 'zh'];
 
     public function __construct(private readonly VenueContentCache $content) {}
 

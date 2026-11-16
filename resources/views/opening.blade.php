@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', $locale) }}">
+<html lang="{{ $locale === 'zh' ? 'zh-TW' : str_replace('_', '-', $locale) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -36,7 +36,7 @@
                 <x-sound-toggle :on="$opening['sound_on']" :off="$opening['sound_off']" />
                 <nav aria-label="Language" class="stage-lang">
                     @foreach ($supportedLocales as $code)
-                        <a href="?lang={{ $code }}" lang="{{ $code }}" aria-label="{{ ['id' => 'Bahasa Indonesia', 'en' => 'English', 'ja' => '日本語'][$code] }}" @if($code === $locale) aria-current="true" @endif>{{ $code }}</a>
+                        <a href="?lang={{ $code }}" lang="{{ $code }}" aria-label="{{ ['id' => 'Bahasa Indonesia', 'en' => 'English', 'ja' => '日本語', 'th' => 'ภาษาไทย', 'zh' => '繁體中文'][$code] }}" @if($code === $locale) aria-current="true" @endif>{{ $code }}</a>
                     @endforeach
                 </nav>
             </div>

@@ -77,6 +77,34 @@ class BookingStatusChanged extends Notification implements ShouldQueue
                     'next' => '別の日程や会場をご希望の場合はお問い合わせください。',
                 ],
             ],
+            'th' => [
+                Booking::STATUS_CONFIRMED => [
+                    'subject' => 'วันจัดงานแต่งงานของคุณได้รับการยืนยันแล้ว %s',
+                    'greeting' => 'สวัสดีค่ะ คุณ%s',
+                    'intro' => 'ขอแสดงความยินดีด้วยค่ะ! %s ได้ยืนยันคำขอวันจัดงานแต่งงานของคุณแล้ว',
+                    'next' => 'ทีมงานของเราจะติดต่อคุณเกี่ยวกับเงินมัดจำ การเข้าชมสถานที่ และกำหนดการของงาน',
+                ],
+                Booking::STATUS_CANCELLED => [
+                    'subject' => 'คำขอวันจัดงานของคุณถูกยกเลิก %s',
+                    'greeting' => 'สวัสดีค่ะ คุณ%s',
+                    'intro' => 'ขออภัยเป็นอย่างยิ่งค่ะ %s ไม่สามารถดำเนินการตามคำขอวันจัดงานนี้ต่อได้',
+                    'next' => 'หากต้องการเลือกวันอื่นหรือฮอลล์อื่น โปรดติดต่อเราได้เลยค่ะ',
+                ],
+            ],
+            'zh' => [
+                Booking::STATUS_CONFIRMED => [
+                    'subject' => '您的婚禮日期已確認 %s',
+                    'greeting' => '%s 您好，',
+                    'intro' => '恭喜您！%s 已確認您的婚禮日期申請。',
+                    'next' => '我們的團隊將與您聯繫，說明訂金、場地參觀及活動流程等事宜。',
+                ],
+                Booking::STATUS_CANCELLED => [
+                    'subject' => '您的日期申請已取消 %s',
+                    'greeting' => '%s 您好，',
+                    'intro' => '非常抱歉，%s 無法保留這項日期申請。',
+                    'next' => '若您希望更換日期或其他宴會廳，歡迎與我們聯繫。',
+                ],
+            ],
             'id' => [
                 Booking::STATUS_CONFIRMED => [
                     'subject' => 'Tanggal pernikahan %s dikonfirmasi',

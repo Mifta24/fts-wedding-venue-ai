@@ -15,7 +15,7 @@ use Illuminate\Validation\ValidationException;
 
 class ConciergeChatController extends Controller
 {
-    private const SUPPORTED_LOCALES = ['id', 'en', 'ja'];
+    private const SUPPORTED_LOCALES = ['id', 'en', 'ja', 'th', 'zh'];
 
     public function __construct(private readonly ConciergeService $concierge) {}
 

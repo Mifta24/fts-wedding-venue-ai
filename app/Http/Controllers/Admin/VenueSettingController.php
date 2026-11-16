@@ -36,6 +36,8 @@ class VenueSettingController extends Controller
             'description' => ['nullable', 'string', 'max:2000'],
             'translations.en.description' => ['nullable', 'string', 'max:2000'],
             'translations.ja.description' => ['nullable', 'string', 'max:2000'],
+            'translations.th.description' => ['nullable', 'string', 'max:2000'],
+            'translations.zh.description' => ['nullable', 'string', 'max:2000'],
             'address' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:100'],
             'country' => ['nullable', 'string', 'max:100'],
@@ -43,7 +45,7 @@ class VenueSettingController extends Controller
             'whatsapp' => ['nullable', 'string', 'max:30'],
             'email' => ['nullable', 'email', 'max:255'],
             'timezone' => ['required', 'timezone:all'],
-            'default_locale' => ['required', Rule::in(['id', 'en', 'ja'])],
+            'default_locale' => ['required', Rule::in(['id', 'en', 'ja', 'th', 'zh'])],
             'event_start_time' => ['required', 'date_format:H:i'],
             'event_end_time' => ['required', 'date_format:H:i', 'after:event_start_time'],
             'weekday_discount_percent' => ['required', 'integer', 'min:0', 'max:90'],
@@ -59,6 +61,8 @@ class VenueSettingController extends Controller
                 ...($venue->translations ?? []),
                 'en' => [...($venue->translations['en'] ?? []), 'description' => $data['translations']['en']['description'] ?? null],
                 'ja' => [...($venue->translations['ja'] ?? []), 'description' => $data['translations']['ja']['description'] ?? null],
+                'th' => [...($venue->translations['th'] ?? []), 'description' => $data['translations']['th']['description'] ?? null],
+                'zh' => [...($venue->translations['zh'] ?? []), 'description' => $data['translations']['zh']['description'] ?? null],
             ],
         ]);
 

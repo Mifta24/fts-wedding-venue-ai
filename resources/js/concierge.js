@@ -284,7 +284,7 @@ function initConcierge() {
 
     const longDate = (iso) => {
         const [year, month, day] = String(iso).split('-').map(Number);
-        const tag = config.locale === 'ja' ? 'ja-JP' : config.locale === 'en' ? 'en-US' : 'id-ID';
+        const tag = { ja: 'ja-JP', en: 'en-US', th: 'th-TH', zh: 'zh-TW' }[config.locale] || 'id-ID';
         return new Intl.DateTimeFormat(tag, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(year, month - 1, day));
     };
 

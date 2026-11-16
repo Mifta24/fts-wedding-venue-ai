@@ -38,6 +38,11 @@ use Illuminate\Support\Str;
     'logo_path',
     'cover_path',
     'video_url',
+    'catalog_mode',
+    'theme',
+    'hall_groups',
+    'plan_info',
+    'access_code_hash',
     'public_status',
 ])]
 class Venue extends Model
@@ -56,6 +61,8 @@ class Venue extends Model
     {
         return [
             'translations' => 'array',
+            'hall_groups' => 'array',
+            'plan_info' => 'array',
             'latitude' => 'decimal:7',
             'longitude' => 'decimal:7',
             'weekday_discount_percent' => 'integer',
@@ -144,6 +151,41 @@ class Venue extends Model
     public function isPublished(): bool
     {
         return in_array($this->public_status, ['published', 'unlisted'], true);
+    }
+
+    /** A venue that sells packages per location instead of renting halls. */
+    public function isPlanCatalog(): bool
+    {
+        return $this->catalog_mode === 'plan';
+    }
+
+    /** Visitors must enter the access code before any public page opens. */
+    public function isGated(): bool
+    {
+        return filled($this->access_code_hash);
+    }
+
+    public function checkAccessCode(string $code): bool
+    {
+        return $this->isGated() && \Illuminate\Support\Facades\Hash::check($code, $this->access_code_hash);
+    }
+
+    /** @return list<array{key: string, label: string}> */
+    public function hallGroupOptions(string $locale): array
+    {
+        return collect($this->hall_groups ?? [])
+            ->map(fn (array $group) => [
+                'key' => $group['key'],
+                'label' => $group['names'][$locale] ?? $group['names']['en'] ?? $group['key'],
+            ])->all();
+    }
+
+    /** @return array<string, mixed> shared plan copy for one language, falling back to English */
+    public function planInfoFor(string $locale): array
+    {
+        $info = $this->plan_info ?? [];
+
+        return $info[$locale] ?? $info['en'] ?? [];
     }
 
     public function isUnlisted(): bool

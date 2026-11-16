@@ -194,3 +194,46 @@ function initVenueVideo() {
 }
 
 initVenueVideo();
+
+/**
+ * Area buttons on the hall board: show only the halls of the chosen area.
+ * Scoped to [data-area-board], so nothing else on the site is affected.
+ */
+function initAreaTabs() {
+    document.querySelectorAll('[data-area-board]').forEach((board) => {
+        const tabs = [...board.querySelectorAll('[data-area-tab]')];
+        const links = [...board.querySelectorAll('[data-area]')];
+        const count = board.querySelector('[data-area-count]');
+        const list = board.querySelector('.hall-nav');
+
+        const select = (key, focus = false) => {
+            let shown = 0;
+            tabs.forEach((tab) => {
+                const on = tab.dataset.areaTab === key;
+                tab.setAttribute('aria-selected', on ? 'true' : 'false');
+                tab.tabIndex = on ? 0 : -1;
+                if (on && focus) tab.focus();
+                if (on && list) list.setAttribute('aria-labelledby', tab.id);
+            });
+            links.forEach((link) => {
+                const on = link.dataset.area === key;
+                link.hidden = !on;
+                if (on) shown += 1;
+            });
+            if (count) count.textContent = String(shown);
+            if (list) list.scrollTop = 0;
+        };
+
+        tabs.forEach((tab, index) => {
+            tab.addEventListener('click', () => select(tab.dataset.areaTab));
+            tab.addEventListener('keydown', (event) => {
+                const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[event.key];
+                if (step === undefined) return;
+                event.preventDefault();
+                select(tabs[(index + step + tabs.length) % tabs.length].dataset.areaTab, true);
+            });
+        });
+    });
+}
+
+initAreaTabs();

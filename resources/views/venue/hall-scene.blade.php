@@ -35,7 +35,7 @@
                     @else
                         <div class="grid h-full place-items-center text-sm">{{ $lobby['no_photo'] }}</div>
                     @endif
-                    <span class="hall-scene-badge">{{ $settingLabel }}</span>
+                    @unless ($venue->isPlanCatalog())<span class="hall-scene-badge">{{ $settingLabel }}</span>@endunless
                 </div>
                 @if ($hall->images->count() > 1)
                     <ul class="mt-2 grid grid-cols-4 gap-2" aria-label="{{ $lobby['gallery'] }}">
@@ -72,11 +72,15 @@
                             </div>
                             <dl class="hall-lightbox-info-facts">
                                 <div><dt>{{ $lobby['hall_label'] }}</dt><dd>{{ $hallName }}</dd></div>
-                                <div><dt>{{ $lobby['capacity'] }}</dt><dd>{{ $hall->min_guests }}–{{ $hall->max_guests }} {{ $lobby['guests_unit'] }}</dd></div>
+                                @unless ($venue->isPlanCatalog())
+                                    <div><dt>{{ $lobby['capacity'] }}</dt><dd>{{ $hall->min_guests }}–{{ $hall->max_guests }} {{ $lobby['guests_unit'] }}</dd></div>
+                                @endunless
                                 @if ($hall->size_sqm)
                                     <div><dt>{{ $lobby['size'] }}</dt><dd>{{ $hall->size_sqm }} m²</dd></div>
                                 @endif
-                                <div><dt>{{ $lobby['setting'] }}</dt><dd>{{ $settingLabel }}</dd></div>
+                                @unless ($venue->isPlanCatalog())
+                                    <div><dt>{{ $lobby['setting'] }}</dt><dd>{{ $settingLabel }}</dd></div>
+                                @endunless
                                 @if ($hall->view_type)
                                     <div><dt>{{ $lobby['view'] }}</dt><dd>{{ $hallTerms['view'][$hall->view_type] ?? Str::headline($hall->view_type) }}</dd></div>
                                 @endif
@@ -93,7 +97,7 @@
                 <p class="hall-scene-description">{{ $hall->translatedDescription($locale) }}</p>
 
                 <div class="hall-scene-rate">
-                    <p><span class="hall-scene-rate-label">{{ $lobby['rate_label'] }}</span> <span class="hall-scene-rate-amount"><strong>{{ $money($hall->base_price) }}</strong> <span class="hall-scene-rate-label">{{ $lobby['rate_per_event'] }}</span></span></p>
+                    <p><span class="hall-scene-rate-label">{{ $venue->isPlanCatalog() ? ($venue->planInfoFor($locale)['rate_label'] ?? $lobby['rate_label']) : $lobby['rate_label'] }}</span> <span class="hall-scene-rate-amount"><strong>{{ $money($hall->base_price) }}</strong> <span class="hall-scene-rate-label">{{ $venue->isPlanCatalog() ? ($venue->planInfoFor($locale)['per_event'] ?? $lobby['rate_per_event']) : $lobby['rate_per_event'] }}</span></span></p>
                     @if ($venue->weekday_discount_percent > 0)
                         <p class="hall-scene-monthly">{{ str_replace(':percent', (string) $venue->weekday_discount_percent, $lobby['weekday_note']) }}</p>
                     @endif
@@ -108,6 +112,38 @@
                     <button type="button" class="hall-scene-step" data-hero-quick-message="{{ str_replace(':name', $hallName, $lobby['ask_hall_q']) }}">{{ $lobby['ask_hall'] }}</button>
                 </div>
 
+                @if ($venue->isPlanCatalog())
+                    @php $info = $venue->planInfoFor($locale); @endphp
+                    @if (! empty($hall->price_options))
+                        <div class="plan-block">
+                            <h3 class="hall-scene-subheading">{{ $info['prices_heading'] ?? '' }}</h3>
+                            <table class="plan-prices">
+                                <thead><tr><th scope="col">{{ $info['plan_col'] ?? '' }}</th><th scope="col">{{ $info['price_col'] ?? '' }}</th></tr></thead>
+                                <tbody>
+                                    @foreach ($hall->price_options as $option)
+                                        <tr><td>{{ $info['options'][$option['key']] ?? $option['key'] }}</td><td><strong>{{ $money($option['price']) }}</strong></td></tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            @if (! empty($info['tax_note']))<p class="plan-note">{{ $info['tax_note'] }} {{ $info['flat_rate'] ?? '' }}</p>@endif
+                        </div>
+                    @endif
+                    @if (! empty($info['includes']))
+                        <div class="plan-block">
+                            <h3 class="hall-scene-subheading">{{ $info['includes_heading'] ?? '' }}</h3>
+                            <ul class="plan-list">@foreach ($info['includes'] as $line)<li>{{ $line }}</li>@endforeach</ul>
+                        </div>
+                    @endif
+                    @if (! empty($info['extras']))
+                        <div class="plan-block">
+                            <h3 class="hall-scene-subheading">{{ $info['extras_heading'] ?? '' }}</h3>
+                            <ul class="plan-list is-extra">@foreach ($info['extras'] as $line)<li>{{ $line }}</li>@endforeach</ul>
+                        </div>
+                    @endif
+                    @if (! empty($info['early_bird']['title']))
+                        <div class="plan-bonus"><strong>{{ $info['early_bird']['title'] }}</strong><p>{{ $info['early_bird']['body'] }}</p></div>
+                    @endif
+                @else
                 <dl class="hall-scene-facts">
                     <div><dt>{{ $lobby['capacity'] }}</dt><dd>{{ $hall->min_guests }}–{{ $hall->max_guests }} {{ $lobby['guests_unit'] }}</dd></div>
                     @if ($hall->size_sqm)
@@ -140,6 +176,7 @@
                             <li>{{ $hallTerms['amenity'][$amenity] ?? Str::headline($amenity) }}</li>
                         @endforeach
                     </ul>
+                @endif
                 @endif
             </div>
         </div>

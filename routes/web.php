@@ -15,6 +15,8 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\ConciergeChatController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\VenueAccessController;
+use App\Http\Middleware\VenueAccessGate;
 use App\Http\Controllers\VenuePageController;
 use Illuminate\Support\Facades\Route;
 
@@ -64,7 +66,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });
 
-Route::prefix('{venueSlug}')->group(function () {
+Route::prefix('{venueSlug}')->middleware(VenueAccessGate::class)->group(function () {
+    Route::get('access', [VenueAccessController::class, 'show'])->name('venue.access');
+    Route::post('access', [VenueAccessController::class, 'store'])->middleware('throttle:8,1')->name('venue.access.store');
+
     Route::get('/', [VenuePageController::class, 'show'])->name('venue.show');
     Route::get('sitemap.xml', [SitemapController::class, 'venue'])->name('venue.sitemap');
     Route::get('halls', [VenuePageController::class, 'halls'])->name('venue.halls');

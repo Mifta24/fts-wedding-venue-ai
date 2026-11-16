@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'venue_id',
     'name',
     'slug',
+    'group_key',
     'description',
     'translations',
     'size_sqm',
@@ -26,6 +27,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'extra_hour_available',
     'extra_hour_price',
     'base_price',
+    'price_options',
     'amenities',
     'is_active',
     'sort_order',
@@ -70,6 +72,7 @@ class Hall extends Model
             'extra_hour_available' => 'boolean',
             'extra_hour_price' => 'decimal:2',
             'base_price' => 'decimal:2',
+            'price_options' => 'array',
             'is_active' => 'boolean',
         ];
     }

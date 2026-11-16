@@ -837,3 +837,54 @@ a.info-fact:hover { border-color: var(--text); }
 .video-modal-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .video-modal-close { position: absolute; z-index: 2; top: 10px; right: 10px; display: grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 50%; background: #000000a6; color: white; font-size: 24px; line-height: 1; cursor: pointer; backdrop-filter: blur(4px); }
 .video-modal-close:hover, .video-modal-close:focus-visible { background: var(--gold); color: var(--gold-ink); }
+
+/* Area buttons on the hall board (venues that group their halls, e.g. by area) */
+.area-tabs { display: flex; gap: 5px; padding: 10px 12px; border-bottom: 1px solid var(--glass-line); }
+.area-tab { flex: 1 1 0; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 4px; padding: 9px 4px; white-space: nowrap; border: 1px solid var(--glass-line); border-radius: 999px; background: transparent; color: #ffffffd9; font-family: var(--font-label); font-size: 12.5px; letter-spacing: 0; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+.area-tab:hover { background: #ffffff14; }
+.area-tab:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.area-tab[aria-selected="true"] { background: var(--gold); border-color: var(--gold); color: var(--gold-ink); font-weight: 600; }
+.area-tab-count { font-size: 11px; opacity: .7; }
+.hall-nav a[hidden] { display: none; }
+.area-tab-label { overflow: hidden; text-overflow: ellipsis; }
+
+/* Private preview page */
+.access-page { min-height: 100dvh; display: grid; place-items: center; padding: 24px; background: var(--ink); color: white; font-family: var(--font-sans); }
+.access-card { width: min(420px, 100%); padding: 36px 32px; border: 1px solid var(--glass-line); border-radius: 18px; background: var(--ink-2); text-align: center; box-shadow: 0 24px 60px #0008; }
+.access-brand { font-family: var(--font-label); font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
+.access-card h1 { margin: 10px 0 8px; font-family: var(--font-serif); font-size: 32px; font-weight: 500; }
+.access-lead { color: #ffffffb3; font-size: 14px; line-height: 1.7; }
+.access-card form { display: grid; gap: 10px; margin-top: 22px; text-align: left; }
+.access-card label { font-size: 12px; letter-spacing: .08em; color: #ffffffb3; }
+.access-card input[type="password"] { padding: 12px 14px; border: 1px solid var(--glass-line); border-radius: 10px; background: #ffffff0f; color: white; font-size: 16px; }
+.access-card input[type="password"]:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+.access-card button[type="submit"] { padding: 12px; border: 0; border-radius: 999px; background: var(--gold); color: var(--gold-ink); font-weight: 600; letter-spacing: .06em; cursor: pointer; }
+.access-error { color: #ffb4a6; font-size: 13px; }
+.access-lang { display: flex; justify-content: center; gap: 14px; margin-top: 22px; font-size: 12px; letter-spacing: .1em; }
+.access-lang a { color: #ffffff8c; text-decoration: none; }
+.access-lang a[aria-current] { color: var(--gold); }
+
+/* Js'Acul identity: bronze-gold on charcoal, plain curtains, Mincho-style serif for the Japanese text */
+.theme-jsacul { --ink: #16161a; --ink-2: #212126; --plum: #2e2e34; --gold: #c9a35a; --gold-deep: #a07f3a; --gold-ink: #1d1608; --rose: #c9a35a; --blush: #efe6d6; --font-serif: 'Cormorant Garamond', 'Shippori Mincho', 'Yu Mincho', 'Hiragino Mincho ProN', 'Noto Serif TC', 'Noto Serif Thai', 'Times New Roman', serif; }
+.theme-jsacul .curtain { background: linear-gradient(90deg, #00000066, transparent 14%, transparent 86%, #00000066), repeating-linear-gradient(90deg, #26262c 0 26px, #313138 26px 52px, #1d1d22 52px 78px); box-shadow: inset 0 0 0 1px #ffffff12, inset 0 -14px 0 #c9a35a33; }
+.theme-jsacul .stage-brand-name { letter-spacing: .08em; }
+.theme-jsacul .stage-shade { background: linear-gradient(0deg, #16161aeb 0, #16161a73 42%, #16161a99 100%); }
+.theme-jsacul .hall-directory { background: #16161aeb; }
+.theme-jsacul .hall-nav a[aria-current]  { background: #c9a35a1a; }
+
+/* Plan pages (photo-wedding packages) */
+.plan-block { margin-top: 24px; }
+.plan-block h3 { margin: 0 0 10px; font-family: var(--font-label); font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-deep); }
+.plan-prices { width: 100%; border-collapse: collapse; font-size: 14px; color: var(--ink); }
+.plan-prices th, .plan-prices td { padding: 11px 12px 11px 0; border-bottom: 1px solid var(--line); text-align: left; vertical-align: baseline; }
+.plan-prices th { font-family: var(--font-label); font-size: 10.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.plan-prices td:last-child, .plan-prices th:last-child { padding-right: 0; text-align: right; white-space: nowrap; }
+.plan-prices strong { font-family: var(--font-serif); font-size: 19px; font-weight: 600; color: var(--ink); }
+.plan-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.plan-list li { position: relative; padding-left: 20px; font-size: 14px; line-height: 1.6; color: var(--ink); }
+.plan-list li::before { content: ''; position: absolute; left: 2px; top: .7em; width: 7px; height: 7px; border-radius: 50%; background: var(--gold-deep); }
+.plan-list.is-extra li::before { background: transparent; border: 1px solid var(--gold-deep); }
+.plan-note { margin-top: 10px; font-size: 12.5px; line-height: 1.6; color: var(--muted); }
+.plan-bonus { margin-top: 24px; padding: 14px 16px; border: 1px solid var(--gold-deep); border-radius: 12px; background: #c9a35a1f; color: var(--ink); }
+.plan-bonus strong { display: block; margin-bottom: 4px; font-family: var(--font-label); font-size: 12px; letter-spacing: .08em; color: var(--gold-deep); }
+.plan-bonus p { margin: 0; font-size: 14px; line-height: 1.6; }

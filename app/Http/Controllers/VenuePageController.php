@@ -434,7 +434,7 @@ class VenuePageController extends Controller
         $url = fn (string $name) => route("venue.{$name}", ['venueSlug' => $venue->slug, 'lang' => $locale]);
 
         return [
-            ['key' => 'halls', 'chapter' => self::CHAPTERS['halls'], 'label' => $labels['halls_heading'], 'href' => $url('halls'), 'exit' => true, 'tour' => $tour['tour_halls'], 'topic' => $labels['menu_halls_q']],
+            ['key' => 'halls', 'chapter' => self::CHAPTERS['halls'], 'label' => $labels['halls_heading'], 'href' => $url('halls'), 'exit' => true, 'tour' => $tour['tour_halls'], 'topic' => $venue->isPlanCatalog() ? ($venue->planInfoFor($locale)['halls_question'] ?? $labels['menu_halls_q']) : $labels['menu_halls_q']],
             ['key' => 'services', 'chapter' => self::CHAPTERS['services'], 'label' => $labels['menu_services'], 'href' => $url('services'), 'exit' => true, 'tour' => $tour['tour_services'], 'topic' => $labels['menu_services_q']],
             ['key' => 'info', 'chapter' => self::CHAPTERS['info'], 'label' => $lobby['menu_info'], 'href' => $url('info'), 'exit' => true, 'tour' => $tour['tour_info'], 'topic' => $labels['menu_policies_q']],
             ['key' => 'reservation', 'chapter' => self::CHAPTERS['reservation'], 'label' => $lobby['reservation'], 'href' => $url('reservation'), 'exit' => true, 'tour' => $tour['tour_reservation'], 'topic' => $lobby['reservation_q']],
@@ -499,14 +499,22 @@ class VenuePageController extends Controller
             return ['halls' => null, 'hall' => []];
         }
 
+        $planInfo = $venue->isPlanCatalog() ? $venue->planInfoFor($locale) : [];
         $intro = str_replace(
             [':count', ':price'],
             [(string) $halls->count(), $money($halls->min('base_price'))],
-            $templates[$halls->count() === 1 ? 'halls_one' : 'halls']
+            $planInfo['intro'] ?? $templates[$halls->count() === 1 ? 'halls_one' : 'halls']
         );
 
-        $items = $halls->mapWithKeys(function (Hall $hall) use ($venue, $templates, $terms, $money, $sentence, $locale) {
+        $items = $halls->mapWithKeys(function (Hall $hall) use ($venue, $templates, $terms, $money, $sentence, $locale, $planInfo) {
             $parts = [$hall->translatedName($locale).'.', filled($hall->translatedDescription($locale)) ? $sentence(trim($hall->translatedDescription($locale))) : null];
+
+            // A package is priced per outfit combination, with no room, seating or guest capacity to describe.
+            if ($venue->isPlanCatalog()) {
+                $parts[] = str_replace(':price', $money($hall->base_price), $planInfo['price_sentence'] ?? $templates['price']);
+
+                return [$hall->slug => implode(' ', array_filter($parts))];
+            }
 
             $parts[] = $sentence($terms['setting_sentence'][$hall->setting] ?? Str::headline((string) $hall->setting));
 

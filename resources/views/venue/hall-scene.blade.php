@@ -6,6 +6,7 @@
         ->implode(', ');
     $settingLabel = $hallTerms['setting'][$hall->setting] ?? Str::headline((string) $hall->setting);
     $primaryImage = $hall->images->first();
+    $tagLabels = fn ($image) => collect($image->tags ?? [])->map(fn ($tag) => $hallTerms['photo_tag'][$tag] ?? null)->filter()->values();
     $hallUrl = fn ($hall) => route('venue.hall', ['venueSlug' => $venue->slug, 'hallSlug' => $hall->slug, 'lang' => $locale]);
 @endphp
 <section class="lobby-content @container" aria-label="{{ $hallName }}">
@@ -26,7 +27,7 @@
                 <div class="hall-scene-photo">
                     @if ($primaryImage)
                         <button type="button" class="hall-scene-zoom" data-hall-zoom aria-label="{{ $lobby['zoom_photo'] }}" aria-haspopup="dialog">
-                            <img src="{{ $primaryImage->image_source }}" alt="{{ $primaryImage->alt_text ?: $hallName }}" data-hall-gallery-main>
+                            <img src="{{ $primaryImage->image_source }}" alt="{{ $primaryImage->alt_text ?: $hallName }}" data-tags="{{ $tagLabels($primaryImage)->toJson(JSON_UNESCAPED_UNICODE) }}" data-hall-gallery-main>
                             <span class="hall-scene-zoom-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.5-4.5M10.5 8v5M8 10.5h5"/></svg>
                             </span>
@@ -40,7 +41,7 @@
                     <ul class="mt-2 grid grid-cols-4 gap-2" aria-label="{{ $lobby['gallery'] }}">
                         @foreach ($hall->images as $imageIndex => $image)
                             <li>
-                                <button type="button" class="hall-scene-thumb" data-hall-thumb data-src="{{ $image->image_source }}" data-alt="{{ $image->alt_text ?: $hallName }}" aria-label="{{ $lobby['photo'] }} {{ $imageIndex + 1 }}" @if($imageIndex === 0) aria-current="true" @endif>
+                                <button type="button" class="hall-scene-thumb" data-hall-thumb data-src="{{ $image->image_source }}" data-alt="{{ $image->alt_text ?: $hallName }}" data-tags="{{ $tagLabels($image)->toJson(JSON_UNESCAPED_UNICODE) }}" aria-label="{{ $lobby['photo'] }} {{ $imageIndex + 1 }}" @if($imageIndex === 0) aria-current="true" @endif>
                                     <img src="{{ $image->image_source }}" alt="" class="h-full w-full object-cover" loading="lazy">
                                 </button>
                             </li>
@@ -56,7 +57,31 @@
                             <button type="button" class="hall-lightbox-nav hall-lightbox-next" data-lightbox-next aria-label="{{ $lobby['next_photo'] }}"><span aria-hidden="true">→</span></button>
                         @endif
                         <img src="" alt="" data-lightbox-image>
-                        <p class="hall-lightbox-caption" data-lightbox-caption aria-live="polite"></p>
+                        <div class="hall-lightbox-bar">
+                            <p class="hall-lightbox-caption" data-lightbox-caption aria-live="polite"></p>
+                            <button type="button" class="hall-lightbox-detail" data-lightbox-detail aria-expanded="false" aria-controls="lightbox-info-{{ $hall->id }}">
+                                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+                                <span>{{ $lobby['detail'] }}</span>
+                            </button>
+                        </div>
+                        <section class="hall-lightbox-info" id="lightbox-info-{{ $hall->id }}" data-lightbox-info hidden aria-label="{{ $lobby['photo_info'] }}">
+                            <div class="hall-lightbox-info-photo">
+                                <p class="hall-lightbox-info-eyebrow">{{ $lobby['photo_of'] }} <span data-info-count></span></p>
+                                <p class="hall-lightbox-info-title" data-info-title></p>
+                                <ul class="hall-lightbox-tags" data-info-tags></ul>
+                            </div>
+                            <dl class="hall-lightbox-info-facts">
+                                <div><dt>{{ $lobby['hall_label'] }}</dt><dd>{{ $hallName }}</dd></div>
+                                <div><dt>{{ $lobby['capacity'] }}</dt><dd>{{ $hall->min_guests }}–{{ $hall->max_guests }} {{ $lobby['guests_unit'] }}</dd></div>
+                                @if ($hall->size_sqm)
+                                    <div><dt>{{ $lobby['size'] }}</dt><dd>{{ $hall->size_sqm }} m²</dd></div>
+                                @endif
+                                <div><dt>{{ $lobby['setting'] }}</dt><dd>{{ $settingLabel }}</dd></div>
+                                @if ($hall->view_type)
+                                    <div><dt>{{ $lobby['view'] }}</dt><dd>{{ $hallTerms['view'][$hall->view_type] ?? Str::headline($hall->view_type) }}</dd></div>
+                                @endif
+                            </dl>
+                        </section>
                     </dialog>
                 @endif
 

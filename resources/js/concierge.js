@@ -1001,6 +1001,15 @@ function initHallGallery() {
     });
 }
 
+function parseTags(raw) {
+    try {
+        const tags = JSON.parse(raw || '[]');
+        return Array.isArray(tags) ? tags : [];
+    } catch {
+        return [];
+    }
+}
+
 function initHallLightbox(gallery, main, thumbs, select) {
     const zoom = gallery.querySelector('[data-hall-zoom]');
     const box = gallery.querySelector('[data-hall-lightbox]');
@@ -1009,8 +1018,13 @@ function initHallLightbox(gallery, main, thumbs, select) {
     const image = box.querySelector('[data-lightbox-image]');
     const caption = box.querySelector('[data-lightbox-caption]');
     const sources = thumbs.length
-        ? thumbs.map((thumb) => ({ src: thumb.dataset.src, alt: thumb.dataset.alt || '' }))
-        : [{ src: main.src, alt: main.alt }];
+        ? thumbs.map((thumb) => ({ src: thumb.dataset.src, alt: thumb.dataset.alt || '', tags: parseTags(thumb.dataset.tags) }))
+        : [{ src: main.src, alt: main.alt, tags: parseTags(main.dataset.tags) }];
+    const detail = box.querySelector('[data-lightbox-detail]');
+    const info = box.querySelector('[data-lightbox-info]');
+    const infoTitle = box.querySelector('[data-info-title]');
+    const infoCount = box.querySelector('[data-info-count]');
+    const infoTags = box.querySelector('[data-info-tags]');
     let index = 0;
 
     const show = (next) => {
@@ -1020,7 +1034,24 @@ function initHallLightbox(gallery, main, thumbs, select) {
         image.alt = item.alt;
         caption.textContent = sources.length > 1 ? `${item.alt} (${index + 1}/${sources.length})` : item.alt;
         if (thumbs[index]) select(thumbs[index]);
+
+        infoTitle.textContent = item.alt;
+        infoCount.textContent = `${index + 1} / ${sources.length}`;
+        infoTags.replaceChildren(...item.tags.map((tag) => Object.assign(document.createElement('li'), { textContent: tag })));
+        infoTags.hidden = item.tags.length === 0;
     };
+
+    // The photo information shows only while "Detail" is hovered or focused (tap toggles on touch screens).
+    const setInfo = (open) => {
+        info.hidden = !open;
+        detail.setAttribute('aria-expanded', String(open));
+    };
+    detail.addEventListener('pointerenter', (event) => { if (event.pointerType !== 'touch') setInfo(true); });
+    detail.addEventListener('pointerleave', (event) => { if (event.pointerType !== 'touch') setInfo(false); });
+    detail.addEventListener('focus', () => { if (detail.matches(':focus-visible')) setInfo(true); });
+    detail.addEventListener('blur', () => setInfo(false));
+    detail.addEventListener('click', () => setInfo(info.hidden));
+    box.addEventListener('close', () => setInfo(false));
 
     const current = () => {
         const found = thumbs.findIndex((thumb) => thumb.hasAttribute('aria-current'));

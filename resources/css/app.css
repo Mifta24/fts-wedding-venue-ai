@@ -514,6 +514,9 @@ a.info-fact:hover { border-color: var(--text); }
 @keyframes door-open-left { to { transform: translateX(-101%); } }
 @keyframes door-open-right { to { transform: translateX(101%); } }
 @keyframes loader-release { to { pointer-events: none; } }
+/* Arrived from content inside the same menu: no curtain, the page is simply there. */
+.stage-direct .stage-loader { display: none; }
+.stage-direct .stage-image { animation: none; }
 .stage.is-leaving .stage-loader { pointer-events: auto; }
 .stage.is-leaving .stage-loader .curtain { transform: none; transition-delay: 0s; transition-duration: .45s; animation: none; }
 .stage.is-leaving .stage-loader > :not(.curtain) { opacity: 1; transition-delay: .3s; }

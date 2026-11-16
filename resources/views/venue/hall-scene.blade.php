@@ -9,14 +9,14 @@
     $hallUrl = fn ($hall) => route('venue.hall', ['venueSlug' => $venue->slug, 'hallSlug' => $hall->slug, 'lang' => $locale]);
 @endphp
 <section class="lobby-content @container" aria-label="{{ $hallName }}">
-    <a href="{{ route('venue.halls', ['venueSlug' => $venue->slug, 'lang' => $locale]) }}" data-stage-exit class="panel-close" aria-label="{{ $labels['halls_heading'] }}"><span aria-hidden="true">×</span></a>
+    <a href="{{ route('venue.halls', ['venueSlug' => $venue->slug, 'lang' => $locale]) }}" data-stage-exit data-stage-inner class="panel-close" aria-label="{{ $labels['halls_heading'] }}"><span aria-hidden="true">×</span></a>
     <article class="hall-scene">
         <div class="flex flex-wrap items-center justify-between gap-3 pr-12">
             <p class="lobby-eyebrow">{{ $lobby['hall_counter'] }} {{ str_pad((string) ($hallIndex + 1), 2, '0', STR_PAD_LEFT) }} / {{ str_pad((string) $halls->count(), 2, '0', STR_PAD_LEFT) }}</p>
             @if ($halls->count() > 1)
                 <nav class="flex gap-2" aria-label="{{ $lobby['hall_scene'] }}">
-                    <a href="{{ $hallUrl($previousHall) }}" data-stage-exit class="hall-scene-step" rel="prev"><span aria-hidden="true">←</span> {{ $lobby['prev_hall'] }}</a>
-                    <a href="{{ $hallUrl($nextHall) }}" data-stage-exit class="hall-scene-step" rel="next">{{ $lobby['next_hall'] }} <span aria-hidden="true">→</span></a>
+                    <a href="{{ $hallUrl($previousHall) }}" data-stage-exit data-stage-inner class="hall-scene-step" rel="prev"><span aria-hidden="true">←</span> {{ $lobby['prev_hall'] }}</a>
+                    <a href="{{ $hallUrl($nextHall) }}" data-stage-exit data-stage-inner class="hall-scene-step" rel="next">{{ $lobby['next_hall'] }} <span aria-hidden="true">→</span></a>
                 </nav>
             @endif
         </div>

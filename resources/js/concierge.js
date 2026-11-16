@@ -989,13 +989,59 @@ function initHallGallery() {
         const thumbs = [...gallery.querySelectorAll('[data-hall-thumb]')];
         if (!main) return;
 
-        thumbs.forEach((thumb) => {
-            thumb.addEventListener('click', () => {
-                main.src = thumb.dataset.src;
-                main.alt = thumb.dataset.alt || '';
-                thumbs.forEach((other) => other.toggleAttribute('aria-current', other === thumb));
-            });
-        });
+        const select = (thumb) => {
+            main.src = thumb.dataset.src;
+            main.alt = thumb.dataset.alt || '';
+            thumbs.forEach((other) => other.toggleAttribute('aria-current', other === thumb));
+        };
+
+        thumbs.forEach((thumb) => thumb.addEventListener('click', () => select(thumb)));
+
+        initHallLightbox(gallery, main, thumbs, select);
+    });
+}
+
+function initHallLightbox(gallery, main, thumbs, select) {
+    const zoom = gallery.querySelector('[data-hall-zoom]');
+    const box = gallery.querySelector('[data-hall-lightbox]');
+    if (!zoom || !box || typeof box.showModal !== 'function') return;
+
+    const image = box.querySelector('[data-lightbox-image]');
+    const caption = box.querySelector('[data-lightbox-caption]');
+    const sources = thumbs.length
+        ? thumbs.map((thumb) => ({ src: thumb.dataset.src, alt: thumb.dataset.alt || '' }))
+        : [{ src: main.src, alt: main.alt }];
+    let index = 0;
+
+    const show = (next) => {
+        index = (next + sources.length) % sources.length;
+        const item = sources[index];
+        image.src = item.src.replace(/([?&])w=\d+/, '$1w=2000');
+        image.alt = item.alt;
+        caption.textContent = sources.length > 1 ? `${item.alt} (${index + 1}/${sources.length})` : item.alt;
+        if (thumbs[index]) select(thumbs[index]);
+    };
+
+    const current = () => {
+        const found = thumbs.findIndex((thumb) => thumb.hasAttribute('aria-current'));
+        return found >= 0 ? found : 0;
+    };
+
+    zoom.addEventListener('click', () => {
+        show(current());
+        box.showModal();
+    });
+    box.querySelector('[data-lightbox-close]')?.addEventListener('click', () => box.close());
+    box.querySelector('[data-lightbox-prev]')?.addEventListener('click', () => show(index - 1));
+    box.querySelector('[data-lightbox-next]')?.addEventListener('click', () => show(index + 1));
+    // Click on the dark backdrop (the dialog itself, not its children) closes it.
+    box.addEventListener('click', (event) => {
+        if (event.target === box) box.close();
+    });
+    box.addEventListener('keydown', (event) => {
+        if (sources.length < 2) return;
+        if (event.key === 'ArrowLeft') show(index - 1);
+        if (event.key === 'ArrowRight') show(index + 1);
     });
 }
 

@@ -25,7 +25,12 @@
             <div data-hall-gallery>
                 <div class="hall-scene-photo">
                     @if ($primaryImage)
-                        <img src="{{ $primaryImage->image_source }}" alt="{{ $primaryImage->alt_text ?: $hallName }}" data-hall-gallery-main>
+                        <button type="button" class="hall-scene-zoom" data-hall-zoom aria-label="{{ $lobby['zoom_photo'] }}" aria-haspopup="dialog">
+                            <img src="{{ $primaryImage->image_source }}" alt="{{ $primaryImage->alt_text ?: $hallName }}" data-hall-gallery-main>
+                            <span class="hall-scene-zoom-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.5-4.5M10.5 8v5M8 10.5h5"/></svg>
+                            </span>
+                        </button>
                     @else
                         <div class="grid h-full place-items-center text-sm">{{ $lobby['no_photo'] }}</div>
                     @endif
@@ -41,6 +46,18 @@
                             </li>
                         @endforeach
                     </ul>
+                @endif
+
+                @if ($primaryImage)
+                    <dialog class="hall-lightbox" data-hall-lightbox aria-label="{{ $hallName }}">
+                        <button type="button" class="hall-lightbox-close" data-lightbox-close aria-label="{{ $lobby['close'] }}"><span aria-hidden="true">×</span></button>
+                        @if ($hall->images->count() > 1)
+                            <button type="button" class="hall-lightbox-nav hall-lightbox-prev" data-lightbox-prev aria-label="{{ $lobby['prev_photo'] }}"><span aria-hidden="true">←</span></button>
+                            <button type="button" class="hall-lightbox-nav hall-lightbox-next" data-lightbox-next aria-label="{{ $lobby['next_photo'] }}"><span aria-hidden="true">→</span></button>
+                        @endif
+                        <img src="" alt="" data-lightbox-image>
+                        <p class="hall-lightbox-caption" data-lightbox-caption aria-live="polite"></p>
+                    </dialog>
                 @endif
 
                 @include('venue.narrator', ['text' => $hallNarrations['hall'][$hall->slug], 'key' => 'hall-'.$hall->slug])

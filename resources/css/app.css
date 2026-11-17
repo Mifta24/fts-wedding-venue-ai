@@ -250,7 +250,7 @@
 .service-card-go { position: absolute; right: 12px; bottom: 14px; display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid var(--line); border-radius: 8px; font-size: 16px; line-height: 1; transition: background .2s, color .2s; }
 .service-card:hover .service-card-go { border-color: var(--ink); background: var(--ink); color: var(--gold); }
 .service-hero { position: relative; height: clamp(170px, 30vh, 280px); }
-.service-hero img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+.service-hero > img, .service-hero > .hall-scene-zoom > img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
 .service-hero .service-card-icon { left: 18px; bottom: -18px; }
 .lobby-content .service-hero + h2 { margin-top: 34px; }
 

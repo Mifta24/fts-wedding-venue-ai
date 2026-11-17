@@ -1052,6 +1052,7 @@ function initHallLightbox(gallery, main, thumbs, select) {
         caption.textContent = sources.length > 1 ? `${item.alt} (${index + 1}/${sources.length})` : item.alt;
         if (thumbs[index]) select(thumbs[index]);
 
+        if (!info) return;
         infoTitle.textContent = item.alt;
         infoCount.textContent = `${index + 1} / ${sources.length}`;
         infoTags.replaceChildren(...item.tags.map((tag) => Object.assign(document.createElement('li'), { textContent: tag })));
@@ -1059,16 +1060,19 @@ function initHallLightbox(gallery, main, thumbs, select) {
     };
 
     // The photo information shows only while "Detail" is hovered or focused (tap toggles on touch screens).
-    const setInfo = (open) => {
-        info.hidden = !open;
-        detail.setAttribute('aria-expanded', String(open));
-    };
-    detail.addEventListener('pointerenter', (event) => { if (event.pointerType !== 'touch') setInfo(true); });
-    detail.addEventListener('pointerleave', (event) => { if (event.pointerType !== 'touch') setInfo(false); });
-    detail.addEventListener('focus', () => { if (detail.matches(':focus-visible')) setInfo(true); });
-    detail.addEventListener('blur', () => setInfo(false));
-    detail.addEventListener('click', () => setInfo(info.hidden));
-    box.addEventListener('close', () => setInfo(false));
+    // A photo without detail panel (a service) has neither button nor panel.
+    if (detail && info) {
+        const setInfo = (open) => {
+            info.hidden = !open;
+            detail.setAttribute('aria-expanded', String(open));
+        };
+        detail.addEventListener('pointerenter', (event) => { if (event.pointerType !== 'touch') setInfo(true); });
+        detail.addEventListener('pointerleave', (event) => { if (event.pointerType !== 'touch') setInfo(false); });
+        detail.addEventListener('focus', () => { if (detail.matches(':focus-visible')) setInfo(true); });
+        detail.addEventListener('blur', () => setInfo(false));
+        detail.addEventListener('click', () => setInfo(info.hidden));
+        box.addEventListener('close', () => setInfo(false));
+    }
 
     const current = () => {
         const found = thumbs.findIndex((thumb) => thumb.hasAttribute('aria-current'));

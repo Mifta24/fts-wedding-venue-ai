@@ -155,7 +155,11 @@ function initStage() {
         });
     });
 
-    window.venueStage = { leave };
+    /** True when `link` is content inside the menu the client is already in (a hall, a service). */
+    const section = (path) => /^(.*?\/(?:halls|services))(?:\/|$)/.exec(path)?.[1] ?? null;
+    const sameMenu = (link) => !!section(link.pathname) && section(link.pathname) === section(window.location.pathname);
+
+    window.venueStage = { leave, go, sameMenu };
 }
 
 /** True when the chat was open on the previous page and the client only moved to content inside the same menu (read once). */

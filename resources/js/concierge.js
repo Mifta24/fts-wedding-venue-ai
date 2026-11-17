@@ -396,6 +396,14 @@ function initConcierge() {
     /** Another page: walk there the way the menu does; a hash change is left to the browser. */
     function followLink(link, event) {
         closeShowcase();
+
+        // Content inside the menu the client is already in: no curtain, the chat stays open.
+        if (link.pathname !== window.location.pathname && window.venueStage?.sameMenu(link)) {
+            event.preventDefault();
+            window.venueStage.go(link);
+            return;
+        }
+
         closePanel({ confirmDraft: false, restoreFocus: false });
 
         if (link.pathname !== window.location.pathname && window.venueStage) {
@@ -776,6 +784,12 @@ function initConcierge() {
             link.className = 'chat-chip';
             link.textContent = target[0];
             link.addEventListener('click', (event) => {
+                if (link.pathname !== window.location.pathname && window.venueStage?.sameMenu(link)) {
+                    event.preventDefault();
+                    window.venueStage.go(link);
+                    return;
+                }
+
                 closePanel({ confirmDraft: false, restoreFocus: false });
 
                 // Another page: walk there the way the menu does. A panel on

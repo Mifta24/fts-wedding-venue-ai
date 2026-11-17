@@ -38,6 +38,15 @@ class JsAculSeeder extends Seeder
 
     private const LOCALES = ['ja', 'en', 'id', 'th', 'zh'];
 
+    /** Two short films from the owner's site, hosted here and shown as small icons on the lobby. */
+    private const FILMS = [
+        ['src' => '/videos/jsacul/helicopter.mp4', 'poster' => '/images/jsacul/film-helicopter.jpg', 'titles' => ['ja' => 'ヘリコプター フォトウエディング', 'en' => 'Helicopter photo wedding', 'id' => 'Foto pernikahan helikopter', 'th' => 'ถ่ายภาพแต่งงานด้วยเฮลิคอปเตอร์', 'zh' => '直升機婚紗攝影']],
+        ['src' => '/videos/jsacul/castle.mp4', 'poster' => '/images/jsacul/film-castle.jpg', 'titles' => ['ja' => 'ウェディングムービー', 'en' => 'Wedding film', 'id' => 'Film pernikahan', 'th' => 'วิดีโองานแต่ง', 'zh' => '婚禮影片']],
+    ];
+
+    /** The chapter that holds the wedding services is called Options here, like the owner's own site. */
+    private const OPTIONS_LABEL = ['ja' => 'オプション', 'en' => 'Options', 'id' => 'Opsi', 'th' => 'ตัวเลือก', 'zh' => '選項'];
+
     /** Interface wording for the plan pages. */
     private const UI = [
         'ja' => ['halls_question' => '撮影プランの種類と料金を見せてください。', 'prices_heading' => '料金（衣裳の組み合わせ別）', 'plan_col' => 'プラン', 'price_col' => '料金（税別）', 'includes_heading' => 'プランに含まれるもの', 'extras_heading' => '別途費用（税別）', 'rate_label' => '基本料金', 'per_event' => '／1プラン',
@@ -61,6 +70,7 @@ class JsAculSeeder extends Seeder
             $block = $data['info'][$locale];
             $info[$locale] = [
                 ...self::UI[$locale],
+                'menu_options' => self::OPTIONS_LABEL[$locale],
                 'options' => $block['plan_labels'],
                 'includes' => $block['includes'],
                 'extras' => $block['extras'],
@@ -97,6 +107,7 @@ class JsAculSeeder extends Seeder
             'theme' => 'jsacul',
             'hall_groups' => $groups,
             'plan_info' => $info,
+            'films' => self::FILMS,
         ];
 
         // No code: public and open. With a code: private (unlisted + noindex + gate).

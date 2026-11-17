@@ -39,4 +39,20 @@
             </dl>
         </div>
     </x-slot:welcome>
+
+    @php $films = $venue->filmsFor($locale); @endphp
+    @if ($films)
+        <div class="lobby-films" data-films>
+            @foreach ($films as $film)
+                <button type="button" class="lobby-film" data-film-open data-film-src="{{ $film['src'] }}" data-film-title="{{ $film['title'] }}" aria-haspopup="dialog" aria-label="{{ $lobby['watch_video'] }}: {{ $film['title'] }}" title="{{ $film['title'] }}">
+                    @if ($film['poster'])<img src="{{ $film['poster'] }}" alt="" loading="lazy">@endif
+                    <span class="lobby-film-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.52.85l10.4-6.5a1 1 0 0 0 0-1.7L9.52 4.65A1 1 0 0 0 8 5.5Z"/></svg></span>
+                </button>
+            @endforeach
+        </div>
+        <dialog class="video-modal" data-film-modal aria-label="{{ $lobby['video_label'] }}">
+            <button type="button" class="video-modal-close" data-film-close aria-label="{{ $lobby['close'] }}"><span aria-hidden="true">×</span></button>
+            <div class="video-modal-frame" data-film-frame></div>
+        </dialog>
+    @endif
 </x-venue-stage>

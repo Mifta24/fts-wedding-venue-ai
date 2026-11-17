@@ -121,4 +121,28 @@ class JsAculSiteTest extends TestCase
 
         $this->get("/$slug/halls")->assertOk()->assertDontSee('data-area-tab=', false);
     }
+
+    public function test_lobby_shows_two_film_icons_and_files_exist_and_services_chapter_is_called_options(): void
+    {
+        $venue = $this->seedSite();
+
+        $this->assertCount(2, $venue->filmsFor('ja'));
+        foreach ($venue->filmsFor('ja') as $film) {
+            $this->assertFileExists(public_path(ltrim($film['src'], '/')));
+            $this->assertFileExists(public_path(ltrim((string) $film['poster'], '/')));
+        }
+
+        $this->get(route('venue.show', ['venueSlug' => 'jsacul', 'lang' => 'ja']))
+            ->assertOk()->assertSee('data-film-open', false)->assertSee('/videos/jsacul/helicopter.mp4', false)->assertSee('オプション');
+        $this->get(route('venue.services', ['venueSlug' => 'jsacul', 'lang' => 'ja']))->assertOk()->assertSee('オプション');
+    }
+
+    public function test_films_never_point_outside_this_site_and_other_venues_have_none(): void
+    {
+        $venue = $this->seedSite();
+        $venue->films = [['src' => 'https://evil.test/x.mp4', 'titles' => ['en' => 'x']], ['src' => '/videos/jsacul/castle.mp4', 'titles' => ['en' => 'ok']]];
+
+        $this->assertSame(['/videos/jsacul/castle.mp4'], array_column($venue->filmsFor('en'), 'src'));
+        $this->assertSame([], (new Venue)->filmsFor('ja'));
+    }
 }

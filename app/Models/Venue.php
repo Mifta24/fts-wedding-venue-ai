@@ -39,6 +39,7 @@ use Illuminate\Support\Str;
     'logo_path',
     'cover_path',
     'video_url',
+    'films',
     'catalog_mode',
     'theme',
     'hall_groups',
@@ -64,6 +65,7 @@ class Venue extends Model
             'translations' => 'array',
             'hall_groups' => 'array',
             'plan_info' => 'array',
+            'films' => 'array',
             'latitude' => 'decimal:7',
             'longitude' => 'decimal:7',
             'weekday_discount_percent' => 'integer',
@@ -146,6 +148,23 @@ class Venue extends Model
         }
 
         return null;
+    }
+
+    /**
+     * The venue's own short films (files on this site, never another address),
+     * with the title in the visitor's language.
+     *
+     * @return list<array{src: string, poster: ?string, title: string}>
+     */
+    public function filmsFor(string $locale): array
+    {
+        return collect($this->films ?? [])
+            ->filter(fn ($film) => is_array($film) && str_starts_with((string) ($film['src'] ?? ''), '/videos/'))
+            ->map(fn (array $film) => [
+                'src' => $film['src'],
+                'poster' => $film['poster'] ?? null,
+                'title' => $film['titles'][$locale] ?? $film['titles']['en'] ?? '',
+            ])->values()->all();
     }
 
     /** Reachable by its link. Unlisted venues are not shown in the opening list or the sitemap. */

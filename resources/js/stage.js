@@ -260,3 +260,33 @@ function initAreaTabs() {
 }
 
 initAreaTabs();
+
+
+/* Short films (files on this site): the player is created on click and removed on close,
+   so nothing is downloaded until a visitor asks for it and the film stops when the pop-up closes. */
+function initFilms() {
+    const modal = document.querySelector('[data-film-modal]');
+    const buttons = document.querySelectorAll('[data-film-open]');
+    if (!modal || !buttons.length || typeof modal.showModal !== 'function') return;
+
+    const frame = modal.querySelector('[data-film-frame]');
+    const stop = () => frame.replaceChildren();
+
+    buttons.forEach((button) => button.addEventListener('click', () => {
+        const player = document.createElement('video');
+        player.src = button.dataset.filmSrc;
+        player.controls = true;
+        player.autoplay = true;
+        player.playsInline = true;
+        player.setAttribute('aria-label', button.dataset.filmTitle || '');
+        frame.replaceChildren(player);
+        modal.showModal();
+        player.play?.().catch(() => { /* autoplay refused: the controls are there */ });
+    }));
+
+    modal.querySelector('[data-film-close]')?.addEventListener('click', () => modal.close());
+    modal.addEventListener('click', (event) => { if (event.target === modal) modal.close(); });
+    modal.addEventListener('close', stop);
+}
+
+initFilms();

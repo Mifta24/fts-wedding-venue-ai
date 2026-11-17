@@ -902,3 +902,15 @@ a.info-fact:hover { border-color: var(--text); }
 .service-card-photo:not(:has(img)) { background: linear-gradient(135deg, #f1e6d6, #d8c09a); }
 .theme-jsacul .service-card-photo:not(:has(img)) { background: linear-gradient(135deg, #3a3a42, #23232a); }
 .service-card-title { text-wrap: balance; word-break: auto-phrase; }
+
+/* Short films: two small round icons at the right-hand side of the concierge, above the chat card */
+.lobby-films { position: absolute; z-index: 4; right: var(--gap); bottom: calc(20px + 56px + 18px); display: flex; flex-direction: column; gap: 12px; }
+.lobby-film { position: relative; display: grid; place-items: center; width: 56px; height: 56px; padding: 0; border: 2px solid var(--gold); border-radius: 50%; background: var(--ink-2); color: white; overflow: hidden; cursor: pointer; box-shadow: 0 10px 26px #0009; transition: transform .25s var(--ease-cine), box-shadow .25s ease; animation: stage-fade .5s ease .6s backwards; }
+.lobby-film img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .75; }
+.lobby-film-play { position: relative; display: grid; place-items: center; width: 28px; height: 28px; padding-left: 2px; border-radius: 50%; background: var(--gold); color: var(--gold-ink); }
+.lobby-film:hover, .lobby-film:focus-visible { transform: scale(1.1); box-shadow: 0 14px 34px #000b; }
+.lobby-film:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.stage-chat.is-open ~ .lobby-films, .stage:has(.stage-chat.is-open) .lobby-films { right: calc(var(--col) + var(--gap) * 2); bottom: 20px; flex-direction: row; }
+.video-modal-frame video { position: absolute; inset: 0; width: 100%; height: 100%; background: #000; }
+@media (max-width: 899px) { .lobby-films { right: 12px; bottom: calc(14px + 56px + 12px); flex-direction: row; } .lobby-film { width: 48px; height: 48px; } }
+@media (prefers-reduced-motion: reduce) { .lobby-film { animation: none; transition: none; } }

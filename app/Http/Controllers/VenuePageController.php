@@ -343,6 +343,8 @@ class VenuePageController extends Controller
 
         $labels = [
             ...$this->labels($locale),
+            // A plan-catalog venue may call this chapter something else (Js'Acul: "Options").
+            ...($venue->isPlanCatalog() && ! empty($venue->planInfoFor($locale)['menu_options']) ? ['menu_services' => $venue->planInfoFor($locale)['menu_options']] : []),
             'setting_labels_json' => json_encode(self::hallTerms($locale)['setting'], JSON_UNESCAPED_UNICODE),
             'event_labels_json' => json_encode($this->eventTypeLabels($locale), JSON_UNESCAPED_UNICODE),
         ];
@@ -435,7 +437,7 @@ class VenuePageController extends Controller
 
         return [
             ['key' => 'halls', 'chapter' => self::CHAPTERS['halls'], 'label' => $labels['halls_heading'], 'href' => $url('halls'), 'exit' => true, 'tour' => $tour['tour_halls'], 'topic' => $venue->isPlanCatalog() ? ($venue->planInfoFor($locale)['halls_question'] ?? $labels['menu_halls_q']) : $labels['menu_halls_q']],
-            ['key' => 'services', 'chapter' => self::CHAPTERS['services'], 'label' => ($venue->isPlanCatalog() ? ($venue->planInfoFor($locale)['menu_options'] ?? null) : null) ?? $labels['menu_services'], 'href' => $url('services'), 'exit' => true, 'tour' => $tour['tour_services'], 'topic' => $labels['menu_services_q']],
+            ['key' => 'services', 'chapter' => self::CHAPTERS['services'], 'label' => $labels['menu_services'], 'href' => $url('services'), 'exit' => true, 'tour' => $tour['tour_services'], 'topic' => $labels['menu_services_q']],
             ['key' => 'info', 'chapter' => self::CHAPTERS['info'], 'label' => $lobby['menu_info'], 'href' => $url('info'), 'exit' => true, 'tour' => $tour['tour_info'], 'topic' => $labels['menu_policies_q']],
             ['key' => 'reservation', 'chapter' => self::CHAPTERS['reservation'], 'label' => $lobby['reservation'], 'href' => $url('reservation'), 'exit' => true, 'tour' => $tour['tour_reservation'], 'topic' => $lobby['reservation_q']],
             ['key' => 'staff', 'chapter' => self::CHAPTERS['staff'], 'label' => $labels['menu_staff'], 'href' => $url('staff'), 'exit' => true, 'tour' => $tour['tour_staff'], 'topic' => $labels['menu_staff_q']],

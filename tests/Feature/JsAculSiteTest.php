@@ -145,4 +145,30 @@ class JsAculSiteTest extends TestCase
         $this->assertSame(['/videos/jsacul/castle.mp4'], array_column($venue->filmsFor('en'), 'src'));
         $this->assertSame([], (new Venue)->filmsFor('ja'));
     }
+
+    public function test_lobby_has_five_photo_icons_that_point_to_real_plans(): void
+    {
+        $venue = $this->seedSite();
+
+        $photos = $venue->lobbyPhotosFor('ja');
+        $this->assertCount(5, $photos);
+        foreach ($photos as $photo) {
+            $this->assertFileExists(public_path(ltrim($photo['src'], '/')));
+            $this->assertFileExists(public_path(ltrim($photo['thumb'], '/')));
+            $this->assertNotSame('', $photo['title']);
+            $this->get($photo['url'])->assertOk();
+        }
+
+        $this->get(route('venue.show', ['venueSlug' => 'jsacul', 'lang' => 'ja']))
+            ->assertOk()->assertSee('data-photo-open="4"', false)->assertSee('data-photo-modal', false);
+    }
+
+    public function test_lobby_photos_ignore_outside_links_and_other_venues_have_none(): void
+    {
+        $venue = $this->seedSite();
+        $venue->lobby_photos = [['src' => 'https://evil.test/a.jpg', 'thumb' => '/images/jsacul/lobby-18.webp', 'hall' => 'plan-18']];
+
+        $this->assertSame([], $venue->lobbyPhotosFor('en'));
+        $this->assertSame([], (new Venue)->lobbyPhotosFor('ja'));
+    }
 }

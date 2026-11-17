@@ -290,3 +290,45 @@ function initFilms() {
 }
 
 initFilms();
+
+
+/* Photo icons on the lobby: a small viewer with previous/next, the plan's name and a link to the plan. */
+function initLobbyPhotos() {
+    const modal = document.querySelector('[data-photo-modal]');
+    const buttons = document.querySelectorAll('[data-photo-open]');
+    const data = document.querySelector('[data-photo-data]');
+    if (!modal || !buttons.length || !data || typeof modal.showModal !== 'function') return;
+
+    let photos = [];
+    try { photos = JSON.parse(data.textContent); } catch { return; }
+    const image = modal.querySelector('[data-photo-image]');
+    const caption = modal.querySelector('[data-photo-caption]');
+    const link = modal.querySelector('[data-photo-link]');
+    let index = 0;
+
+    const show = (next) => {
+        index = (next + photos.length) % photos.length;
+        const photo = photos[index];
+        image.src = photo.src;
+        image.alt = photo.title;
+        caption.textContent = `${photo.title} (${index + 1}/${photos.length})`;
+        link.hidden = !photo.url;
+        link.href = photo.url || '#';
+    };
+
+    buttons.forEach((button) => button.addEventListener('click', () => {
+        show(Number(button.dataset.photoOpen) || 0);
+        modal.showModal();
+    }));
+    modal.querySelector('[data-photo-prev]').addEventListener('click', () => show(index - 1));
+    modal.querySelector('[data-photo-next]').addEventListener('click', () => show(index + 1));
+    modal.querySelector('[data-photo-close]').addEventListener('click', () => modal.close());
+    modal.addEventListener('click', (event) => { if (event.target === modal) modal.close(); });
+    modal.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') show(index - 1);
+        if (event.key === 'ArrowRight') show(index + 1);
+    });
+    modal.addEventListener('close', () => { image.removeAttribute('src'); });
+}
+
+initLobbyPhotos();

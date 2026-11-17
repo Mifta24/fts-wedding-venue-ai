@@ -55,4 +55,25 @@
             <div class="video-modal-frame" data-film-frame></div>
         </dialog>
     @endif
+    @php $lobbyPhotos = $venue->lobbyPhotosFor($locale); @endphp
+    @if ($lobbyPhotos)
+        <div class="lobby-photos" data-lobby-photos>
+            @foreach ($lobbyPhotos as $i => $photo)
+                <button type="button" class="lobby-photo" data-photo-open="{{ $i }}" aria-haspopup="dialog" aria-label="{{ $lobby['zoom_photo'] }}: {{ $photo['title'] }}" title="{{ $photo['title'] }}">
+                    <img src="{{ $photo['thumb'] }}" alt="" loading="lazy" width="108" height="83">
+                </button>
+            @endforeach
+        </div>
+        <dialog class="lobby-photo-modal" data-photo-modal aria-label="{{ $lobby['photo_info'] }}">
+            <button type="button" class="video-modal-close" data-photo-close aria-label="{{ $lobby['close'] }}"><span aria-hidden="true">×</span></button>
+            <button type="button" class="hall-lightbox-nav lobby-photo-prev" data-photo-prev aria-label="{{ $lobby['prev_photo'] }}"><span aria-hidden="true">←</span></button>
+            <button type="button" class="hall-lightbox-nav lobby-photo-next" data-photo-next aria-label="{{ $lobby['next_photo'] }}"><span aria-hidden="true">→</span></button>
+            <img class="lobby-photo-big" data-photo-image alt="">
+            <div class="lobby-photo-bar">
+                <p data-photo-caption aria-live="polite"></p>
+                <a class="hall-lightbox-detail" data-photo-link href="#">{{ $lobby['detail'] }} →</a>
+            </div>
+        </dialog>
+        <script type="application/json" data-photo-data>@json($lobbyPhotos)</script>
+    @endif
 </x-venue-stage>

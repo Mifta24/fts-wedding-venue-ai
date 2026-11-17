@@ -40,6 +40,7 @@ use Illuminate\Support\Str;
     'cover_path',
     'video_url',
     'films',
+    'lobby_photos',
     'catalog_mode',
     'theme',
     'hall_groups',
@@ -66,6 +67,7 @@ class Venue extends Model
             'hall_groups' => 'array',
             'plan_info' => 'array',
             'films' => 'array',
+            'lobby_photos' => 'array',
             'latitude' => 'decimal:7',
             'longitude' => 'decimal:7',
             'weekday_discount_percent' => 'integer',
@@ -165,6 +167,29 @@ class Venue extends Model
                 'poster' => $film['poster'] ?? null,
                 'title' => $film['titles'][$locale] ?? $film['titles']['en'] ?? '',
             ])->values()->all();
+    }
+
+    /**
+     * Photo icons on the lobby. Each opens the photo big and points to the plan it comes from.
+     *
+     * @return list<array{src: string, thumb: string, title: string, url: string}>
+     */
+    public function lobbyPhotosFor(string $locale): array
+    {
+        $photos = collect($this->lobby_photos ?? [])
+            ->filter(fn ($photo) => is_array($photo) && str_starts_with((string) ($photo['src'] ?? ''), '/images/') && str_starts_with((string) ($photo['thumb'] ?? ''), '/images/'));
+        if ($photos->isEmpty()) {
+            return [];
+        }
+
+        $halls = $this->halls()->whereIn('slug', $photos->pluck('hall')->filter()->all())->get()->keyBy('slug');
+
+        return $photos->map(fn (array $photo) => [
+            'src' => $photo['src'],
+            'thumb' => $photo['thumb'],
+            'title' => ($hall = $halls->get($photo['hall'] ?? '')) ? $hall->translatedName($locale) : '',
+            'url' => $hall ? route('venue.hall', ['venueSlug' => $this->slug, 'hallSlug' => $hall->slug, 'lang' => $locale]) : '',
+        ])->values()->all();
     }
 
     /** Reachable by its link. Unlisted venues are not shown in the opening list or the sitemap. */

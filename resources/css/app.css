@@ -940,3 +940,6 @@ a.info-fact:hover { border-color: var(--text); }
     .stage-welcome:not(.stage-welcome-scene) > .lobby-stats { flex: none; }
 }
 .stage-welcome h1, .stage-welcome > p { word-break: auto-phrase; }
+
+/* Presenting pose: sits a bit further from the right-hand panel. */
+.stage:has(.stage-character[data-pose="presenting"]):not(:has(.lobby-content.stage-panel-right)) { --char-right: calc(var(--col) + var(--gap) * 2 + clamp(24px, 4vw, 64px)); }

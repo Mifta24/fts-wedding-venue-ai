@@ -931,3 +931,12 @@ a.info-fact:hover { border-color: var(--text); }
 .lobby-photo-next { right: 12px; top: 45%; }
 @media (max-width: 899px) { .lobby-photos { display: none; } }
 @media (prefers-reduced-motion: reduce) { .lobby-photo { transition: none; } }
+
+/* Lobby on a roomy desktop screen: the title block sits at the top, the buttons and figures stay at the bottom. */
+@media (min-width: 900px) and (min-height: 700px) {
+    .stage-welcome:not(.stage-welcome-scene) { top: calc(var(--header) + var(--gap) + 8px); display: flex; flex-direction: column; pointer-events: none; }
+    .stage-welcome:not(.stage-welcome-scene) > * { pointer-events: auto; }
+    .stage-welcome:not(.stage-welcome-scene) > .lobby-cta { margin-top: auto; }
+    .stage-welcome:not(.stage-welcome-scene) > .lobby-stats { flex: none; }
+}
+.stage-welcome h1, .stage-welcome > p { word-break: auto-phrase; }

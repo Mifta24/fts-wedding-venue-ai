@@ -176,6 +176,9 @@ function initConcierge() {
     });
     syncPanelState();
 
+    // Content inside the menu (a hall, a service) was clicked while the chat was open: keep it open.
+    if (window.takeKeptChat?.()) openPanel();
+
     // Amounts from the server are already in the page language's currency.
     function money(value) {
         return formatMoney(value, config.currency);

@@ -12,6 +12,7 @@
 const TOPIC_KEY = 'concierge_pending_topic';
 const CHAPTER_KEY = 'venue_last_chapter';
 const DIRECT_KEY = 'venue_direct';
+const CHAT_KEEP_KEY = 'venue_chat_keep';
 const CHAPTER_ORDER = ['I', 'II', 'III', 'IV', 'V', 'VI'];
 
 /**
@@ -114,6 +115,12 @@ function initStage() {
         try {
             sessionStorage.removeItem(TOPIC_KEY);
             sessionStorage.setItem(DIRECT_KEY, JSON.stringify({ path: link.pathname, at: Date.now() }));
+            // Content inside the menu (a hall, a service): a chat that is open stays open on the next page.
+            if (document.getElementById('concierge-app')?.dataset.chatState === 'open') {
+                sessionStorage.setItem(CHAT_KEEP_KEY, JSON.stringify({ path: link.pathname, at: Date.now() }));
+            } else {
+                sessionStorage.removeItem(CHAT_KEEP_KEY);
+            }
         } catch { /* private mode: the next page just opens its curtain as usual */ }
 
         window.location.href = link.href;
@@ -143,12 +150,24 @@ function initStage() {
                 return;
             }
 
-            leave(link.href, link.dataset.tourLine, link.dataset.topic);
+            // Another menu: the chat is closed on arrival (no topic is raised, so it does not pop open).
+            leave(link.href, link.dataset.tourLine, null);
         });
     });
 
     window.venueStage = { leave };
 }
+
+/** True when the chat was open on the previous page and the client only moved to content inside the same menu (read once). */
+window.takeKeptChat = () => {
+    try {
+        const kept = JSON.parse(sessionStorage.getItem(CHAT_KEEP_KEY) || 'null');
+        sessionStorage.removeItem(CHAT_KEEP_KEY);
+        return !!kept && kept.path === window.location.pathname && Date.now() - kept.at < 8000;
+    } catch {
+        return false;
+    }
+};
 
 /** The topic the client picked on the previous scene, if any (read once). */
 window.takePendingConciergeTopic = () => {

@@ -1042,7 +1042,29 @@ function initHallLightbox(gallery, main, thumbs, select) {
     const infoTitle = box.querySelector('[data-info-title]');
     const infoCount = box.querySelector('[data-info-count]');
     const infoTags = box.querySelector('[data-info-tags]');
+    const strip = box.querySelector('[data-lightbox-thumbs]');
     let index = 0;
+
+    // A strip of small photos to pick one directly (only when there is more than one).
+    const stripButtons = strip && sources.length > 1
+        ? sources.map((item, position) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'hall-lightbox-thumb';
+            button.setAttribute('aria-label', `${position + 1} / ${sources.length}`);
+            const preview = document.createElement('img');
+            preview.src = item.src;
+            preview.alt = '';
+            preview.loading = 'lazy';
+            button.append(preview);
+            button.addEventListener('click', () => show(position));
+            return button;
+        })
+        : [];
+    if (strip && stripButtons.length) {
+        strip.append(...stripButtons);
+        strip.hidden = false;
+    }
 
     const show = (next) => {
         index = (next + sources.length) % sources.length;
@@ -1051,6 +1073,10 @@ function initHallLightbox(gallery, main, thumbs, select) {
         image.alt = item.alt;
         caption.textContent = sources.length > 1 ? `${item.alt} (${index + 1}/${sources.length})` : item.alt;
         if (thumbs[index]) select(thumbs[index]);
+        stripButtons.forEach((button, position) => {
+            button.toggleAttribute('aria-current', position === index);
+            if (position === index) button.scrollIntoView({ block: 'nearest', inline: 'center' });
+        });
 
         if (!info) return;
         infoTitle.textContent = item.alt;

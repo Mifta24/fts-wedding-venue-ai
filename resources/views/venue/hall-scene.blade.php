@@ -57,6 +57,7 @@
                             <button type="button" class="hall-lightbox-nav hall-lightbox-next" data-lightbox-next aria-label="{{ $lobby['next_photo'] }}"><span aria-hidden="true">→</span></button>
                         @endif
                         <img src="" alt="" data-lightbox-image>
+                        <div class="hall-lightbox-thumbs" data-lightbox-thumbs hidden></div>
                         <div class="hall-lightbox-bar">
                             <p class="hall-lightbox-caption" data-lightbox-caption aria-live="polite"></p>
                             <button type="button" class="hall-lightbox-detail" data-lightbox-detail aria-expanded="false" aria-controls="lightbox-info-{{ $hall->id }}">

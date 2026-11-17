@@ -943,3 +943,27 @@ a.info-fact:hover { border-color: var(--text); }
 
 /* Presenting pose: sits a bit further from the right-hand panel. */
 .stage:has(.stage-character[data-pose="presenting"]):not(:has(.lobby-content.stage-panel-right)) { --char-right: calc(var(--col) + var(--gap) * 2 + clamp(24px, 4vw, 64px)); }
+
+/* Photo viewer: the photo uses the whole screen; the strip of small photos, the caption and the buttons float on top of it. */
+.hall-lightbox, .lobby-photo-modal { position: fixed; inset: 0; width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; border-radius: 0; background: #0d080b; }
+.hall-lightbox::backdrop, .lobby-photo-modal::backdrop { background: #0d080b; backdrop-filter: none; }
+.hall-lightbox[open] { display: block; }
+.hall-lightbox > img[data-lightbox-image], .lobby-photo-big { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; min-height: 0; object-fit: contain; border-radius: 0; box-shadow: none; background: transparent; }
+.hall-lightbox-thumbs, .hall-lightbox-bar, .lobby-photo-bar { position: absolute; left: 0; right: 0; z-index: 2; }
+.hall-lightbox-thumbs { bottom: 54px; justify-content: center; padding: 18px 16px 6px; background: linear-gradient(to top, #0d080bd9, transparent); }
+.hall-lightbox-thumb { width: 84px; height: 56px; opacity: .72; box-shadow: 0 4px 14px #0009; }
+.hall-lightbox-bar { bottom: 0; min-height: 54px; padding: 8px 16px; background: #0d080bd9; }
+.lobby-photo-bar { bottom: 0; padding: 14px 20px; background: linear-gradient(to top, #0d080bf2, #0d080b99 60%, transparent); }
+.hall-lightbox-close, .hall-lightbox-nav { background: #0d080bb3; }
+.hall-lightbox-close { top: 14px; right: 14px; }
+.hall-lightbox-prev { left: 14px; }
+.hall-lightbox-next { right: 14px; }
+.hall-lightbox-info { bottom: 130px; }
+.lobby-photo-modal .video-modal-close { top: 14px; right: 14px; z-index: 3; }
+.lobby-photo-prev { left: 14px; }
+.lobby-photo-next { right: 14px; }
+.lobby-photo-prev, .lobby-photo-next { z-index: 3; }
+.hall-lightbox[open], .lobby-photo-modal[open] { animation: lightbox-fade .2s ease-out; }
+@keyframes lightbox-fade { from { opacity: 0; } to { opacity: 1; } }
+@media (max-width: 640px) { .hall-lightbox-thumb { width: 60px; height: 42px; } .hall-lightbox-thumbs { bottom: 104px; } .hall-lightbox-info { bottom: 190px; } }
+@media (prefers-reduced-motion: reduce) { .hall-lightbox[open], .lobby-photo-modal[open] { animation: none; } }

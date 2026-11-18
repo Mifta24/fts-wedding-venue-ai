@@ -1050,3 +1050,14 @@ a.info-fact:hover { border-color: var(--text); }
 .theme-jsacul .stage-welcome-scene .narrator { background: #4a4e5cc4; border-color: #ffffff3d; color: #fff; backdrop-filter: blur(12px); }
 .theme-jsacul .stage-welcome-scene .narrator * { color: inherit; }
 .theme-jsacul .journey-panel-footer, .theme-jsacul .lobby-stats dt { font-size: 11.5px; text-shadow: 0 1px 6px #0000008c; }
+
+/* Laptop: the film icons sit in one row at the bottom (a swipeable slider), under the welcome text, no longer a column beside the lady */
+@media (min-width: 900px) {
+    .lobby-films, .stage-chat.is-open ~ .lobby-films, .stage:has(.stage-chat.is-open) .lobby-films { top: auto; right: auto; left: calc(var(--content-left) + 20px); bottom: calc(var(--dock) + 8px); width: min(560px, max(300px, calc(var(--char-left) + var(--char-w) * .25 - var(--content-left) - 20px))); flex-direction: row; gap: 12px; overflow-x: auto; -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent); scroll-snap-type: x mandatory; scrollbar-width: none; padding: 6px 4px; margin: -6px -4px; }
+    .lobby-films::-webkit-scrollbar { display: none; }
+    .lobby-film { flex: 0 0 auto; scroll-snap-align: start; }
+    .stage:has(.lobby-films) .stage-welcome { bottom: calc(var(--dock) + 8px + 80px + 18px); }
+}
+@media (min-width: 900px) and (max-height: 760px) {
+    .stage:has(.lobby-films) .stage-welcome { bottom: calc(var(--dock) + 8px + 68px + 14px); }
+}

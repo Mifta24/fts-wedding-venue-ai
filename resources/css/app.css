@@ -971,3 +971,34 @@ a.info-fact:hover { border-color: var(--text); }
 @media (prefers-reduced-motion: reduce) { .hall-lightbox[open], .lobby-photo-modal[open] { animation: none; } }
 
 @media (min-width: 900px) and (max-height: 760px) { .lobby-film { width: 108px; height: 68px; } .lobby-films { gap: 10px; } }
+
+/* Phones: fixes found when checking every Js'Acul page at 390px */
+.info-hours-time, .service-card-title { font-variant-numeric: lining-nums tabular-nums; }
+@media (max-width: 899px) {
+    /* The strip below already says which chapter this is, so the header gives the room to the venue name and bigger tap targets. */
+    .stage-header .chapter-display { display: none; }
+    .stage-header { grid-template-columns: minmax(0, 1fr) auto; }
+    .stage-lang a { padding: 10px 6px; min-width: 28px; text-align: center; }
+    .sound-toggle { width: 36px; height: 36px; }
+    .stage-tools { gap: 6px; }
+    .stage-brand { gap: 8px; }
+    .stage-brand-name { font-size: 15px; line-height: 1.15; white-space: normal; overflow: visible; text-overflow: clip; letter-spacing: .02em; }
+    .theme-jsacul .stage-brand-name { letter-spacing: .03em; }
+    /* The chapter strip fades at both ends so it is clear that it scrolls */
+    .journey-buttons { padding-inline: 4px 22px; -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent); scroll-padding-inline: 12px; }
+    /* Js'Acul: dark at the bottom where the text sits, light above so the photo shows */
+    .theme-jsacul .stage-shade { background: linear-gradient(0deg, #16161af0 0, #16161ab3 38%, #16161a40 70%, #16161a33 100%); }
+    /* The film row sits between the welcome text and the chat bar, so it never covers the stats */
+    .stage:has(.lobby-films) .stage-welcome { bottom: calc(var(--dock) + 4px + 64px); }
+    /* The standing pose is cut straight at its edges: pull her in from the screen edge and soften both sides */
+    .stage-character:not([data-pose="consulting"]) { right: 3%; height: 29%; -webkit-mask-image: linear-gradient(#000 72%, transparent), linear-gradient(90deg, transparent, #000 16%, #000 90%, transparent); mask-image: linear-gradient(#000 72%, transparent), linear-gradient(90deg, transparent, #000 16%, #000 90%, transparent); -webkit-mask-composite: source-in; mask-composite: intersect; }
+    .lobby-films { left: 16px; right: 16px; justify-content: space-between; gap: 8px; bottom: calc(14px + 56px + 12px); }
+    .lobby-film { flex: 1 1 0; width: auto; max-width: 128px; }
+    /* More of the hall list is visible */
+    /* The close button of the pop-up stays in view while its cards are scrolled */
+    .showcase-panel > .showcase-close { position: sticky; top: 10px; float: right; margin: 10px 10px -50px 0; }
+    .hall-directory { max-height: 62dvh; }
+    .hall-nav { -webkit-mask-image: linear-gradient(#000 calc(100% - 28px), transparent); mask-image: linear-gradient(#000 calc(100% - 28px), transparent); padding-bottom: 22px; }
+    .lobby-content { padding: 18px 18px 14px; }
+}
+@media (max-width: 899px) and (max-height: 700px) { .stage:has(.lobby-films) .stage-welcome > p { display: none; } }

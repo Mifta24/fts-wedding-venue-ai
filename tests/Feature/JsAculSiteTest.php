@@ -186,4 +186,17 @@ class JsAculSiteTest extends TestCase
         $this->get('/jsacul?lang=ja')->assertOk()->assertSee("sessionStorage.getItem('venue_direct')", false);
         $this->get('/jsacul/services?lang=en')->assertOk()->assertSee("sessionStorage.getItem('venue_direct')", false);
     }
+
+    public function test_the_chat_has_a_microphone_button_with_labels_in_every_language(): void
+    {
+        $this->seedSite();
+
+        foreach (['id', 'en', 'ja', 'th', 'zh'] as $lang) {
+            $html = $this->get("/jsacul?lang={$lang}")->assertOk()->getContent();
+            $this->assertStringContainsString('data-chat-mic', $html, $lang);
+            foreach (['data-label-mic="', 'data-label-mic-listening="', 'data-label-mic-denied="', 'data-label-mic-nospeech="'] as $attr) {
+                $this->assertMatchesRegularExpression('/'.preg_quote($attr, '/').'[^"]{4,}"/u', $html, "{$lang} {$attr}");
+            }
+        }
+    }
 }

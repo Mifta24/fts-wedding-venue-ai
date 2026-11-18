@@ -1061,3 +1061,15 @@ a.info-fact:hover { border-color: var(--text); }
 @media (min-width: 900px) and (max-height: 760px) {
     .stage:has(.lobby-films) .stage-welcome { bottom: calc(var(--dock) + 8px + 68px + 14px); }
 }
+
+/* Voice input button in the chat bar (hidden where the browser has no speech recognition) */
+.chat-bar .chat-mic { display: inline-flex; align-items: center; justify-content: center; width: 42px; padding: 0; border: 1px solid #ffffff40; background: #ffffff1a; color: white; transition: background .2s ease, color .2s ease; }
+.chat-bar .chat-mic[hidden] { display: none; }
+.chat-bar .chat-mic:hover:not(:disabled):not(.is-listening) { background: #ffffff33; }
+.chat-bar .chat-mic:disabled { opacity: .45; cursor: not-allowed; }
+.chat-bar .chat-mic.is-listening { border-color: #c4574f; background: #c4574f; color: white; animation: mic-pulse 1.4s ease-out infinite; }
+@keyframes mic-pulse { 0% { box-shadow: 0 0 0 0 #c4574f66; } 100% { box-shadow: 0 0 0 12px #c4574f00; } }
+@media (prefers-reduced-motion: reduce) { .chat-bar .chat-mic.is-listening { animation: none; } }
+.chat-bar input { text-overflow: ellipsis; }
+.chat-bar input::placeholder { text-overflow: ellipsis; }
+.chat-bar .chat-mic { width: 40px; min-height: 40px; align-self: center; border-radius: 999px; }

@@ -870,7 +870,7 @@ a.info-fact:hover { border-color: var(--text); }
 .theme-jsacul { --ink: #16161a; --ink-2: #212126; --plum: #2e2e34; --gold: #c9a35a; --gold-deep: #a07f3a; --gold-ink: #1d1608; --rose: #c9a35a; --blush: #efe6d6; --font-serif: 'Cormorant Garamond', 'Shippori Mincho', 'Yu Mincho', 'Hiragino Mincho ProN', 'Noto Serif TC', 'Noto Serif Thai', 'Times New Roman', serif; }
 .theme-jsacul .curtain { background: linear-gradient(90deg, #00000066, transparent 14%, transparent 86%, #00000066), repeating-linear-gradient(90deg, #26262c 0 26px, #313138 26px 52px, #1d1d22 52px 78px); box-shadow: inset 0 0 0 1px #ffffff12, inset 0 -14px 0 #c9a35a33; }
 .theme-jsacul .stage-brand-name { letter-spacing: .08em; }
-.theme-jsacul .stage-shade { background: linear-gradient(0deg, #16161aeb 0, #16161a73 42%, #16161a99 100%); }
+.theme-jsacul .stage-shade { background: linear-gradient(90deg, #16161a99 0, #16161a66 calc(var(--content-left) + 420px), transparent 68%), linear-gradient(0deg, #16161ac7 0, #16161a38 42%, #16161a42 100%); }
 .theme-jsacul .hall-directory { background: #16161aeb; }
 .theme-jsacul .hall-nav a[aria-current]  { background: #c9a35a1a; }
 

@@ -1002,3 +1002,51 @@ a.info-fact:hover { border-color: var(--text); }
     .lobby-content { padding: 18px 18px 14px; }
 }
 @media (max-width: 899px) and (max-height: 700px) { .stage:has(.lobby-films) .stage-welcome > p { display: none; } }
+
+/* iPhone zooms the whole page when a text box under 16px is tapped: keep every field at 16px so the page never changes size */
+.chat-bar input, .wizard-field input, .wizard-field textarea, .wizard-field select, .access-card input { font-size: 16px; }
+
+/* Js'Acul: a lighter, airier stage. The photo stays bright; menus and panels become frosted glass instead of solid dark plum. */
+.theme-jsacul .stage-image { filter: brightness(1.06) saturate(1.04); }
+.theme-jsacul .stage-header { background: linear-gradient(180deg, #2a2a30a6, #2a2a3033); border-bottom-color: #ffffff2e; }
+.theme-jsacul .journey-panel { background: linear-gradient(160deg, #3c3c44a6, #2c2c33a0); backdrop-filter: blur(14px) saturate(1.1); border-color: #ffffff38; box-shadow: 0 14px 34px #0003, inset 0 1px 0 #ffffff26; }
+.theme-jsacul .chapter-display { background: #2a2a3380; }
+.theme-jsacul .hall-directory { background: #25252bb8; backdrop-filter: blur(14px) saturate(1.1); border-color: #ffffff38; }
+.theme-jsacul .chat-launcher, .theme-jsacul .chat-bar { background: #2a2a32cc; backdrop-filter: blur(12px); }
+.theme-jsacul .lobby-film { background: #2a2a32; }
+.theme-jsacul .stage-welcome h1, .theme-jsacul .stage-welcome > p, .theme-jsacul .chapter-display-label, .theme-jsacul .stage-welcome-scene h1 { text-shadow: 0 1px 14px #0000008c, 0 0 2px #00000059; }
+.theme-jsacul .stage-shade { background: linear-gradient(90deg, #16161a73 0, #16161a40 calc(var(--content-left) + 420px), transparent 68%), linear-gradient(0deg, #16161a99 0, #16161a1f 40%, #16161a24 100%); }
+@media (max-width: 899px) {
+    .theme-jsacul .journey-panel { background: #2e2e36b3; border-bottom-color: #ffffff2e; }
+    .theme-jsacul .stage-shade { background: linear-gradient(0deg, #16161ad9 0, #16161a8c 34%, #16161a26 62%, #16161a1a 100%); }
+}
+
+/* Js'Acul, second pass: lighter frosted glass everywhere, brighter champagne gold, small text raised for contrast */
+.theme-jsacul { --gold: #e0bd78; }
+.theme-jsacul .stage-header { background: linear-gradient(180deg, #5c606c80, #5c606c1a); border-bottom-color: #ffffff3d; }
+.theme-jsacul .stage-lang, .theme-jsacul .sound-toggle, .theme-jsacul .chapter-display { background: #5a5e6ca6; border-color: #ffffff47; }
+.theme-jsacul .stage-lang a { color: #ffffffe6; }
+.theme-jsacul .journey-panel { background: linear-gradient(160deg, #6a6e7dad, #565a68a6); border-color: #ffffff47; }
+.theme-jsacul .journey-key { background: radial-gradient(circle at 35% 30%, #8a8e9c, #646877); border-color: #ffffff59; color: #fff; }
+.theme-jsacul .journey-panel-footer, .theme-jsacul .lobby-stats dt, .theme-jsacul .stage-brand-city { color: #fff; }
+.theme-jsacul .hall-directory { background: #5a5e6cc7; border-color: #ffffff47; }
+.theme-jsacul .hall-directory-title, .theme-jsacul .hall-nav-layout { color: #ffffffe6; }
+.theme-jsacul .chat-launcher, .theme-jsacul .chat-bar { background: #5a5e6ccc; border-color: #ffffff52; }
+.theme-jsacul .chat-bar input::placeholder { color: #ffffffcc; }
+.theme-jsacul .chat-log-header { background: #4a4e5c; }
+.theme-jsacul .lobby-action-ghost { background: #5a5e6c80; border-color: #ffffff8c; }
+.theme-jsacul .stage-welcome > p { color: #fff; }
+.theme-jsacul .stage-welcome .lobby-eyebrow, .theme-jsacul .stage-welcome h1 em { text-shadow: 0 1px 12px #000000a6, 0 0 3px #00000073; }
+.theme-jsacul .stage-shade { background: linear-gradient(90deg, #16161a59 0, #16161a2e calc(var(--content-left) + 420px), transparent 68%), linear-gradient(0deg, #16161a73 0, #16161a14 36%, #16161a14 100%); }
+.theme-jsacul .curtain { opacity: .9; }
+@media (max-width: 899px) {
+    .theme-jsacul .journey-panel { background: #5f6372b8; }
+    .theme-jsacul .stage-shade { background: linear-gradient(0deg, #16161ab3 0, #16161a66 30%, #16161a14 58%, #16161a0d 100%); }
+}
+
+/* Small gold labels sat on bright sky: darker backing so they read, and the AI card matches the glass panels */
+.theme-jsacul .lobby-eyebrow, .theme-jsacul .stage-welcome-scene .lobby-eyebrow, .theme-jsacul .chapter-eyebrow { color: #f3d9a0; font-weight: 600; text-shadow: 0 1px 10px #000000b3, 0 0 3px #0000008c; }
+.theme-jsacul .stage-lang a[aria-current] { color: #1d1608; font-weight: 600; }
+.theme-jsacul .stage-welcome-scene .narrator { background: #4a4e5cc4; border-color: #ffffff3d; color: #fff; backdrop-filter: blur(12px); }
+.theme-jsacul .stage-welcome-scene .narrator * { color: inherit; }
+.theme-jsacul .journey-panel-footer, .theme-jsacul .lobby-stats dt { font-size: 11.5px; text-shadow: 0 1px 6px #0000008c; }

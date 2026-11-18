@@ -303,6 +303,7 @@ function initConcierge() {
             <div class="p-3">
                 <p class="chat-card-tag">${esc(facts)}</p>
                 <p class="mt-1 font-semibold">${esc(hall.name)}</p>
+                ${hall.event_date ? `<p class="chat-card-tag mt-1">${esc(longDate(hall.event_date))}</p>` : ''}
                 <p class="mt-1 text-sm font-semibold">${moneyCount(hall.total_price)} <span class="font-normal opacity-60">${esc(config.labels.perEvent)}</span></p>
                 ${hall.discount_percent > 0 ? `<p class="chat-card-tag mt-1">−${hall.discount_percent}% ${esc(config.labels.discount)}</p>` : ''}
                 ${hall.deposit_total > 0 ? `<p class="mt-1 text-xs opacity-70">${esc(config.labels.deposit)}: ${money(hall.deposit_total)}</p>` : ''}
@@ -555,6 +556,7 @@ function initConcierge() {
                     <div class="showcase-card-body">
                         <p class="chat-card-tag">${esc(facts)}</p>
                         <h3 class="showcase-card-title">${esc(hall.name)}</h3>
+                        ${hall.event_date ? `<p class="chat-card-tag">${esc(longDate(hall.event_date))}</p>` : ''}
                         <p class="showcase-card-price">${moneyCount(hall.total_price)} <span>${esc(config.labels.perEvent)}</span></p>
                         ${hall.discount_percent > 0 ? `<p class="chat-card-tag">−${hall.discount_percent}% ${esc(config.labels.discount)}</p>` : ''}
                         <button type="button" class="chat-card-button" data-showcase-slug="${esc(hall.hall_slug)}">${esc(config.labels.viewDetails)}</button>

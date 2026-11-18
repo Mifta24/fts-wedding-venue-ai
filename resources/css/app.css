@@ -56,7 +56,7 @@
 /* The concierge stands in front of the photo, behind every panel. Her size sets how much room each page leaves her:
    --char-left is where she starts, and the cards and panels beside her are cut to end before it. */
 .stage { --char-h: calc((100dvh - var(--header)) * .96); --char-ratio: .471; --char-right: calc(var(--col) + var(--gap) * 2); --char-w: calc(var(--char-h) * var(--char-ratio)); --char-left: calc(100% - var(--char-right) - var(--char-w)); }
-.stage:has(.stage-character[data-pose="presenting"]) { --char-h: calc((100dvh - var(--header)) * .66); --char-ratio: .703; }
+.stage:has(.stage-character[data-pose="presenting"]) { --char-h: calc((100dvh - var(--header)) * .66); --char-ratio: 1.029; }
 /* Cropped at the right edge of the picture, so it sits flush with the edge of the screen: she faces the client beside her. */
 .stage:has(.stage-character[data-pose="consulting"]) { --char-h: calc((100dvh - var(--header)) * .64); --char-ratio: .644; --char-right: 0px; }
 .stage:has(.stage-character[data-pose="consulting"]):has(.stage-chat.is-open) { --char-right: calc(var(--col) + var(--gap) * 2); }

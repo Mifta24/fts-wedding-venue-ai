@@ -41,6 +41,7 @@ class JsAculSeeder extends Seeder
     /** Two short films from the owner's site, hosted here and shown as small icons on the lobby. */
     private const FILMS = [
         ['src' => '/videos/jsacul/helicopter.mp4', 'poster' => '/images/jsacul/film-helicopter.jpg', 'titles' => ['ja' => 'ヘリコプター フォトウエディング', 'en' => 'Helicopter photo wedding', 'id' => 'Foto pernikahan helikopter', 'th' => 'ถ่ายภาพแต่งงานด้วยเฮลิคอปเตอร์', 'zh' => '直升機婚紗攝影']],
+        ['src' => '/videos/jsacul/rickshaw.mp4', 'poster' => '/images/jsacul/film-rickshaw.jpg', 'titles' => ['ja' => '人力車フォトウエディング', 'en' => 'Rickshaw photo wedding', 'id' => 'Foto pernikahan becak Jepang (jinrikisha)', 'th' => 'ถ่ายภาพแต่งงานด้วยรถลาก (จินริกิชะ)', 'zh' => '人力車婚紗攝影']],
         ['src' => '/videos/jsacul/castle.mp4', 'poster' => '/images/jsacul/film-castle.jpg', 'titles' => ['ja' => 'ウェディングムービー', 'en' => 'Wedding film', 'id' => 'Film pernikahan', 'th' => 'วิดีโองานแต่ง', 'zh' => '婚禮影片']],
     ];
 
@@ -181,6 +182,7 @@ class JsAculSeeder extends Seeder
                 'category' => $item['category'],
                 'title' => $item['ja']['title'],
                 'body' => $item['ja']['body'],
+                'image_url' => $item['image'] ?? null,
                 'translations' => collect(self::LOCALES)->mapWithKeys(fn (string $l) => [$l => $item[$l]])->all(),
                 'tags' => [],
                 'sort_order' => $sort,

@@ -122,19 +122,34 @@ class JsAculSiteTest extends TestCase
         $this->get("/$slug/halls")->assertOk()->assertDontSee('data-area-tab=', false);
     }
 
-    public function test_lobby_shows_two_film_icons_and_files_exist_and_services_chapter_is_called_options(): void
+    public function test_lobby_shows_three_film_icons_and_files_exist_and_services_chapter_is_called_options(): void
     {
         $venue = $this->seedSite();
 
-        $this->assertCount(2, $venue->filmsFor('ja'));
+        $this->assertCount(3, $venue->filmsFor('ja'));
         foreach ($venue->filmsFor('ja') as $film) {
             $this->assertFileExists(public_path(ltrim($film['src'], '/')));
             $this->assertFileExists(public_path(ltrim((string) $film['poster'], '/')));
         }
 
         $this->get(route('venue.show', ['venueSlug' => 'jsacul', 'lang' => 'ja']))
-            ->assertOk()->assertSee('data-film-open', false)->assertSee('/videos/jsacul/helicopter.mp4', false)->assertSee('オプション');
+            ->assertOk()->assertSee('data-film-open', false)->assertSee('/videos/jsacul/helicopter.mp4', false)->assertSee('/videos/jsacul/rickshaw.mp4', false)->assertSee('オプション');
         $this->get(route('venue.services', ['venueSlug' => 'jsacul', 'lang' => 'ja']))->assertOk()->assertSee('オプション');
+    }
+
+    public function test_every_option_card_has_a_photo_that_exists(): void
+    {
+        $venue = $this->seedSite();
+        $services = $venue->knowledgeItems()->where('category', 'services')->get();
+
+        $this->assertCount(10, $services);
+        foreach ($services as $service) {
+            $this->assertStringStartsWith('/images/jsacul/', (string) $service->image_url, $service->title);
+            $this->assertFileExists(public_path(ltrim($service->image_url, '/')));
+        }
+
+        $this->get(route('venue.services', ['venueSlug' => 'jsacul', 'lang' => 'ja']))
+            ->assertOk()->assertSee('/images/jsacul/opt-09.webp', false)->assertSee('人力車フォトウエディング');
     }
 
     public function test_films_never_point_outside_this_site_and_other_venues_have_none(): void

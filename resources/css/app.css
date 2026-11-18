@@ -969,4 +969,4 @@ a.info-fact:hover { border-color: var(--text); }
 @media (prefers-reduced-motion: reduce) { .hall-lightbox[open], .lobby-photo-modal[open] { animation: none; } }
 
 /* Short desktop screens: the two film squares sit side by side so they never run into the photo column. */
-@media (min-width: 900px) and (max-height: 860px) { .lobby-films { flex-direction: row; bottom: calc(20px + 56px + 10px); } .lobby-film { width: 72px; height: 72px; } }
+@media (min-width: 900px) and (max-height: 1000px) { .lobby-films { flex-direction: row; bottom: calc(20px + 56px + 10px); } .lobby-film { width: 72px; height: 72px; } }

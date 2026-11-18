@@ -747,7 +747,9 @@ a.info-fact:hover { border-color: var(--text); }
 .showcase-card-photo { aspect-ratio: 16 / 10; overflow: hidden; background: var(--ink); }
 .showcase-card-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease-cine); }
 .showcase-card:hover .showcase-card-photo img { transform: scale(1.07); }
-.showcase-card-body { display: flex; flex-direction: column; gap: 4px; padding: 14px; }
+.showcase-card { display: flex; flex-direction: column; }
+.showcase-card-body { display: flex; flex-direction: column; flex: 1; gap: 4px; padding: 14px; }
+.showcase-card-body .chat-card-button { margin-top: auto; align-self: flex-start; }
 .showcase-card-title { font-family: var(--font-serif); font-size: 20px; font-weight: 500; line-height: 1.2; }
 .showcase-card-price { font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; }
 @keyframes card-deal { from { opacity: 0; transform: translateY(40px) rotate(-3deg) scale(.92); } to { opacity: 1; transform: none; } }

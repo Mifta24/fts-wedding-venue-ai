@@ -36,6 +36,7 @@
             data-label-draft-keep="{{ $labels['chat_draft_keep'] }}"
             data-label-draft-discard="{{ $labels['chat_draft_discard'] }}"
             data-label-view-details="{{ $labels['view_details'] }}"
+            data-label-options="{{ $labels['menu_services'] ?? '' }}"
             data-label-hall-details-question="{{ $labels['hall_details_question'] }}"
             data-label-book-now="{{ $labels['book_now'] }}"
             data-label-menu-heading="{{ $labels['menu_heading'] }}"

@@ -49,6 +49,7 @@ function initConcierge() {
             draftKeep: root.dataset.labelDraftKeep,
             draftDiscard: root.dataset.labelDraftDiscard,
             viewDetails: root.dataset.labelViewDetails,
+            options: root.dataset.labelOptions,
             hallDetailsQuestion: root.dataset.labelHallDetailsQuestion,
             bookNow: root.dataset.labelBookNow,
             menuHeading: root.dataset.labelMenuHeading,
@@ -304,7 +305,7 @@ function initConcierge() {
                 <p class="mt-1 font-semibold">${esc(hall.name)}</p>
                 <p class="mt-1 text-sm font-semibold">${moneyCount(hall.total_price)} <span class="font-normal opacity-60">${esc(config.labels.perEvent)}</span></p>
                 ${hall.discount_percent > 0 ? `<p class="chat-card-tag mt-1">−${hall.discount_percent}% ${esc(config.labels.discount)}</p>` : ''}
-                <p class="mt-1 text-xs opacity-70">${esc(config.labels.deposit)}: ${money(hall.deposit_total)}</p>
+                ${hall.deposit_total > 0 ? `<p class="mt-1 text-xs opacity-70">${esc(config.labels.deposit)}: ${money(hall.deposit_total)}</p>` : ''}
                 <button type="button" class="chat-card-button" data-detail-slug="${esc(hall.hall_slug)}">
                     ${esc(config.labels.viewDetails)}
                 </button>
@@ -313,6 +314,35 @@ function initConcierge() {
         el.querySelector('[data-detail-slug]').addEventListener('click', () => {
             sendMessage(config.labels.hallDetailsQuestion.replace(':hall', hall.name));
         });
+        return el;
+    }
+
+    function serviceCard(service) {
+        const el = document.createElement('a');
+        el.className = 'chat-card';
+        el.href = service.url;
+        el.innerHTML = `
+            ${service.image_url ? `<img src="${esc(service.image_url)}" alt="${esc(service.title)}" class="h-28 w-full object-cover">` : ''}
+            <div class="p-3">
+                <p class="font-semibold">${esc(service.title)}</p>
+                <p class="mt-1 text-xs opacity-70">${esc(service.body)}</p>
+            </div>
+        `;
+        return el;
+    }
+
+    function showcaseServices(services) {
+        const el = document.createElement('div');
+        el.className = 'showcase-results';
+        el.innerHTML = `<div class="showcase-grid">${services.map((service, index) => `
+            <a class="showcase-card" href="${esc(service.url)}" style="--i:${index}">
+                <div class="showcase-card-photo">${service.image_url ? `<img src="${esc(service.image_url)}" alt="${esc(service.title)}">` : ''}</div>
+                <div class="showcase-card-body">
+                    <h3 class="showcase-card-title">${esc(service.title)}</h3>
+                    <p class="text-sm opacity-70">${esc(service.body)}</p>
+                </div>
+            </a>`).join('')}</div>`;
+
         return el;
     }
 
@@ -568,6 +598,8 @@ function initConcierge() {
 
             if (payload.type === 'hall_results') {
                 wrapper = card(payload.halls.map(hallResultCard));
+            } else if (payload.type === 'service_results') {
+                wrapper = card(payload.services.map(serviceCard));
             } else if (payload.type === 'hall_detail') {
                 wrapper = card([hallDetailCard(payload.hall)]);
             } else if (payload.type === 'availability') {
@@ -586,11 +618,13 @@ function initConcierge() {
 
         if (!live) return;
 
-        const stageful = uiPayload.find((payload) => (payload.type === 'hall_detail' && payload.hall.images?.length) || (payload.type === 'hall_results' && payload.halls?.length));
+        const stageful = uiPayload.find((payload) => (payload.type === 'hall_detail' && payload.hall.images?.length) || (payload.type === 'hall_results' && payload.halls?.length) || (payload.type === 'service_results' && payload.services?.length));
         if (stageful) {
             window.setTimeout(() => {
                 if (stageful.type === 'hall_detail') {
                     openShowcase(stageful.hall.name, showcaseGallery(stageful.hall));
+                } else if (stageful.type === 'service_results') {
+                    openShowcase(config.labels.options || '', showcaseServices(stageful.services));
                 } else {
                     openShowcase(config.labels.viewDetails, showcaseResults(stageful.halls));
                 }

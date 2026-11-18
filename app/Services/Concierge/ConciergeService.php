@@ -6,6 +6,7 @@ use App\Models\Conversation;
 use App\Models\ConversationMessage;
 use App\Models\Venue;
 use App\Services\CurrencyConverter;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use RuntimeException;
@@ -36,6 +37,14 @@ class ConciergeService
     private const REPLY_BUDGET_SECONDS = 85;
 
     private const UNBACKED_DATA_PATTERN = '/(?:rp\.?|idr|usd|jpy|¥|\$)\s?\d|\d[\d.,]*\s?(?:rb|ribu|juta|jt)\b|\[[^\]]+\]|https?:\/\//iu';
+
+    /**
+     * Asking what plans, halls or packages exist, or what the options are:
+     * the cards go on screen at once, nothing to tap first.
+     */
+    private const PLAN_LIST_PATTERN = '/\bwhat\s+(?:kinds?\s+of\s+|types?\s+of\s+)?(?:photo\s+)?(?:wedding\s+)?(?:plans?|packages?|halls?)\b|\b(?:which|list)\s+(?:of\s+)?(?:the\s+)?(?:photo\s+)?(?:wedding\s+)?(?:plans?|packages?|halls?)\b|\b(?:plans?|packages?|halls?)\s+do\s+you\s+(?:have|offer)|\b(?:show|see|view)\b.{0,24}\b(?:plans?|packages?|halls?)\b|paket\s+apa|ada\s+paket|daftar\s+paket|jenis\s+paket|どんなプラン|プランの?(?:一覧|種類)|プランを(?:見|教)|ホールを見/iu';
+    private const OPTIONS_PATTERN = '/\boptions?\b|\badd-?ons?\b|\bextra\s+services?\b|\bwedding\s+services?\b|opsi|layanan\s+tambahan|オプション/iu';
+
 
     public function __construct(private readonly ContentGuard $contentGuard) {}
 
@@ -133,7 +142,48 @@ class ConciergeService
 
     private function lastClientMessage(Conversation $conversation): string
     {
-        return (string) $conversation->messages()->where('role', ConversationMessage::ROLE_CLIENT)->latest('id')->value('content');
+        return (string) $conversation->messages()->where('role', ConversationMessage::ROLE_CLIENT)->reorder('id', 'desc')->value('content');
+    }
+
+    /**
+     * The tool the couple's message plainly asks for, so the cards appear even
+     * when the local model answers in text instead of calling it: a date and
+     * guest count go straight to the plan search, "what plans do you have?"
+     * lists the plans, and "options" shows the optional services.
+     *
+     * @return array{name: string, input: array<string, mixed>, always: bool}|null
+     */
+    private function preemptedToolCall(Venue $venue, Conversation $conversation): ?array
+    {
+        $message = $this->lastClientMessage($conversation);
+
+        if ($message === '' || $this->mentionedHallSlug($venue, $message) !== null) {
+            return null;
+        }
+
+        $today = CarbonImmutable::now($venue->timezone ?: 'UTC')->startOfDay();
+
+        if (EventParser::mentionsEvent($message, $today, $conversation->locale)) {
+            $recent = array_reverse($conversation->messages()->where('role', ConversationMessage::ROLE_CLIENT)->reorder('id', 'desc')->limit(6)->pluck('content')->map(fn ($text) => (string) $text)->all());
+            $event = EventParser::fromMessages($recent, $today, $conversation->locale);
+
+            // A photo-plan venue has no guest list to size a hall by; a couple is the default.
+            $guests = $event['guests'] ?? ($venue->isPlanCatalog() ? 2 : null);
+
+            if ($event['date'] !== null && $guests !== null && $event['date'] >= $today->toDateString()) {
+                return ['name' => 'search_halls', 'input' => ['event_date' => $event['date'], 'guests' => $guests], 'always' => true];
+            }
+        }
+
+        if (preg_match(self::OPTIONS_PATTERN, $message) === 1) {
+            return ['name' => 'show_options', 'input' => [], 'always' => false];
+        }
+
+        if (preg_match(self::PLAN_LIST_PATTERN, $message) === 1) {
+            return ['name' => 'show_plans', 'input' => [], 'always' => false];
+        }
+
+        return null;
     }
 
     /**
@@ -169,9 +219,30 @@ class ConciergeService
         $uiPayloads = [];
         $deadline = microtime(true) + self::REPLY_BUDGET_SECONDS;
 
+        $preempted = false;
+        $call = $this->preemptedToolCall($venue, $conversation);
+
+        if ($call !== null) {
+            $result = $tools->dispatch($call['name'], $call['input']);
+
+            // A search with no result ("nothing free that day") is an answer the model must see.
+            if ($result['ui'] !== null || $call['always']) {
+                $callId = 'call_'.Str::random(12);
+
+                $messages[] = ['role' => 'assistant', 'content' => '', 'tool_calls' => [['id' => $callId, 'type' => 'function', 'function' => ['name' => $call['name'], 'arguments' => json_encode((object) $call['input'])]]]];
+                $messages[] = ['role' => 'tool', 'tool_call_id' => $callId, 'content' => $result['text']];
+
+                $toolLog[] = ['name' => $call['name'], 'input' => $call['input']];
+                if ($result['ui'] !== null) {
+                    $uiPayloads[] = $result['ui'];
+                }
+                $preempted = true;
+            }
+        }
+
         $message = $this->chatCompletion($messages, $definitions, $deadline);
 
-        if (empty($message['tool_calls']) && $this->claimsToolData($message['content'] ?? '')) {
+        if (! $preempted && empty($message['tool_calls']) && $this->claimsToolData($message['content'] ?? '')) {
             $messages[] = ['role' => 'assistant', 'content' => $message['content']];
             $messages[] = ['role' => 'user', 'content' => '[System notice: your last reply stated a price, listed photo links or pretended to show hall cards or photos without calling a tool. Never state a hall price or availability from memory, and never write photo URLs. Call search_halls, get_hall_detail or check_availability now (the photos then appear on screen by themselves), or ask the couple for the details you still need.]'];
 

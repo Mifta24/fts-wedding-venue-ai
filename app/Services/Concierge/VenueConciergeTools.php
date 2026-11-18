@@ -112,6 +112,16 @@ class VenueConciergeTools
                     ],
                 ],
                 [
+                    'name' => 'show_plans',
+                    'description' => 'Put every wedding plan (hall) of this venue on screen as cards with its starting price. Use this when the couple asks what plans, halls or packages exist and has not given a date yet.',
+                    'parameters' => ['type' => 'object', 'properties' => new \stdClass],
+                ],
+                [
+                    'name' => 'show_options',
+                    'description' => 'Put the venue\'s optional wedding services (the Options chapter) on screen as cards with photos. Use this when the couple asks what options or extra services are available.',
+                    'parameters' => ['type' => 'object', 'properties' => new \stdClass],
+                ],
+                [
                     'name' => 'request_human_handover',
                     'description' => 'Hand this conversation over to a human member of the wedding team. Use this for special requests (custom decoration, outside vendors, religious or cultural ceremonies), complaints, custom packages, negotiated rates, rescheduling or unusual cancellations, payment problems, guest counts above the online limit, or any question you cannot answer confidently from the available tools. Always write a clear summary so the team does not need to ask the couple to repeat themselves.',
                     'parameters' => [
@@ -142,6 +152,8 @@ class VenueConciergeTools
             'get_hall_detail' => $this->getHallDetail($input),
             'check_availability' => $this->checkAvailability($input),
             'create_booking_request' => $this->createBookingRequest($input),
+            'show_plans' => $this->showPlans(),
+            'show_options' => $this->showOptions(),
             'request_human_handover' => $this->requestHumanHandover($input),
             default => ['text' => "Unknown tool: {$name}", 'ui' => null],
         };
@@ -183,6 +195,67 @@ class VenueConciergeTools
         ])->values()->all();
 
         return ['text' => json_encode($results, JSON_UNESCAPED_UNICODE), 'ui' => null];
+    }
+
+    /**
+     * Every active plan with its starting price, for "what plans do you have?".
+     */
+    private function showPlans(): array
+    {
+        $halls = $this->venue->halls()->where('is_active', true)->with(['venue', 'images'])->orderBy('sort_order')->limit(24)->get();
+
+        if ($halls->isEmpty()) {
+            return ['text' => 'This venue has no plan listed yet. Tell the couple honestly and offer to connect them with the team.', 'ui' => null];
+        }
+
+        $currency = app(CurrencyConverter::class)->currencyFor($this->venue, $this->locale);
+
+        $plans = $halls->map(fn (Hall $hall) => [
+            'hall_slug' => $hall->slug,
+            'name' => $hall->translatedName($this->locale),
+            'size_sqm' => $hall->size_sqm,
+            'setting' => $hall->setting,
+            'view_type' => $hall->view_type,
+            'min_guests' => $hall->min_guests,
+            'max_guests' => $hall->max_guests,
+            'catering_included' => $hall->catering_included,
+            'event_date' => null,
+            'discount_percent' => 0,
+            'total_price' => app(CurrencyConverter::class)->convert((float) $hall->base_price, $this->venue, $currency),
+            'deposit_total' => 0,
+            'currency' => $currency,
+            'thumbnail_url' => $hall->images->first()?->image_source,
+        ])->values()->all();
+
+        return [
+            'text' => json_encode(['note' => 'Starting prices, before any date surcharge. Ask for the date and guest count to check a real date.', 'plans' => $plans], JSON_UNESCAPED_UNICODE),
+            'ui' => ['type' => 'hall_results', 'event_date' => null, 'guests' => null, 'halls' => $plans],
+        ];
+    }
+
+    /**
+     * The optional services, with the photo each one has, for "what options do you offer?".
+     */
+    private function showOptions(): array
+    {
+        $items = $this->venue->knowledgeItems()->where('is_active', true)->where('category', 'services')->orderBy('sort_order')->get();
+
+        if ($items->isEmpty()) {
+            return ['text' => 'No optional service is listed. Do not guess; offer to ask the team.', 'ui' => null];
+        }
+
+        $services = $items->map(fn (VenueKnowledgeItem $item) => [
+            'id' => $item->id,
+            'title' => $item->translatedTitle($this->locale),
+            'body' => Str::limit($item->translatedBody($this->locale), 140),
+            'image_url' => $item->image_url,
+            'url' => route('venue.service', ['venueSlug' => $this->venue->slug, 'serviceId' => $item->id, 'lang' => $this->locale]),
+        ])->values()->all();
+
+        return [
+            'text' => json_encode(array_map(fn (array $service) => ['title' => $service['title'], 'body' => $service['body']], $services), JSON_UNESCAPED_UNICODE),
+            'ui' => ['type' => 'service_results', 'services' => $services],
+        ];
     }
 
     private function searchHalls(array $input): array

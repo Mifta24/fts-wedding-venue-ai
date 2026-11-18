@@ -161,21 +161,13 @@ class JsAculSiteTest extends TestCase
         $this->assertSame([], (new Venue)->filmsFor('ja'));
     }
 
-    public function test_lobby_has_five_photo_icons_that_point_to_real_plans(): void
+    public function test_lobby_has_no_photo_icons_any_more(): void
     {
         $venue = $this->seedSite();
 
-        $photos = $venue->lobbyPhotosFor('ja');
-        $this->assertCount(5, $photos);
-        foreach ($photos as $photo) {
-            $this->assertFileExists(public_path(ltrim($photo['src'], '/')));
-            $this->assertFileExists(public_path(ltrim($photo['thumb'], '/')));
-            $this->assertNotSame('', $photo['title']);
-            $this->get($photo['url'])->assertOk();
-        }
-
+        $this->assertSame([], $venue->lobbyPhotosFor('ja'));
         $this->get(route('venue.show', ['venueSlug' => 'jsacul', 'lang' => 'ja']))
-            ->assertOk()->assertSee('data-photo-open="4"', false)->assertSee('data-photo-modal', false);
+            ->assertOk()->assertDontSee('data-photo-open', false)->assertDontSee('data-photo-modal', false)->assertSee('data-film-open', false);
     }
 
     public function test_lobby_photos_ignore_outside_links_and_other_venues_have_none(): void

@@ -906,15 +906,15 @@ a.info-fact:hover { border-color: var(--text); }
 .service-card-title { text-wrap: balance; word-break: auto-phrase; }
 
 /* Short films: two small round icons at the right-hand side of the concierge, above the chat card */
-.lobby-films { position: absolute; z-index: 4; right: var(--gap); bottom: calc(20px + 56px + 18px); display: flex; flex-direction: column; gap: 12px; }
+.lobby-films { position: absolute; z-index: 4; right: var(--gap); top: calc(var(--header) + 16px); display: flex; flex-direction: column; gap: 12px; }
 .lobby-film { position: relative; display: grid; place-items: center; width: 83px; height: 83px; padding: 0; border: 2px solid var(--gold); border-radius: 10px; background: var(--ink-2); color: white; overflow: hidden; cursor: pointer; box-shadow: 0 10px 26px #0009; transition: transform .25s var(--ease-cine), box-shadow .25s ease; animation: stage-fade .5s ease .6s backwards; }
 .lobby-film img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .75; }
 .lobby-film-play { position: relative; display: grid; place-items: center; width: 32px; height: 32px; padding-left: 2px; border-radius: 8px; background: var(--gold); color: var(--gold-ink); }
 .lobby-film:hover, .lobby-film:focus-visible { transform: scale(1.1); box-shadow: 0 14px 34px #000b; }
 .lobby-film:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
-.stage-chat.is-open ~ .lobby-films, .stage:has(.stage-chat.is-open) .lobby-films { right: calc(var(--col) + var(--gap) * 2); bottom: 20px; flex-direction: row; }
+.stage-chat.is-open ~ .lobby-films, .stage:has(.stage-chat.is-open) .lobby-films { right: calc(var(--col) + var(--gap) * 2); }
 .video-modal-frame video { position: absolute; inset: 0; width: 100%; height: 100%; background: #000; }
-@media (max-width: 899px) { .lobby-films { right: 12px; bottom: calc(14px + 56px + 12px); flex-direction: row; } .lobby-film { width: 56px; height: 56px; border-radius: 8px; } }
+@media (max-width: 899px) { .lobby-films { right: 12px; top: auto; bottom: calc(14px + 56px + 12px); flex-direction: row; } .lobby-film { width: 56px; height: 56px; border-radius: 8px; } }
 @media (prefers-reduced-motion: reduce) { .lobby-film { animation: none; transition: none; } }
 
 .lobby-photos { position: absolute; z-index: 4; top: calc(var(--header) + 16px); right: var(--gap); display: flex; flex-direction: column; gap: 12px; }
@@ -970,5 +970,4 @@ a.info-fact:hover { border-color: var(--text); }
 @media (max-width: 640px) { .hall-lightbox-thumb { width: 60px; height: 42px; } .hall-lightbox-thumbs { bottom: 104px; } .hall-lightbox-info { bottom: 190px; } }
 @media (prefers-reduced-motion: reduce) { .hall-lightbox[open], .lobby-photo-modal[open] { animation: none; } }
 
-/* Short desktop screens: the two film squares sit side by side so they never run into the photo column. */
-@media (min-width: 900px) and (max-height: 1000px) { .lobby-films { flex-direction: row; bottom: calc(20px + 56px + 10px); } .lobby-film { width: 72px; height: 72px; } }
+@media (min-width: 900px) and (max-height: 760px) { .lobby-film { width: 68px; height: 68px; } .lobby-films { gap: 10px; } }

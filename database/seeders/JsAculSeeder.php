@@ -45,15 +45,6 @@ class JsAculSeeder extends Seeder
         ['src' => '/videos/jsacul/castle.mp4', 'poster' => '/images/jsacul/film-castle.jpg', 'titles' => ['ja' => 'ウェディングムービー', 'en' => 'Wedding film', 'id' => 'Film pernikahan', 'th' => 'วิดีโองานแต่ง', 'zh' => '婚禮影片']],
     ];
 
-    /** Five photo icons on the lobby, one per look: steam train, lake, forest, horses, castle. */
-    private const LOBBY_PHOTOS = [
-        ['src' => '/images/jsacul/18-1.webp', 'thumb' => '/images/jsacul/lobby-18.webp', 'hall' => 'plan-18'],
-        ['src' => '/images/jsacul/06-1.webp', 'thumb' => '/images/jsacul/lobby-06.webp', 'hall' => 'plan-06'],
-        ['src' => '/images/jsacul/14-1.webp', 'thumb' => '/images/jsacul/lobby-14.webp', 'hall' => 'plan-14'],
-        ['src' => '/images/jsacul/01-1.webp', 'thumb' => '/images/jsacul/lobby-01.webp', 'hall' => 'plan-01'],
-        ['src' => '/images/jsacul/00-1.webp', 'thumb' => '/images/jsacul/lobby-00.webp', 'hall' => 'plan-00'],
-    ];
-
     /** The chapter that holds the wedding services is called Options here, like the owner's own site. */
     private const OPTIONS_LABEL = ['ja' => 'オプション', 'en' => 'Options', 'id' => 'Opsi', 'th' => 'ตัวเลือก', 'zh' => '選項'];
 
@@ -118,7 +109,7 @@ class JsAculSeeder extends Seeder
             'hall_groups' => $groups,
             'plan_info' => $info,
             'films' => self::FILMS,
-            'lobby_photos' => self::LOBBY_PHOTOS,
+            'lobby_photos' => [], // the five lobby photo icons were removed at the owner's request
         ];
 
         // No code: public and open. With a code: private (unlisted + noindex + gate).

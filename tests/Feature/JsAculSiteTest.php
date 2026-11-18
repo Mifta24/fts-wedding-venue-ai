@@ -178,4 +178,12 @@ class JsAculSiteTest extends TestCase
         $this->assertSame([], $venue->lobbyPhotosFor('en'));
         $this->assertSame([], (new Venue)->lobbyPhotosFor('ja'));
     }
+
+    public function test_pages_carry_the_flag_that_lets_a_language_switch_skip_the_opening_curtain(): void
+    {
+        $this->seedSite();
+
+        $this->get('/jsacul?lang=ja')->assertOk()->assertSee("sessionStorage.getItem('venue_direct')", false);
+        $this->get('/jsacul/services?lang=en')->assertOk()->assertSee("sessionStorage.getItem('venue_direct')", false);
+    }
 }

@@ -184,7 +184,29 @@ window.takePendingConciergeTopic = () => {
     }
 };
 
+/**
+ * Changing the language reloads the same page: it must not replay the opening
+ * curtain. The next load is told to skip it (same flag as moving inside a menu),
+ * and an open chat stays open.
+ */
+function initLanguageSwitch() {
+    document.querySelectorAll('.stage-lang a').forEach((link) => {
+        link.addEventListener('click', (event) => {
+            const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0;
+            if (event.defaultPrevented || modified) return;
+
+            try {
+                const mark = JSON.stringify({ path: link.pathname, at: Date.now() });
+                sessionStorage.setItem(DIRECT_KEY, mark);
+                sessionStorage.removeItem(TOPIC_KEY);
+                if (document.getElementById('concierge-app')?.dataset.chatState === 'open') sessionStorage.setItem(CHAT_KEEP_KEY, mark);
+            } catch { /* private mode: the page just opens its curtain as usual */ }
+        });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', initStage);
+document.addEventListener('DOMContentLoaded', initLanguageSwitch);
 
 
 /* Venue film: the YouTube player is created on click and removed on close, so

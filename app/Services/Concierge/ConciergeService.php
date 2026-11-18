@@ -43,8 +43,8 @@ class ConciergeService
      * the cards go on screen at once, nothing to tap first.
      */
     private const PLAN_LIST_PATTERN = '/\bwhat\s+(?:kinds?\s+of\s+|types?\s+of\s+)?(?:photo\s+)?(?:wedding\s+)?(?:plans?|packages?|halls?)\b|\b(?:which|list)\s+(?:of\s+)?(?:the\s+)?(?:photo\s+)?(?:wedding\s+)?(?:plans?|packages?|halls?)\b|\b(?:plans?|packages?|halls?)\s+do\s+you\s+(?:have|offer)|\b(?:show|see|view)\b.{0,24}\b(?:plans?|packages?|halls?)\b|paket\s+apa|ada\s+paket|daftar\s+paket|jenis\s+paket|どんなプラン|プランの?(?:一覧|種類)|プランを(?:見|教)|ホールを見/iu';
-    private const OPTIONS_PATTERN = '/\boptions?\b|\badd-?ons?\b|\bextra\s+services?\b|\bwedding\s+services?\b|opsi|layanan\s+tambahan|オプション/iu';
 
+    private const OPTIONS_PATTERN = '/\boptions?\b|\badd-?ons?\b|\bextra\s+services?\b|\bwedding\s+services?\b|opsi|layanan\s+tambahan|オプション/iu';
 
     public function __construct(private readonly ContentGuard $contentGuard) {}
 

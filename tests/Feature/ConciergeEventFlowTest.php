@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\HallInventory;
 use App\Models\Venue;
 use App\Services\Concierge\EventParser;
+use App\Services\Concierge\VenueConciergeTools;
 use Carbon\CarbonImmutable;
 use Database\Seeders\JsAculSeeder;
 use Illuminate\Console\Command;
@@ -140,5 +141,29 @@ class ConciergeEventFlowTest extends TestCase
     public function test_inventory_exists_for_the_dates_these_tests_use(): void
     {
         $this->assertGreaterThan(60, HallInventory::count() / 21);
+    }
+
+    public function test_a_venue_question_is_answered_from_the_knowledge_base_even_when_the_model_calls_no_tool(): void
+    {
+        $token = $this->token();
+        $this->say($token, 'How much is the helicopter?');
+
+        // The model's second request carries the real helicopter entry, so it cannot invent a price.
+        Http::assertSent(fn ($request) => str_contains($request->body(), '242,000') && str_contains($request->body(), '828,000'));
+    }
+
+    public function test_a_japanese_sentence_finds_the_helicopter_entry_and_not_everything(): void
+    {
+        $token = $this->token();
+        $this->say($token, 'ヘリコプターの料金はいくらですか');
+
+        Http::assertSent(fn ($request) => str_contains($request->body(), '242,000'));
+    }
+
+    public function test_knowledge_terms_drop_filler_and_split_japanese_particles(): void
+    {
+        $this->assertSame(['ヘリコプター', '料金'], VenueConciergeTools::knowledgeTerms('ヘリコプターの料金はいくらですか'));
+        $this->assertSame(['tokyo'], VenueConciergeTools::knowledgeTerms('Can we come from Tokyo?'));
+        $this->assertSame([], VenueConciergeTools::knowledgeTerms('12/23'));
     }
 }

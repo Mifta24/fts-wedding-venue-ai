@@ -183,6 +183,12 @@ class ConciergeService
             return ['name' => 'show_plans', 'input' => [], 'always' => false];
         }
 
+        // Anything else about the venue is looked up here, so the model answers from the knowledge base
+        // (prices of the helicopter, access, rain policy) and never from memory.
+        if (VenueConciergeTools::knowledgeTerms($message) !== []) {
+            return ['name' => 'search_knowledge', 'input' => ['query' => $message], 'always' => false];
+        }
+
         return null;
     }
 
@@ -226,7 +232,7 @@ class ConciergeService
             $result = $tools->dispatch($call['name'], $call['input']);
 
             // A search with no result ("nothing free that day") is an answer the model must see.
-            if ($result['ui'] !== null || $call['always']) {
+            if ($result['ui'] !== null || $call['always'] || ($call['name'] === 'search_knowledge' && str_starts_with($result['text'], '['))) {
                 $callId = 'call_'.Str::random(12);
 
                 $messages[] = ['role' => 'assistant', 'content' => '', 'tool_calls' => [['id' => $callId, 'type' => 'function', 'function' => ['name' => $call['name'], 'arguments' => json_encode((object) $call['input'])]]]];

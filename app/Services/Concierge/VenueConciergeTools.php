@@ -159,26 +159,54 @@ class VenueConciergeTools
         };
     }
 
+    /**
+     * Search terms of a question. Japanese and Chinese have no spaces, so the
+     * sentence is also cut at particles and polite endings; short filler
+     * words are dropped so "the" or "is" do not match half the knowledge base.
+     *
+     * @return list<string>
+     */
+    public static function knowledgeTerms(string $query): array
+    {
+        $query = Str::lower(trim($query));
+        $parts = preg_split('/[\s、。，．？?！!,.\/・「」『』()（）]+|です|ます|でしょう|ください|いくら|ありますか|できますか|ですか|から|まで|って|など|の|は|が|を|に|で|と|も|へ|や|か|か|こと|いつ|どう|何|なに/u', $query) ?: [];
+        $stop = ['what', 'when', 'where', 'which', 'who', 'does', 'have', 'with', 'your', 'about', 'there', 'much', 'many', 'from', 'this', 'that', 'they', 'would', 'could', 'should', 'please', 'tell', 'know', 'also', 'can', 'the', 'and', 'for', 'you', 'are', 'how', 'any', 'come', 'なり', 'apa', 'bisa', 'dari', 'yang', 'untuk', 'dengan', 'berapa', 'ada'];
+
+        return collect($parts)
+            ->map(fn ($part) => trim((string) $part))
+            ->filter(fn ($part) => mb_strlen($part) >= (preg_match('/^[a-z]+$/', $part) ? 3 : (preg_match('/^\\p{Han}$/u', $part) ? 1 : 2)) && ! preg_match('/^[\\d\\-:]+$/', $part) && ! in_array($part, $stop, true))
+            ->unique()
+            ->values()
+            ->all();
+    }
+
     private function searchKnowledge(array $input): array
     {
         $query = trim((string) ($input['query'] ?? ''));
         $category = $input['category'] ?? null;
-        $words = collect(preg_split('/\s+/', Str::lower($query)))->filter();
+        $terms = self::knowledgeTerms($query);
 
         $items = $this->venue->knowledgeItems()
             ->where('is_active', true)
             ->when($category, fn ($q) => $q->where('category', $category))
             ->get()
-            ->filter(function (VenueKnowledgeItem $item) use ($query, $words) {
+            ->map(function (VenueKnowledgeItem $item) use ($query, $terms) {
                 if ($query === '') {
-                    return true;
+                    return [$item, 1];
                 }
 
                 $haystack = Str::lower($item->title.' '.$item->body.' '.implode(' ', $item->tags ?? []));
+                foreach ($item->translations ?? [] as $translation) {
+                    $haystack .= ' '.Str::lower((string) ($translation['title'] ?? '').' '.(string) ($translation['body'] ?? ''));
+                }
 
-                return Str::contains($haystack, Str::lower($query))
-                    || $words->contains(fn ($word) => Str::contains($haystack, $word));
+                $score = collect($terms)->filter(fn ($term) => Str::contains($haystack, $term))->count();
+
+                return [$item, Str::contains($haystack, Str::lower($query)) ? $score + 3 : $score];
             })
+            ->filter(fn (array $pair) => $pair[1] > 0)
+            ->sortByDesc(fn (array $pair) => $pair[1])
+            ->map(fn (array $pair) => $pair[0])
             ->take(5);
 
         if ($items->isEmpty()) {

@@ -1078,3 +1078,45 @@ a.info-fact:hover { border-color: var(--text); }
 .theme-jsacul .stage-welcome .lobby-eyebrow, .theme-jsacul .hall-scene .lobby-eyebrow, .theme-jsacul .lobby-content > .lobby-eyebrow, .theme-jsacul .chapter-eyebrow { display: inline-block; padding: 7px 16px; border-radius: 999px; background: #16161ab3; backdrop-filter: blur(8px); color: #fff; font-size: 13px; font-weight: 600; letter-spacing: .12em; text-shadow: none; }
 .theme-jsacul .stage-welcome .lobby-eyebrow::before { width: 22px; margin-right: 10px; background: var(--gold); opacity: 1; }
 @media (max-width: 899px) { .theme-jsacul .stage-welcome .lobby-eyebrow, .theme-jsacul .lobby-content > .lobby-eyebrow { font-size: 12px; padding: 6px 13px; } }
+
+/* TUTU Okinawa: a bridal salon in its own red (#be284b), on a soft wine glass so the white text stays readable over the photo. */
+.theme-tutu { --ink: #2a1219; --ink-2: #3a1a24; --plum: #4a2230; --gold: #f2b8c6; --gold-deep: #be284b; --gold-ink: #2a0d16; --rose: #f2b8c6; --blush: #fbeaee; --font-serif: 'Cormorant Garamond', 'Shippori Mincho', 'Yu Mincho', 'Hiragino Mincho ProN', 'Noto Serif TC', 'Noto Serif Thai', 'Times New Roman', serif; }
+.theme-tutu .curtain { background: linear-gradient(90deg, #00000055, transparent 14%, transparent 86%, #00000055), repeating-linear-gradient(90deg, #8a1f3b 0 26px, #a32545 26px 52px, #741a31 52px 78px); box-shadow: inset 0 0 0 1px #ffffff1f, inset 0 -14px 0 #ffffff33; opacity: .94; }
+.theme-tutu .stage-brand-name { letter-spacing: .06em; }
+.theme-tutu .stage-image { filter: brightness(1.04) saturate(1.04); }
+.theme-tutu .stage-shade { background: linear-gradient(90deg, #2a121a73 0, #2a121a40 calc(var(--content-left) + 420px), transparent 68%), linear-gradient(0deg, #2a121a8c 0, #2a121a1a 38%, #2a121a0d 100%); }
+.theme-tutu .stage-header { background: linear-gradient(180deg, #7a2a42a6, #7a2a421a); border-bottom-color: #ffffff3d; }
+.theme-tutu .stage-lang, .theme-tutu .sound-toggle, .theme-tutu .chapter-display { background: #7a2a42a6; border-color: #ffffff47; }
+.theme-tutu .stage-lang a { color: #ffffffe6; }
+.theme-tutu .stage-lang a[aria-current] { color: #2a0d16; font-weight: 600; }
+.theme-tutu .journey-panel { background: linear-gradient(160deg, #8a3350ad, #6e2740a6); backdrop-filter: blur(14px) saturate(1.1); border-color: #ffffff47; }
+.theme-tutu .journey-key { background: radial-gradient(circle at 35% 30%, #c0577a, #8f2c4b); border-color: #ffffff59; color: #fff; }
+.theme-tutu .journey-panel-footer, .theme-tutu .lobby-stats dt, .theme-tutu .stage-brand-city { color: #fff; }
+.theme-tutu .hall-directory { background: #6e2740c7; backdrop-filter: blur(14px) saturate(1.1); border-color: #ffffff47; }
+.theme-tutu .hall-directory-title, .theme-tutu .hall-nav-layout { color: #ffffffe6; }
+.theme-tutu .hall-nav a[aria-current] { background: #f2b8c61f; }
+.theme-tutu .chat-launcher, .theme-tutu .chat-bar { background: #6e2740cc; backdrop-filter: blur(12px); border-color: #ffffff52; }
+.theme-tutu .chat-bar input::placeholder { color: #ffffffcc; }
+.theme-tutu .chat-log-header { background: #5a1f33; }
+.theme-tutu .lobby-action-ghost { background: #7a2a4280; border-color: #ffffff8c; }
+.theme-tutu .stage-welcome > p { color: #fff; }
+.theme-tutu .stage-welcome h1, .theme-tutu .stage-welcome > p, .theme-tutu .chapter-display-label, .theme-tutu .stage-welcome-scene h1 { text-shadow: 0 1px 14px #0000008c, 0 0 2px #000000a6; }
+.theme-tutu .stage-welcome-scene .narrator { background: #6e2740c4; border-color: #ffffff3d; color: #fff; backdrop-filter: blur(12px); }
+.theme-tutu .stage-welcome-scene .narrator * { color: inherit; }
+.theme-tutu .lobby-eyebrow, .theme-tutu .stage-welcome-scene .lobby-eyebrow, .theme-tutu .chapter-eyebrow { color: #ffe3ea; font-weight: 600; text-shadow: 0 1px 10px #000000b3; }
+.theme-tutu .stage-welcome .lobby-eyebrow, .theme-tutu .hall-scene .lobby-eyebrow, .theme-tutu .lobby-content > .lobby-eyebrow, .theme-tutu .chapter-eyebrow { display: inline-block; padding: 7px 15px; border-radius: 999px; background: #4a1626b8; font-size: 13px; }
+.theme-tutu .stage-welcome .lobby-eyebrow::before { width: 22px; margin-right: 10px; background: var(--gold); opacity: 1; }
+.theme-tutu .service-card-photo:not(:has(img)) { background: linear-gradient(135deg, #8a3350, #4a2230); }
+.hall-scene-guide-facts { grid-template-columns: 1fr; }
+.hall-scene-guide-facts > div:nth-child(even) { padding-left: 0; border-left: 0; }
+.hall-scene-guide-facts dd { line-height: 1.55; }
+.hall-scene-note { margin: 12px 0 0; font-size: 13px; color: var(--muted); }
+.theme-tutu .showcase-facts { display: grid; gap: 4px; margin: 8px 0 0; font-size: 12.5px; }
+.theme-tutu .showcase-facts div { display: grid; grid-template-columns: 6rem 1fr; gap: 8px; }
+.theme-tutu .showcase-facts dt { opacity: .7; }
+.theme-tutu .showcase-facts dd { margin: 0; }
+@media (max-width: 899px) {
+    .theme-tutu .stage-shade { background: linear-gradient(0deg, #2a121abf 0, #2a121a66 34%, #2a121a1f 62%, #2a121a14 100%); }
+    .theme-tutu .journey-panel { background: #7a2a42b8; border-bottom-color: #ffffff2e; }
+    .theme-tutu .stage-welcome .lobby-eyebrow, .theme-tutu .lobby-content > .lobby-eyebrow { font-size: 12px; padding: 6px 13px; }
+}

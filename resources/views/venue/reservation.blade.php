@@ -11,6 +11,7 @@
         data-locale="{{ $locale }}"
         data-currency="{{ $currency }}"
         data-today="{{ $today }}"
+        data-prices="{{ $venue->showsPrices() ? 1 : 0 }}"
         data-weekday-deal="{{ $venue->weekday_discount_percent > 0 ? 1 : 0 }}"
         data-preselect-hall="{{ $preselectedHall ?? '' }}"
     >
@@ -63,7 +64,7 @@
                     </fieldset>
                     <label class="wizard-field">
                         <span>{{ $wizard['guests'] }}</span>
-                        <input type="number" name="guests" min="1" max="{{ $maxGuests }}" value="200" inputmode="numeric" required>
+                        <input type="number" name="guests" min="1" max="{{ $venue->showsPrices() ? $maxGuests : 20 }}" value="{{ $venue->showsPrices() ? 200 : 2 }}" inputmode="numeric" required>
                     </label>
                     <p class="wizard-hint wizard-field-wide">{{ $wizard['guests_hint'] }}</p>
                 </div>
@@ -83,8 +84,8 @@
                                     <input type="radio" name="hall_slug" value="{{ $hall->slug }}">
                                     <span class="wizard-hall-body">
                                         <strong>{{ $hall->translatedName($locale) }}</strong>
-                                        <span>{{ str_replace([':min', ':max'], [(string) $hall->min_guests, (string) $hall->max_guests], $wizard['fits']) }}</span>
-                                        <span class="wizard-hall-price">{{ $labels['from'] }} {{ $price($hall->base_price) }} {{ $labels['per_event'] }}</span>
+                                        @if ($venue->showsPrices())<span>{{ str_replace([':min', ':max'], [(string) $hall->min_guests, (string) $hall->max_guests], $wizard['fits']) }}</span>@else<span>{{ $venue->planInfoFor($locale)['kinds'][$hall->setting] ?? '' }}</span>@endif
+                                        @if ($venue->showsPrices())<span class="wizard-hall-price">{{ $labels['from'] }} {{ $price($hall->base_price) }} {{ $labels['per_event'] }}</span>@endif
                                         <span class="wizard-hall-hint" data-hall-hint></span>
                                     </span>
                                 </label>
@@ -129,8 +130,10 @@
                     <dl class="wizard-summary" data-summary></dl>
                     <p class="wizard-discount" data-summary-extra hidden><span>{{ $wizard['extra_hours_total'] }}</span> <strong data-summary-extra-amount></strong></p>
                     <p class="wizard-discount" data-summary-discount hidden><span>{{ $wizard['discount'] }} <b data-summary-discount-percent></b></span> <strong data-summary-discount-amount></strong></p>
-                    <p class="wizard-total"><span>{{ $wizard['estimated_total'] }}</span> <strong data-summary-total></strong></p>
-                    <p class="wizard-deposit"><span data-summary-deposit-label></span> <strong data-summary-deposit></strong></p>
+                    @if ($venue->showsPrices())
+                        <p class="wizard-total"><span>{{ $wizard['estimated_total'] }}</span> <strong data-summary-total></strong></p>
+                        <p class="wizard-deposit"><span data-summary-deposit-label></span> <strong data-summary-deposit></strong></p>
+                    @endif
                     <p class="wizard-hint">{{ $wizard['disclaimer'] }}</p>
                 </div>
 

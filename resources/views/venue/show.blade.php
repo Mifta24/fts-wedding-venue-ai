@@ -29,7 +29,11 @@
             @endif
 
             <dl class="lobby-stats">
-                @if ($halls->isNotEmpty())
+                @if ($halls->isNotEmpty() && ! $venue->showsPrices())
+                    @foreach ($venue->planInfoFor($locale)['stats'] ?? [] as [$statLabel, $statValue])
+                        <div><dt>{{ $statLabel }}</dt><dd>{{ $statValue }}</dd></div>
+                    @endforeach
+                @elseif ($halls->isNotEmpty())
                     <div><dt>{{ $lobby['stat_from'] }}</dt><dd>{{ $money($halls->min('base_price')) }}</dd></div>
                     <div><dt>{{ $lobby['stat_capacity'] }}</dt><dd>{{ str_replace(':count', number_format((int) $halls->max('max_guests'), 0, ',', '.'), $lobby['stat_capacity_value']) }}</dd></div>
                 @endif

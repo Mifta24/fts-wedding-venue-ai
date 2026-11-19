@@ -303,14 +303,14 @@ function initConcierge() {
     function hallResultCard(hall) {
         const el = document.createElement('div');
         el.className = 'chat-card';
-        const facts = [config.settings[hall.setting] || '', hall.size_sqm ? `${hall.size_sqm} m²` : '', `${hall.min_guests}–${hall.max_guests} ${config.labels.maxGuests}`].filter(Boolean).join(' · ');
+        const facts = [config.settings[hall.setting] || '', hall.size_sqm ? `${hall.size_sqm} m²` : '', (hall.min_guests != null ? `${hall.min_guests}–${hall.max_guests} ${config.labels.maxGuests}` : '')].filter(Boolean).join(' · ');
         el.innerHTML = `
             ${hall.thumbnail_url ? `<img src="${esc(hall.thumbnail_url)}" alt="${esc(hall.name)}" class="h-28 w-full object-cover">` : ''}
             <div class="p-3">
                 <p class="chat-card-tag">${esc(facts)}</p>
                 <p class="mt-1 font-semibold">${esc(hall.name)}</p>
                 ${hall.event_date ? `<p class="chat-card-tag mt-1">${esc(longDate(hall.event_date))}</p>` : ''}
-                <p class="mt-1 text-sm font-semibold">${moneyCount(hall.total_price)} <span class="font-normal opacity-60">${esc(config.labels.perEvent)}</span></p>
+                ${hall.total_price != null ? `<p class="mt-1 text-sm font-semibold">${moneyCount(hall.total_price)} <span class="font-normal opacity-60">${esc(config.labels.perEvent)}</span></p>` : ''}
                 ${hall.discount_percent > 0 ? `<p class="chat-card-tag mt-1">−${hall.discount_percent}% ${esc(config.labels.discount)}</p>` : ''}
                 ${hall.deposit_total > 0 ? `<p class="mt-1 text-xs opacity-70">${esc(config.labels.deposit)}: ${money(hall.deposit_total)}</p>` : ''}
                 <button type="button" class="chat-card-button" data-detail-slug="${esc(hall.hall_slug)}">
@@ -364,7 +364,7 @@ function initConcierge() {
 
         el.innerHTML = `
             <div class="p-3">
-                <p class="chat-card-tag">${esc([config.settings[hall.setting] || '', `${hall.min_guests}–${hall.max_guests} ${config.labels.maxGuests}`].filter(Boolean).join(' · '))}</p>
+                <p class="chat-card-tag">${esc([config.settings[hall.setting] || '', (hall.min_guests != null ? `${hall.min_guests}–${hall.max_guests} ${config.labels.maxGuests}` : '')].filter(Boolean).join(' · '))}</p>
                 <p class="mt-1 font-semibold">${esc(hall.name)}</p>
                 <p class="mt-1 text-xs opacity-70">${esc(hall.description || '')}</p>
                 <div class="mt-2 grid grid-cols-4 gap-1">${images}</div>
@@ -396,9 +396,9 @@ function initConcierge() {
                     <p class="chat-card-tag mt-0.5">${esc(longDate(q.event_date))}</p>
                 </div>
             </div>
-            ${q.discount_percent > 0 ? `<p class="mt-1 text-xs opacity-70"><s>${money(q.subtotal)}</s> · −${q.discount_percent}% ${esc(config.labels.discount)}</p>` : ''}
+            ${q.grand_total == null ? '' : `${q.discount_percent > 0 ? `<p class="mt-1 text-xs opacity-70"><s>${money(q.subtotal)}</s> · −${q.discount_percent}% ${esc(config.labels.discount)}</p>` : ''}
             <p class="mt-1 text-base font-semibold">${moneyCount(q.grand_total)}</p>
-            <p class="mt-1 text-xs opacity-70">${esc(config.labels.deposit)} (${q.deposit_percent}%): ${money(q.deposit_total)}</p>
+            <p class="mt-1 text-xs opacity-70">${esc(config.labels.deposit)} (${q.deposit_percent}%): ${money(q.deposit_total)}</p>`}
         `;
         return el;
     }
@@ -413,8 +413,8 @@ function initConcierge() {
             <p class="text-sm font-semibold">${esc(config.labels.bookingReceived)}</p>
             <p class="chat-card-tag mt-1">${esc(config.labels.reference)}: ${esc(b.booking_reference)}</p>
             <p class="mt-1 text-xs opacity-70">${esc(b.name)} · ${esc(longDate(b.event_date))}${config.eventTypes[b.event_type] ? ' · ' + esc(config.eventTypes[b.event_type]) : ''}</p>
-            <p class="mt-1 text-sm font-semibold">${moneyCount(b.total_price)}</p>
-            <p class="mt-1 text-xs opacity-70">${esc(config.labels.deposit)}: ${money(b.deposit_amount)}</p>
+            ${b.total_price == null ? '' : `<p class="mt-1 text-sm font-semibold">${moneyCount(b.total_price)}</p>
+            <p class="mt-1 text-xs opacity-70">${esc(config.labels.deposit)}: ${money(b.deposit_amount)}</p>`}
         `;
         return el;
     }
@@ -489,7 +489,7 @@ function initConcierge() {
     /** Every photo of a hall, big in the middle of the screen, drifting slowly like a film still. */
     function showcaseGallery(hall) {
         const images = hall.images || [];
-        const facts = [config.settings[hall.setting] || '', hall.size_sqm ? `${hall.size_sqm} m²` : '', `${hall.min_guests}–${hall.max_guests} ${config.labels.maxGuests}`].filter(Boolean).join(' · ');
+        const facts = [config.settings[hall.setting] || '', hall.size_sqm ? `${hall.size_sqm} m²` : '', (hall.min_guests != null ? `${hall.min_guests}–${hall.max_guests} ${config.labels.maxGuests}` : '')].filter(Boolean).join(' · ');
         const el = document.createElement('div');
         el.className = 'showcase-gallery';
         el.innerHTML = `
@@ -507,7 +507,7 @@ function initConcierge() {
                 <p class="chat-card-tag" style="--i:0">${esc(facts)}</p>
                 <h2 class="showcase-title" style="--i:1">${esc(hall.name)}</h2>
                 <p class="showcase-text" style="--i:2">${esc(hall.description || '')}</p>
-                <p class="showcase-price" style="--i:3">${moneyCount(hall.starting_price)} <span>${esc(config.labels.perEvent)}</span></p>
+                ${hall.starting_price != null ? `<p class="showcase-price" style="--i:3">${moneyCount(hall.starting_price)} <span>${esc(config.labels.perEvent)}</span></p>` : (hall.details || []).length ? `<dl class="showcase-facts" style="--i:3">${hall.details.map((fact) => `<div><dt>${esc(fact.label)}</dt><dd>${esc(fact.value)}</dd></div>`).join('')}</dl>` : ''}
                 <div class="showcase-actions" style="--i:4">
                     <a class="showcase-action is-primary" href="${esc(reservationUrl(hall.hall_slug))}">${esc(config.labels.bookNow)}</a>
                     <a class="showcase-action" href="${esc(hallUrl(hall.hall_slug))}">${esc(config.labels.viewDetails)}</a>
@@ -554,7 +554,7 @@ function initConcierge() {
         const el = document.createElement('div');
         el.className = 'showcase-results';
         el.innerHTML = `<div class="showcase-grid">${halls.map((hall, index) => {
-            const facts = [config.settings[hall.setting] || '', hall.size_sqm ? `${hall.size_sqm} m²` : '', `${hall.min_guests}–${hall.max_guests} ${config.labels.maxGuests}`].filter(Boolean).join(' · ');
+            const facts = [config.settings[hall.setting] || '', hall.size_sqm ? `${hall.size_sqm} m²` : '', (hall.min_guests != null ? `${hall.min_guests}–${hall.max_guests} ${config.labels.maxGuests}` : '')].filter(Boolean).join(' · ');
 
             return `
                 <article class="showcase-card" style="--i:${index}">
@@ -563,7 +563,7 @@ function initConcierge() {
                         <p class="chat-card-tag">${esc(facts)}</p>
                         <h3 class="showcase-card-title">${esc(hall.name)}</h3>
                         ${hall.event_date ? `<p class="chat-card-tag">${esc(longDate(hall.event_date))}</p>` : ''}
-                        <p class="showcase-card-price">${moneyCount(hall.total_price)} <span>${esc(config.labels.perEvent)}</span></p>
+                        ${hall.total_price != null ? `<p class="showcase-card-price">${moneyCount(hall.total_price)} <span>${esc(config.labels.perEvent)}</span></p>` : ''}
                         ${hall.discount_percent > 0 ? `<p class="chat-card-tag">−${hall.discount_percent}% ${esc(config.labels.discount)}</p>` : ''}
                         <button type="button" class="chat-card-button" data-showcase-slug="${esc(hall.hall_slug)}">${esc(config.labels.viewDetails)}</button>
                     </div>

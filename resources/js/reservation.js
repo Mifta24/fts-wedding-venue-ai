@@ -38,6 +38,7 @@ function initReservationWizard() {
         currency: root.dataset.currency,
         today: root.dataset.today,
         weekdayDeal: root.dataset.weekdayDeal === '1',
+        prices: root.dataset.prices !== '0',
         draftKey: `reservation_draft_${root.dataset.venueSlug}`,
         tokenKey: `concierge_token_${root.dataset.venueSlug}`,
     };
@@ -133,7 +134,7 @@ function initReservationWizard() {
             const button = document.createElement('button');
             button.type = 'button';
             button.className = 'wizard-secondary';
-            button.textContent = `${alternative.name} · ${money(alternative.total)}`;
+            button.textContent = config.prices ? `${alternative.name} · ${money(alternative.total)}` : alternative.name;
             button.addEventListener('click', () => {
                 form.elements.hall_slug.value = alternative.slug;
                 refreshHalls();
@@ -330,7 +331,8 @@ function initReservationWizard() {
         if (data.special_request) rows.push(summaryRow(labels.special, data.special_request, 4));
 
         root.querySelector('[data-summary]').replaceChildren(...rows);
-        root.querySelector('[data-summary-total]').textContent = quote ? money(quote.grand_total) : '';
+        const totalEl = root.querySelector('[data-summary-total]');
+        if (totalEl) totalEl.textContent = quote ? money(quote.grand_total) : '';
 
         const extra = root.querySelector('[data-summary-extra]');
         const hasExtra = Boolean(quote && quote.extra_hours_total > 0);
@@ -345,8 +347,10 @@ function initReservationWizard() {
             discount.querySelector('[data-summary-discount-amount]').textContent = `−${money(quote.discount_total)}`;
         }
 
-        root.querySelector('[data-summary-deposit-label]').textContent = text(labels.deposit, { percent: quote ? quote.deposit_percent : '' });
-        root.querySelector('[data-summary-deposit]').textContent = quote ? money(quote.deposit_total) : '';
+        const depositLabel = root.querySelector('[data-summary-deposit-label]');
+        const depositEl = root.querySelector('[data-summary-deposit]');
+        if (depositLabel) depositLabel.textContent = text(labels.deposit, { percent: quote ? quote.deposit_percent : '' });
+        if (depositEl) depositEl.textContent = quote ? money(quote.deposit_total) : '';
     }
 
     function showDone(result) {

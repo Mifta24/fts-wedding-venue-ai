@@ -1,0 +1,2193 @@
+{
+ "ui": {
+  "lobby": {
+   "ja": {
+    "welcome": "ようこそ",
+    "lobby": "TUTU沖縄へ",
+    "intro": "沖縄の結婚式場探しを、無料でお手伝いします。ホテル、ゲストハウス、チャペルなど20を超える会場から、AIコンシェルジュと一緒にぴったりの一つを見つけましょう。",
+    "cta_halls": "会場を見る",
+    "start_booking": "無料相談を予約",
+    "reservation": "無料相談を予約",
+    "reservation_intro": "ご希望の相談日と、気になる会場をAIコンシェルジュにお伝えください。サロンでのご相談は無料です。",
+    "reservation_q": "無料相談を予約したいです。空いている日を教えてください。",
+    "staff_intro": "スタッフと話したい場合は、メッセージをお送りください。ご来店、お電話、LINEでも無料でご相談いただけます。",
+    "hall_scene": "会場のご案内",
+    "hall_counter": "会場",
+    "hall_label": "会場",
+    "ask_hall": "この会場について聞く",
+    "reserve_hall": "この会場の相談を予約",
+    "halls_empty": "会場の情報は準備中です。スタッフにお尋ねください。",
+    "assistant": "ウェディングコンシェルジュ"
+   },
+   "en": {
+    "welcome": "Welcome to",
+    "lobby": "TUTU Okinawa",
+    "intro": "Free help finding your wedding venue in Okinawa. Browse more than 20 partner hotels, guest houses and chapels, and find the right one with your AI concierge.",
+    "cta_halls": "See the venues",
+    "start_booking": "Book a free consultation",
+    "reservation": "Book a free consultation",
+    "reservation_intro": "Tell your AI concierge the day you would like to come in and the venues you are curious about. Consultations at the salon are free.",
+    "reservation_q": "I would like to book a free consultation. Which days are open?",
+    "staff_intro": "If you would like to speak with our staff, send us a message. You can also visit, call or use LINE, and consultations are free.",
+    "hall_scene": "Venue guide",
+    "hall_counter": "Venue",
+    "hall_label": "Venue",
+    "ask_hall": "Ask about this venue",
+    "reserve_hall": "Book a consultation about this venue",
+    "halls_empty": "Venue information is being prepared. Please ask our staff.",
+    "assistant": "Wedding concierge"
+   },
+   "id": {
+    "welcome": "Selamat datang di",
+    "lobby": "TUTU Okinawa",
+    "intro": "Kami membantu Anda mencari tempat pernikahan di Okinawa, gratis. Jelajahi lebih dari 20 hotel, guest house, dan kapel mitra, lalu temukan yang paling cocok bersama AI concierge Anda.",
+    "cta_halls": "Lihat venue",
+    "start_booking": "Reservasi konsultasi gratis",
+    "reservation": "Reservasi konsultasi gratis",
+    "reservation_intro": "Sampaikan kepada AI concierge hari yang Anda inginkan untuk datang dan venue yang membuat Anda penasaran. Konsultasi di salon gratis.",
+    "reservation_q": "Saya ingin memesan konsultasi gratis. Hari apa saja yang masih kosong?",
+    "staff_intro": "Jika ingin berbicara dengan staf kami, silakan kirim pesan. Anda juga dapat datang langsung, menelepon, atau menggunakan LINE, dan konsultasi gratis.",
+    "hall_scene": "Panduan venue",
+    "hall_counter": "Venue",
+    "hall_label": "Venue",
+    "ask_hall": "Tanya tentang venue ini",
+    "reserve_hall": "Reservasi konsultasi tentang venue ini",
+    "halls_empty": "Informasi venue sedang disiapkan. Silakan tanyakan kepada staf kami.",
+    "assistant": "Wedding concierge"
+   },
+   "th": {
+    "welcome": "ยินดีต้อนรับสู่",
+    "lobby": "TUTU Okinawa",
+    "intro": "ช่วยคุณค้นหาสถานที่จัดงานแต่งงานในโอกินาวาฟรี เลือกดูสถานที่พันธมิตรกว่า 20 แห่ง ทั้งโรงแรม เกสต์เฮาส์ และโบสถ์ แล้วค้นหาที่ที่ใช่ไปพร้อมกับ AI คอนเซียร์จของคุณ",
+    "cta_halls": "ดูสถานที่จัดงาน",
+    "start_booking": "จองปรึกษาฟรี",
+    "reservation": "จองปรึกษาฟรี",
+    "reservation_intro": "บอก AI คอนเซียร์จว่าคุณสะดวกเข้ามาวันไหน และสนใจสถานที่ใดบ้าง การปรึกษาที่ร้านไม่มีค่าใช้จ่าย",
+    "reservation_q": "ฉันอยากจองปรึกษาฟรี รบกวนบอกวันที่ว่างด้วย",
+    "staff_intro": "หากต้องการพูดคุยกับเจ้าหน้าที่ กรุณาส่งข้อความหาเรา หรือจะแวะมาที่ร้าน โทร หรือใช้ LINE ก็ได้ ปรึกษาฟรี",
+    "hall_scene": "แนะนำสถานที่",
+    "hall_counter": "สถานที่",
+    "hall_label": "สถานที่",
+    "ask_hall": "สอบถามเกี่ยวกับสถานที่นี้",
+    "reserve_hall": "จองปรึกษาเกี่ยวกับสถานที่นี้",
+    "halls_empty": "ข้อมูลสถานที่อยู่ระหว่างจัดเตรียม กรุณาสอบถามเจ้าหน้าที่",
+    "assistant": "เวดดิ้งคอนเซียร์จ"
+   },
+   "zh": {
+    "welcome": "歡迎來到",
+    "lobby": "TUTU 沖繩",
+    "intro": "免費協助您尋找沖繩的婚禮場地。從飯店、民宿、教堂等超過 20 個合作場地中,與 AI 禮賓顧問一起找到最適合的那一處吧。",
+    "cta_halls": "查看場地",
+    "start_booking": "預約免費諮詢",
+    "reservation": "預約免費諮詢",
+    "reservation_intro": "請告訴 AI 禮賓顧問您希望前來的日期,以及您感興趣的場地。在沙龍的諮詢完全免費。",
+    "reservation_q": "我想預約免費諮詢,請問哪幾天還有空位?",
+    "staff_intro": "如果想與我們的工作人員聊聊,歡迎傳送訊息給我們。也可以直接來店、來電或透過 LINE,諮詢皆免費。",
+    "hall_scene": "場地介紹",
+    "hall_counter": "場地",
+    "hall_label": "場地",
+    "ask_hall": "詢問這個場地",
+    "reserve_hall": "預約這個場地的諮詢",
+    "halls_empty": "場地資訊準備中,請洽詢工作人員。",
+    "assistant": "婚禮禮賓顧問"
+   }
+  },
+  "labels": {
+   "ja": {
+    "halls_heading": "会場",
+    "menu_halls": "会場を探す",
+    "menu_halls_q": "沖縄の結婚式場を、エリアとタイプ別に見せてください。",
+    "menu_services_q": "ドレスやフォトウエディングなど、TUTUのサービスを教えてください。",
+    "menu_policies_q": "ご相談の流れと、費用について教えてください。",
+    "menu_staff_q": "TUTUのスタッフと話したいです。",
+    "chat_subtitle": "沖縄の結婚式場・ドレス・フォトウエディングについて24時間いつでもどうぞ。",
+    "chat_placeholder": "会場、ドレス、無料相談について質問…",
+    "chat_intro": "こんにちは。TUTU沖縄のウェディングコンシェルジュです。沖縄の結婚式場、ドレス、フォトウエディング、無料相談について、何でもお尋ねください。",
+    "view_details": "会場を見る",
+    "book_now": "この会場の相談を予約",
+    "hall_details_question": ":hall の詳細と写真を見せてください",
+    "chat_no_availability": "ご希望の日は、相談枠に空きがありません。",
+    "chat_booking_received": "相談リクエストを受け付けました"
+   },
+   "en": {
+    "halls_heading": "Venues",
+    "menu_halls": "Find a venue",
+    "menu_halls_q": "Please show me the wedding venues in Okinawa by area and type.",
+    "menu_services_q": "What services does TUTU offer, such as dresses and photo weddings?",
+    "menu_policies_q": "How does a consultation work, and what does it cost?",
+    "menu_staff_q": "I would like to speak with the TUTU staff.",
+    "chat_subtitle": "Ask about Okinawa wedding venues, dresses and photo weddings, any time of day.",
+    "chat_placeholder": "Ask about venues, dresses or a free consultation…",
+    "chat_intro": "Hello! I'm the wedding concierge of TUTU Okinawa. Ask me anything about wedding venues in Okinawa, dresses, photo weddings and our free consultation.",
+    "view_details": "See the venue",
+    "book_now": "Book a consultation about this venue",
+    "hall_details_question": "Please show me the details and photos of :hall",
+    "chat_no_availability": "There is no consultation slot open on that day.",
+    "chat_booking_received": "Consultation request received"
+   },
+   "id": {
+    "halls_heading": "Tempat Pernikahan",
+    "menu_halls": "Cari tempat pernikahan",
+    "menu_halls_q": "Tolong tunjukkan tempat pernikahan di Okinawa berdasarkan area dan tipenya.",
+    "menu_services_q": "Layanan apa saja yang ditawarkan TUTU, seperti gaun dan pernikahan foto (photo wedding)?",
+    "menu_policies_q": "Bagaimana alur konsultasi, dan berapa biayanya?",
+    "menu_staff_q": "Saya ingin berbicara dengan staf TUTU.",
+    "chat_subtitle": "Tanyakan tentang tempat pernikahan, gaun, dan photo wedding di Okinawa kapan saja, 24 jam.",
+    "chat_placeholder": "Tanyakan tentang tempat, gaun, atau konsultasi gratis…",
+    "chat_intro": "Halo! Saya concierge pernikahan TUTU Okinawa. Silakan tanyakan apa saja tentang tempat pernikahan di Okinawa, gaun, photo wedding, dan konsultasi gratis kami.",
+    "view_details": "Lihat tempat",
+    "book_now": "Reservasi konsultasi untuk tempat ini",
+    "hall_details_question": "Tolong tunjukkan detail dan foto :hall",
+    "chat_no_availability": "Tidak ada slot konsultasi yang tersedia pada hari yang Anda inginkan.",
+    "chat_booking_received": "Permintaan konsultasi telah diterima"
+   },
+   "th": {
+    "halls_heading": "สถานที่จัดงาน",
+    "menu_halls": "ค้นหาสถานที่จัดงาน",
+    "menu_halls_q": "ช่วยแสดงสถานที่จัดงานแต่งงานในโอกินาว่าแยกตามพื้นที่และประเภทหน่อยค่ะ",
+    "menu_services_q": "TUTU มีบริการอะไรบ้าง เช่น ชุดเดรสและโฟโต้เวดดิ้ง",
+    "menu_policies_q": "ขั้นตอนการปรึกษาเป็นอย่างไร และมีค่าใช้จ่ายเท่าไร",
+    "menu_staff_q": "ฉันอยากพูดคุยกับเจ้าหน้าที่ของ TUTU",
+    "chat_subtitle": "สอบถามเรื่องสถานที่จัดงานแต่งงาน ชุดเดรส และโฟโต้เวดดิ้งในโอกินาว่าได้ตลอด 24 ชั่วโมง",
+    "chat_placeholder": "สอบถามเรื่องสถานที่ ชุดเดรส หรือการปรึกษาฟรี…",
+    "chat_intro": "สวัสดีค่ะ ฉันเป็นเวดดิ้งคอนเซียร์จของ TUTU โอกินาว่า สอบถามได้ทุกเรื่อง ทั้งสถานที่จัดงานแต่งงานในโอกินาว่า ชุดเดรส โฟโต้เวดดิ้ง และการปรึกษาฟรี",
+    "view_details": "ดูสถานที่",
+    "book_now": "จองปรึกษาเกี่ยวกับสถานที่นี้",
+    "hall_details_question": "ช่วยแสดงรายละเอียดและรูปภาพของ :hall หน่อยค่ะ",
+    "chat_no_availability": "วันที่ท่านต้องการไม่มีคิวปรึกษาว่างค่ะ",
+    "chat_booking_received": "ได้รับคำขอปรึกษาแล้วค่ะ"
+   },
+   "zh": {
+    "halls_heading": "會場",
+    "menu_halls": "尋找會場",
+    "menu_halls_q": "請依地區與類型，為我介紹沖繩的婚禮會場。",
+    "menu_services_q": "請問TUTU提供哪些服務，例如禮服和婚紗攝影？",
+    "menu_policies_q": "請問諮詢的流程與費用是怎麼樣的？",
+    "menu_staff_q": "我想和TUTU的工作人員聊聊。",
+    "chat_subtitle": "關於沖繩的婚禮會場、禮服與婚紗攝影，24小時隨時歡迎詢問。",
+    "chat_placeholder": "詢問會場、禮服或免費諮詢…",
+    "chat_intro": "您好！我是TUTU沖繩的婚禮顧問。關於沖繩的婚禮會場、禮服、婚紗攝影與免費諮詢，歡迎隨時詢問。",
+    "view_details": "查看會場",
+    "book_now": "預約此會場的諮詢",
+    "hall_details_question": "請讓我看看 :hall 的詳細資訊與照片",
+    "chat_no_availability": "您希望的日期已無可預約的諮詢時段。",
+    "chat_booking_received": "已收到您的諮詢申請"
+   }
+  },
+  "wizard": {
+   "ja": {
+    "title": "無料相談を予約",
+    "intro": "かんたんな手順です。日程はTUTUのスタッフが確認してご連絡します。ご相談は無料で、お支払いは発生しません。",
+    "steps": [
+     "日程",
+     "ご希望",
+     "会場",
+     "ご連絡先",
+     "確認"
+    ],
+    "event_date": "ご希望の相談日",
+    "cal_pick": "相談日を選んでください。",
+    "cal_none": "現在オンラインで受付中の日程はありません。コンシェルジュまたはスタッフにご相談ください。",
+    "event_type": "ご相談内容",
+    "guests": "ご来店人数",
+    "guests_hint": "ご一緒にご来店される方の人数（目安）",
+    "choose_hall": "気になる会場を選ぶ",
+    "hall": "気になる会場",
+    "event": "ご相談内容",
+    "dates": "相談日",
+    "special": "ご要望（任意）",
+    "special_placeholder": "例：ドレスも見たい、フォトウエディングも相談したい",
+    "submit": "相談リクエストを送信",
+    "disclaimer": "これは相談のご予約リクエストです。日程はTUTUのスタッフが確認してご連絡します。ご相談は無料で、お支払いは発生しません。",
+    "available_instead": "ご希望の日に空きのある会場：",
+    "done_title": "相談リクエストを受け付けました",
+    "awaiting": "TUTUスタッフの確認待ち",
+    "done_hint": "スタッフが日程を確認し、ご連絡します。お急ぎの場合はお電話ください。",
+    "call_venue": "TUTUに電話",
+    "email_venue": "TUTUにメール",
+    "contact_staff": "TUTUに連絡",
+    "select_hall": "会場を選択してください。"
+   },
+   "en": {
+    "title": "Book a free consultation",
+    "intro": "A few quick steps. The TUTU staff will confirm the day and contact you. The consultation is free and nothing is charged now.",
+    "steps": [
+     "Day",
+     "Your wishes",
+     "Venue",
+     "Contact",
+     "Review"
+    ],
+    "event_date": "Preferred day",
+    "cal_pick": "Choose the day you would like to come in.",
+    "cal_none": "No day is open for online requests right now. Please ask the concierge or our staff.",
+    "event_type": "What would you like to discuss?",
+    "guests": "People coming",
+    "guests_hint": "Roughly how many people will come with you",
+    "choose_hall": "Choose the venue you are curious about",
+    "hall": "Venue",
+    "event": "Topic",
+    "dates": "Day",
+    "special": "Requests (optional)",
+    "special_placeholder": "e.g. I would also like to see dresses and ask about a photo wedding",
+    "submit": "Send the consultation request",
+    "disclaimer": "This is a request for a consultation, not a contract. The TUTU staff will confirm the day and contact you. The consultation is free and nothing is charged now.",
+    "available_instead": "Venues with an open slot on your day:",
+    "done_title": "Consultation request received",
+    "awaiting": "Waiting for the TUTU staff to confirm",
+    "done_hint": "The staff will confirm the day and contact you. If you are in a hurry, please call.",
+    "call_venue": "Call TUTU",
+    "email_venue": "Email TUTU",
+    "contact_staff": "Contact TUTU",
+    "select_hall": "Please choose a venue."
+   },
+   "id": {
+    "title": "Pesan konsultasi gratis",
+    "intro": "Langkahnya singkat saja. Staf TUTU akan memastikan harinya lalu menghubungi Anda. Konsultasi ini gratis dan tidak ada biaya yang dikenakan sekarang.",
+    "steps": [
+     "Hari",
+     "Keinginan Anda",
+     "Lokasi",
+     "Kontak",
+     "Konfirmasi"
+    ],
+    "event_date": "Hari konsultasi yang diinginkan",
+    "cal_pick": "Silakan pilih hari konsultasi.",
+    "cal_none": "Saat ini tidak ada jadwal yang dibuka untuk permintaan online. Silakan hubungi concierge atau staf kami.",
+    "event_type": "Apa yang ingin Anda konsultasikan?",
+    "guests": "Jumlah tamu yang datang",
+    "guests_hint": "Perkiraan jumlah orang yang datang bersama Anda",
+    "choose_hall": "Pilih lokasi yang menarik bagi Anda",
+    "hall": "Lokasi yang diminati",
+    "event": "Topik konsultasi",
+    "dates": "Hari konsultasi",
+    "special": "Permintaan (opsional)",
+    "special_placeholder": "Contoh: Saya juga ingin melihat gaun dan berkonsultasi tentang foto pernikahan",
+    "submit": "Kirim permintaan konsultasi",
+    "disclaimer": "Ini adalah permintaan reservasi konsultasi, bukan kontrak. Staf TUTU akan memastikan harinya lalu menghubungi Anda. Konsultasi ini gratis dan tidak ada biaya yang dikenakan sekarang.",
+    "available_instead": "Lokasi yang masih tersedia pada hari pilihan Anda:",
+    "done_title": "Permintaan konsultasi telah diterima",
+    "awaiting": "Menunggu konfirmasi dari staf TUTU",
+    "done_hint": "Staf akan memastikan harinya lalu menghubungi Anda. Jika Anda terburu-buru, silakan telepon.",
+    "call_venue": "Telepon TUTU",
+    "email_venue": "Kirim email ke TUTU",
+    "contact_staff": "Hubungi TUTU",
+    "select_hall": "Silakan pilih lokasi."
+   },
+   "th": {
+    "title": "จองปรึกษาฟรี",
+    "intro": "ขั้นตอนง่าย ๆ เจ้าหน้าที่ TUTU จะตรวจสอบวันและติดต่อกลับไปหาคุณ การปรึกษาไม่มีค่าใช้จ่าย และจะไม่มีการเรียกเก็บเงินในตอนนี้",
+    "steps": [
+     "วันที่",
+     "ความต้องการ",
+     "สถานที่",
+     "ข้อมูลติดต่อ",
+     "ตรวจสอบ"
+    ],
+    "event_date": "วันที่ต้องการปรึกษา",
+    "cal_pick": "กรุณาเลือกวันที่ต้องการปรึกษา",
+    "cal_none": "ขณะนี้ไม่มีวันที่เปิดรับผ่านทางออนไลน์ กรุณาสอบถามคอนเซียร์จหรือเจ้าหน้าที่ของเรา",
+    "event_type": "คุณอยากปรึกษาเรื่องอะไร",
+    "guests": "จำนวนผู้มาด้วย",
+    "guests_hint": "จำนวนคนที่จะมาด้วยกัน (โดยประมาณ)",
+    "choose_hall": "เลือกสถานที่ที่คุณสนใจ",
+    "hall": "สถานที่ที่สนใจ",
+    "event": "หัวข้อปรึกษา",
+    "dates": "วันที่ปรึกษา",
+    "special": "ความต้องการเพิ่มเติม (ไม่บังคับ)",
+    "special_placeholder": "เช่น อยากดูชุดเดรสด้วย และอยากปรึกษาเรื่องถ่ายภาพพรีเวดดิ้ง",
+    "submit": "ส่งคำขอปรึกษา",
+    "disclaimer": "นี่คือคำขอจองเพื่อปรึกษา ไม่ใช่สัญญา เจ้าหน้าที่ TUTU จะตรวจสอบวันและติดต่อกลับไปหาคุณ การปรึกษาไม่มีค่าใช้จ่าย และจะไม่มีการเรียกเก็บเงินในตอนนี้",
+    "available_instead": "สถานที่ที่ยังว่างในวันที่คุณต้องการ:",
+    "done_title": "ได้รับคำขอปรึกษาแล้ว",
+    "awaiting": "รอเจ้าหน้าที่ TUTU ตรวจสอบ",
+    "done_hint": "เจ้าหน้าที่จะตรวจสอบวันและติดต่อกลับไปหาคุณ หากเร่งด่วนกรุณาโทรศัพท์",
+    "call_venue": "โทรหา TUTU",
+    "email_venue": "ส่งอีเมลถึง TUTU",
+    "contact_staff": "ติดต่อ TUTU",
+    "select_hall": "กรุณาเลือกสถานที่"
+   },
+   "zh": {
+    "title": "預約免費諮詢",
+    "intro": "步驟很簡單。日期將由 TUTU 的工作人員確認後與您聯絡。諮詢免費，現在不會產生任何費用。",
+    "steps": [
+     "日期",
+     "您的希望",
+     "場地",
+     "聯絡方式",
+     "確認"
+    ],
+    "event_date": "希望的諮詢日期",
+    "cal_pick": "請選擇諮詢日期。",
+    "cal_none": "目前沒有開放線上受理的日期。請洽詢禮賓人員或我們的工作人員。",
+    "event_type": "您想諮詢什麼?",
+    "guests": "同行人數",
+    "guests_hint": "與您一同前來的人數(大約即可)",
+    "choose_hall": "選擇您感興趣的場地",
+    "hall": "感興趣的場地",
+    "event": "諮詢內容",
+    "dates": "諮詢日期",
+    "special": "其他需求(選填)",
+    "special_placeholder": "例如:也想看看禮服、想諮詢婚紗攝影",
+    "submit": "送出諮詢申請",
+    "disclaimer": "這是諮詢預約的申請,並非契約。日期將由 TUTU 的工作人員確認後與您聯絡。諮詢免費,現在不會產生任何費用。",
+    "available_instead": "您希望的日期仍有空檔的場地:",
+    "done_title": "已收到您的諮詢申請",
+    "awaiting": "等待 TUTU 工作人員確認",
+    "done_hint": "工作人員確認日期後會與您聯絡。若有急事,請來電。",
+    "call_venue": "致電 TUTU",
+    "email_venue": "寄電子郵件給 TUTU",
+    "contact_staff": "聯絡 TUTU",
+    "select_hall": "請選擇場地。"
+   }
+  },
+  "event_types": {
+   "ja": {
+    "akad": "挙式のご相談",
+    "reception": "披露宴・パーティのご相談",
+    "akad_reception": "挙式＋披露宴のご相談",
+    "engagement": "結納・顔合わせのご相談"
+   },
+   "en": {
+    "akad": "Wedding ceremony",
+    "reception": "Reception or party",
+    "akad_reception": "Ceremony and reception",
+    "engagement": "Engagement ceremony or family meeting"
+   },
+   "id": {
+    "akad": "Konsultasi upacara pernikahan",
+    "reception": "Konsultasi resepsi atau pesta",
+    "akad_reception": "Konsultasi upacara dan resepsi pernikahan",
+    "engagement": "Konsultasi lamaran atau pertemuan keluarga"
+   },
+   "th": {
+    "akad": "ปรึกษาเรื่องพิธีแต่งงาน",
+    "reception": "ปรึกษาเรื่องงานเลี้ยงหรือปาร์ตี้",
+    "akad_reception": "ปรึกษาเรื่องพิธีแต่งงานและงานเลี้ยง",
+    "engagement": "ปรึกษาเรื่องพิธีหมั้นหรือการพบปะครอบครัว"
+   },
+   "zh": {
+    "akad": "婚禮儀式諮詢",
+    "reception": "婚宴・派對諮詢",
+    "akad_reception": "婚禮儀式＋婚宴諮詢",
+    "engagement": "訂婚・雙方家長見面諮詢"
+   }
+  },
+  "detail_labels": {
+   "ja": {
+    "style": "挙式スタイル",
+    "party": "パーティ人数",
+    "cuisine": "お料理",
+    "address": "住所",
+    "access": "アクセス"
+   },
+   "en": {
+    "style": "Ceremony style",
+    "party": "Party size",
+    "cuisine": "Cuisine",
+    "address": "Address",
+    "access": "Access"
+   },
+   "id": {
+    "style": "Gaya upacara",
+    "party": "Jumlah tamu",
+    "cuisine": "Hidangan",
+    "address": "Alamat",
+    "access": "Akses"
+   },
+   "th": {
+    "style": "รูปแบบพิธี",
+    "party": "จำนวนแขก",
+    "cuisine": "อาหาร",
+    "address": "ที่อยู่",
+    "access": "การเดินทาง"
+   },
+   "zh": {
+    "style": "婚禮儀式形式",
+    "party": "宴客人數",
+    "cuisine": "餐點",
+    "address": "地址",
+    "access": "交通方式"
+   }
+  },
+  "kinds": {
+   "ja": {
+    "hotel": "ホテルウエディング",
+    "guesthouse": "ゲストハウス・レストラン",
+    "chapel": "独立型チャペル",
+    "party": "2次会・結納"
+   },
+   "en": {
+    "hotel": "Hotel wedding",
+    "guesthouse": "Guest house / restaurant",
+    "chapel": "Stand-alone chapel",
+    "party": "After-party / engagement"
+   },
+   "id": {
+    "hotel": "Pernikahan di hotel",
+    "guesthouse": "Guest house / restoran",
+    "chapel": "Kapel mandiri",
+    "party": "After-party / pertunangan"
+   },
+   "th": {
+    "hotel": "งานแต่งงานในโรงแรม",
+    "guesthouse": "เกสต์เฮาส์ / ร้านอาหาร",
+    "chapel": "แชเปลแยกอิสระ",
+    "party": "งานเลี้ยงหลังงานแต่ง / พิธีหมั้น"
+   },
+   "zh": {
+    "hotel": "飯店婚禮",
+    "guesthouse": "Guest House・餐廳",
+    "chapel": "獨立式教堂",
+    "party": "二次會・訂婚"
+   }
+  },
+  "stats": {
+   "ja": [
+    [
+     "提携会場",
+     "21"
+    ],
+    [
+     "ご相談",
+     "無料"
+    ]
+   ],
+   "en": [
+    [
+     "Partner venues",
+     "21"
+    ],
+    [
+     "Consultation",
+     "Free"
+    ]
+   ],
+   "id": [
+    [
+     "Venue mitra",
+     "21"
+    ],
+    [
+     "Konsultasi",
+     "Gratis"
+    ]
+   ],
+   "th": [
+    [
+     "สถานที่จัดงานพันธมิตร",
+     "21"
+    ],
+    [
+     "ปรึกษา",
+     "ฟรี"
+    ]
+   ],
+   "zh": [
+    [
+     "合作會場",
+     "21"
+    ],
+    [
+     "諮詢",
+     "免費"
+    ]
+   ]
+  },
+  "misc": {
+   "ja": {
+    "consult_note": "会場の料金は、人数やご希望によって変わります。お見積もりはTUTUのサロンで無料でご案内します。",
+    "intro": "沖縄の結婚式場:count件をご紹介しています。エリアを選んで、気になる会場を開いてください。",
+    "price_sentence": "料金はご希望に合わせてお見積もりします。ご相談は無料です。",
+    "menu_options": "オプション",
+    "halls_question": "沖縄の結婚式場を、エリアとタイプ別に見せてください。"
+   },
+   "en": {
+    "consult_note": "Venue prices depend on the number of guests and your wishes. We prepare a quote for you for free at the TUTU salon.",
+    "intro": "We introduce :count wedding venues in Okinawa. Pick an area, then open a venue that interests you.",
+    "price_sentence": "We prepare a quote to match your wishes. The consultation is free.",
+    "menu_options": "Options",
+    "halls_question": "Please show me the wedding venues in Okinawa by area and type."
+   },
+   "id": {
+    "consult_note": "Biaya venue bergantung pada jumlah tamu dan keinginan Anda. Penawaran harga disiapkan secara gratis di salon TUTU.",
+    "intro": "Kami memperkenalkan :count venue pernikahan di Okinawa. Pilih area, lalu buka venue yang menarik bagi Anda.",
+    "price_sentence": "Kami menyiapkan penawaran harga sesuai keinginan Anda. Konsultasi gratis.",
+    "menu_options": "Opsi",
+    "halls_question": "Tolong tunjukkan venue pernikahan di Okinawa berdasarkan area dan tipe."
+   },
+   "th": {
+    "consult_note": "ค่าใช้จ่ายของสถานที่จัดงานจะแตกต่างกันไปตามจำนวนแขกและความต้องการของคุณ เราจัดทำใบเสนอราคาให้ฟรีที่ซาลอน TUTU",
+    "intro": "เรามีสถานที่จัดงานแต่งงานในโอกินาวะ :count แห่งมาแนะนำ เลือกพื้นที่ แล้วเปิดดูสถานที่ที่คุณสนใจได้เลย",
+    "price_sentence": "เราจัดทำใบเสนอราคาให้เหมาะกับความต้องการของคุณ ปรึกษาได้ฟรี",
+    "menu_options": "ตัวเลือกเสริม",
+    "halls_question": "ช่วยแสดงสถานที่จัดงานแต่งงานในโอกินาวะแยกตามพื้นที่และประเภทให้หน่อยค่ะ"
+   },
+   "zh": {
+    "consult_note": "會場費用會依賓客人數與您的需求而有所不同。報價將由TUTU沙龍免費為您說明。",
+    "intro": "為您介紹沖繩的 :count 間婚禮會場。請先選擇地區,再開啟您感興趣的會場。",
+    "price_sentence": "我們會依照您的需求為您報價。諮詢免費。",
+    "menu_options": "加選項目",
+    "halls_question": "請依地區與類型,讓我看看沖繩的婚禮會場。"
+   }
+  },
+  "link": {
+   "url": "https://line.me/R/ti/p/%40psp6927m",
+   "names": {
+    "ja": "LINEで無料相談",
+    "en": "Free consultation on LINE",
+    "id": "Konsultasi gratis lewat LINE",
+    "th": "ปรึกษาฟรีผ่าน LINE",
+    "zh": "透過 LINE 免費諮詢"
+   }
+  },
+  "extra_lobby": {
+   "ja": {
+    "info_hours": "営業時間",
+    "event_hours": "営業時間",
+    "menu_info": "TUTUについて",
+    "info_about": "TUTUについて",
+    "info_policies": "ご相談について",
+    "info_ask": "TUTUについて聞く",
+    "availability_note": "相談日は、TUTUのスタッフが最終確認いたします。",
+    "location": "サロンの場所",
+    "stat_from": "提携会場",
+    "stat_capacity": "ご相談"
+   },
+   "en": {
+    "info_hours": "Opening hours",
+    "event_hours": "Opening hours",
+    "menu_info": "About TUTU",
+    "info_about": "About TUTU",
+    "info_policies": "About consultations",
+    "info_ask": "Ask about TUTU",
+    "availability_note": "The day of your consultation is confirmed by the TUTU staff.",
+    "location": "Find the salon",
+    "stat_from": "Partner venues",
+    "stat_capacity": "Consultation"
+   },
+   "id": {
+    "info_hours": "Jam operasional",
+    "event_hours": "Jam operasional",
+    "menu_info": "Tentang TUTU",
+    "info_about": "Tentang TUTU",
+    "info_policies": "Tentang konsultasi",
+    "info_ask": "Tanyakan tentang TUTU",
+    "availability_note": "Tanggal konsultasi akan dikonfirmasi oleh staf TUTU pada akhirnya.",
+    "location": "Lokasi salon",
+    "stat_from": "Venue mitra",
+    "stat_capacity": "Konsultasi"
+   },
+   "th": {
+    "info_hours": "เวลาทำการ",
+    "event_hours": "เวลาทำการ",
+    "menu_info": "เกี่ยวกับ TUTU",
+    "info_about": "เกี่ยวกับ TUTU",
+    "info_policies": "เกี่ยวกับการปรึกษา",
+    "info_ask": "สอบถามเกี่ยวกับ TUTU",
+    "availability_note": "วันปรึกษาจะได้รับการยืนยันขั้นสุดท้ายโดยเจ้าหน้าที่ของ TUTU",
+    "location": "ที่ตั้งของร้าน",
+    "stat_from": "สถานที่จัดงานพันธมิตร",
+    "stat_capacity": "การปรึกษา"
+   },
+   "zh": {
+    "info_hours": "營業時間",
+    "event_hours": "營業時間",
+    "menu_info": "關於 TUTU",
+    "info_about": "關於 TUTU",
+    "info_policies": "關於諮詢",
+    "info_ask": "詢問 TUTU 相關問題",
+    "availability_note": "諮詢日期將由 TUTU 的工作人員做最後確認。",
+    "location": "沙龍位置",
+    "stat_from": "合作會場",
+    "stat_capacity": "諮詢"
+   }
+  },
+  "extra_narration": {
+   "ja": {
+    "tour_halls": "会場のご案内を開きます。",
+    "tour_reservation": "無料相談のご予約を開きます。",
+    "tour_staff": "TUTUのスタッフのところへ参ります。",
+    "tour_info": "TUTUのご案内を開きます。",
+    "info_welcome": "TUTU沖縄へようこそ。",
+    "info_hours": "サロンの営業時間は:inから:outまでです。",
+    "info_more": "以下に、住所、ご相談について、よくあるご質問を掲載しています。ご不明な点はお気軽にお尋ねください。"
+   },
+   "en": {
+    "tour_halls": "Opening the venue guide.",
+    "tour_reservation": "Opening the booking for a free consultation.",
+    "tour_staff": "Stepping over to the TUTU staff.",
+    "tour_info": "Opening the information about TUTU.",
+    "info_welcome": "Welcome to TUTU Okinawa.",
+    "info_hours": "The salon is open from :in to :out.",
+    "info_more": "Below you will find the address, how a consultation works and frequently asked questions. Just ask me if anything is unclear."
+   },
+   "id": {
+    "tour_halls": "Membuka panduan venue.",
+    "tour_reservation": "Membuka halaman reservasi konsultasi gratis.",
+    "tour_staff": "Saya akan mengantar Anda ke staf TUTU.",
+    "tour_info": "Membuka informasi tentang TUTU.",
+    "info_welcome": "Selamat datang di TUTU Okinawa.",
+    "info_hours": "Jam buka salon adalah pukul :in hingga :out.",
+    "info_more": "Di bawah ini tersedia alamat, informasi tentang konsultasi, dan pertanyaan yang sering diajukan. Jika ada yang kurang jelas, silakan tanyakan kepada saya."
+   },
+   "th": {
+    "tour_halls": "กำลังเปิดคู่มือสถานที่จัดงานค่ะ",
+    "tour_reservation": "กำลังเปิดหน้าจองการปรึกษาฟรีค่ะ",
+    "tour_staff": "ขอพาไปพบเจ้าหน้าที่ของ TUTU นะคะ",
+    "tour_info": "กำลังเปิดข้อมูลเกี่ยวกับ TUTU ค่ะ",
+    "info_welcome": "ยินดีต้อนรับสู่ TUTU Okinawa ค่ะ",
+    "info_hours": "ซาลอนเปิดให้บริการตั้งแต่เวลา :in ถึง :out ค่ะ",
+    "info_more": "ด้านล่างนี้มีที่อยู่ ข้อมูลเกี่ยวกับการปรึกษา และคำถามที่พบบ่อยค่ะ หากมีสิ่งใดไม่ชัดเจน สอบถามได้เลยนะคะ"
+   },
+   "zh": {
+    "tour_halls": "為您開啟會場介紹。",
+    "tour_reservation": "為您開啟免費諮詢的預約頁面。",
+    "tour_staff": "這就帶您前往 TUTU 的工作人員身邊。",
+    "tour_info": "為您開啟 TUTU 的相關介紹。",
+    "info_welcome": "歡迎來到 TUTU Okinawa。",
+    "info_hours": "沙龍的營業時間為 :in 至 :out。",
+    "info_more": "下方刊載了地址、諮詢說明以及常見問題。如有任何不清楚的地方,歡迎隨時詢問我。"
+   }
+  }
+ },
+ "areas": {
+  "naha": {
+   "ja": "那覇エリア",
+   "en": "Naha area",
+   "id": "Area Naha",
+   "th": "พื้นที่นาฮะ",
+   "zh": "那霸地區"
+  },
+  "central": {
+   "ja": "中部エリア",
+   "en": "Central area",
+   "id": "Area Tengah",
+   "th": "พื้นที่ตอนกลาง",
+   "zh": "中部地區"
+  },
+  "north": {
+   "ja": "北部・恩納エリア",
+   "en": "North and Onna area",
+   "id": "Area Utara dan Onna",
+   "th": "พื้นที่ตอนเหนือและออนนะ",
+   "zh": "北部・恩納地區"
+  }
+ },
+ "description": {
+  "ja": "TUTU沖縄（ブライダルハウスチュチュ）は、沖縄の結婚式場探しからドレス、フォトウエディングまでをお手伝いするブライダルサロンです。那覇本店と浦添のサロンで、ご相談は無料です。",
+  "en": "TUTU Okinawa (Bridal House TUTU) helps couples find a wedding venue in Okinawa and also offers dresses and photo weddings. Consultations at the Naha and Urazoe salons are free.",
+  "id": "TUTU Okinawa (Bridal House TUTU) adalah bridal salon yang membantu Anda mulai dari mencari tempat pernikahan di Okinawa, gaun pengantin, hingga photo wedding. Konsultasi di salon pusat Naha dan salon Urazoe gratis.",
+  "th": "TUTU Okinawa (Bridal House TUTU) เป็นบริดัลซาลอนที่ช่วยดูแลตั้งแต่การหาสถานที่จัดงานแต่งงานในโอกินาวะ ชุดแต่งงาน ไปจนถึงโฟโต้เวดดิ้ง ปรึกษาได้ฟรีที่ซาลอนสาขาหลักนาฮะและซาลอนอุราโซเอะ",
+  "zh": "TUTU Okinawa（Bridal House TUTU）是一家婚紗沙龍，從尋找沖繩的婚禮場地、挑選婚紗禮服，到婚紗攝影，都能為您提供協助。那霸本店與浦添的沙龍，諮詢皆免費。"
+ },
+ "venues": [
+  {
+   "n": 0,
+   "slug": "southgate-hotel",
+   "area": "naha",
+   "kind": "hotel",
+   "images": [
+    "v23702-1.webp",
+    "v23702-2.webp",
+    "v23702-3.webp",
+    "v23702-4.webp",
+    "v23702-5.webp",
+    "v23702-6.webp"
+   ],
+   "name": {
+    "ja": "サウスゲートホテル",
+    "en": "South Gate Hotel",
+    "id": "South Gate Hotel",
+    "th": "South Gate Hotel (サウスゲートホテル)",
+    "zh": "South Gate Hotel（サウスゲートホテル）"
+   },
+   "desc": {
+    "ja": "海と空を望む沖縄の中心で叶える、アットホームウェディング 海の玄関口として地元の人々に長年愛されてきたこの場所 那覇で唯一の海を一望できる、自然光が降りそそぐチャペルと、最大400名収容可能なパーティ会場 ホテルでは珍しいフロア貸し切りでご利用いただけるので、他のゲストの目を気にすることなく、リラックスしてお楽しみいただけます",
+    "en": "An intimate, homey wedding in the heart of Okinawa, with views of the sea and sky. This place has been loved by locals for many years as a gateway to the sea. It has Naha's only chapel with a panoramic ocean view, filled with natural light, and a banquet hall that holds up to 400 guests. Unusually for a hotel, you can reserve an entire floor, so you can relax and enjoy your day without worrying about other guests.",
+    "id": "Pernikahan hangat dan akrab di jantung Okinawa, dengan pemandangan laut dan langit. Tempat ini telah lama dicintai warga setempat sebagai gerbang menuju laut. Satu-satunya kapel di Naha dengan pemandangan laut yang luas, dipenuhi cahaya alami, serta ruang pesta yang dapat menampung hingga 400 tamu. Yang jarang ditemukan di hotel, Anda dapat menyewa seluruh lantai, sehingga Anda bisa bersantai dan menikmati hari istimewa tanpa merasa terganggu oleh tamu lain.",
+    "th": "งานแต่งงานอบอุ่นเป็นกันเอง ณ ใจกลางโอกินาว่า พร้อมวิวทะเลและท้องฟ้า สถานที่แห่งนี้เป็นที่รักของคนในพื้นที่มาอย่างยาวนานในฐานะประตูสู่ทะเล มีโบสถ์ที่เดียวในนาฮะที่มองเห็นทะเลได้อย่างกว้างไกล เปี่ยมด้วยแสงธรรมชาติ และห้องจัดเลี้ยงที่รองรับแขกได้สูงสุด 400 ท่าน ที่พิเศษสำหรับโรงแรมคือสามารถเหมาทั้งชั้นได้ จึงผ่อนคลายและเพลิดเพลินกับวันสำคัญได้เต็มที่โดยไม่ต้องกังวลสายตาแขกท่านอื่น",
+    "zh": "在沖繩的中心，眺望海天一色，打造溫馨自在的婚禮。這裡長年以來作為海之玄關，深受當地人喜愛。擁有那霸唯一能一覽海景、灑落自然光的教堂，以及最多可容納400位賓客的宴會廳。在飯店中難得可整層包場，不必在意其他住客的目光，能輕鬆自在地盡情享受。"
+   },
+   "style": "チャペル式 / 人前式",
+   "party": {
+    "ja": "～400名（6F） / ～200名（7F） / ～104名（15F）",
+    "en": "Up to 400 guests (6F) / Up to 200 guests (7F) / Up to 104 guests (15F)",
+    "id": "Hingga 400 tamu (Lt. 6) / Hingga 200 tamu (Lt. 7) / Hingga 104 tamu (Lt. 15)",
+    "th": "สูงสุด 400 ท่าน (ชั้น 6) / สูงสุด 200 ท่าน (ชั้น 7) / สูงสุด 104 ท่าน (ชั้น 15)",
+    "zh": "最多400位（6樓） / 最多200位（7樓） / 最多104位（15樓）"
+   },
+   "cuisine": {
+    "ja": "卓盛料理、洋食正餐",
+    "en": "Table-served shared dishes, Western-style formal course meal",
+    "id": "Hidangan gaya meja yang disajikan untuk dinikmati bersama, hidangan formal ala Barat",
+    "th": "อาหารเสิร์ฟแบบจัดวางบนโต๊ะสำหรับทานร่วมกัน, อาหารตะวันตกแบบคอร์สเต็มรูปแบบ",
+    "zh": "桌菜料理、西式正餐"
+   },
+   "address": "那覇市前島3丁目25-1",
+   "access": {
+    "ja": "お車、タクシーの場合「那覇空港」から約11分 / バスの場合「那覇空港」から約25分",
+    "en": "By car or taxi: approx. 11 minutes from Naha Airport / By bus: approx. 25 minutes from Naha Airport",
+    "id": "Dengan mobil atau taksi: sekitar 11 menit dari Bandara Naha / Dengan bus: sekitar 25 menit dari Bandara Naha",
+    "th": "หากเดินทางด้วยรถยนต์หรือแท็กซี่ ประมาณ 11 นาทีจากสนามบินนาฮะ / หากเดินทางด้วยรถบัส ประมาณ 25 นาทีจากสนามบินนาฮะ",
+    "zh": "自行開車或搭乘計程車：從「那霸機場」約11分鐘 / 搭乘巴士：從「那霸機場」約25分鐘"
+   }
+  },
+  {
+   "n": 1,
+   "slug": "southwest-grand-hotel",
+   "area": "naha",
+   "kind": "hotel",
+   "images": [
+    "v23689-1.webp",
+    "v23689-2.webp",
+    "v23689-3.webp",
+    "v23689-4.webp",
+    "v23689-5.webp",
+    "v23689-6.webp"
+   ],
+   "name": {
+    "ja": "サウスウエストグランドホテル",
+    "en": "South West Grand Hotel",
+    "id": "South West Grand Hotel",
+    "th": "South West Grand Hotel",
+    "zh": "South West Grand Hotel"
+   },
+   "desc": {
+    "ja": "那覇 国際通りすぐのホテルで おふたりのこだわりを詰め込んだ 1日1組限定のおもてなしウェディング",
+    "en": "A hotel just steps from Naha's Kokusai-dori, offering a warm, one-wedding-per-day celebration filled with the couple's own personal touches",
+    "id": "Hotel yang hanya sejenak dari Kokusai-dori di Naha, menghadirkan pernikahan penuh keramahan hanya untuk 1 pasangan per hari, dipenuhi sentuhan personal Anda berdua",
+    "th": "โรงแรมใกล้ถนนโคคุไซ โดริ ในนาฮะ ต้อนรับด้วยงานแต่งงานแสนอบอุ่นเพียงวันละ 1 คู่ เติมเต็มด้วยความใส่ใจในแบบที่คุณทั้งสองต้องการ",
+    "zh": "位於那霸國際通旁的飯店，每天僅限1組的溫馨款待婚禮，滿載兩位專屬的用心與堅持"
+   },
+   "style": "人前式",
+   "party": {
+    "ja": "6名〜80名様",
+    "en": "6 to 80 guests",
+    "id": "6 hingga 80 tamu",
+    "th": "6 ถึง 80 ท่าน",
+    "zh": "6～80位"
+   },
+   "cuisine": {
+    "ja": "正餐料理（和洋折衷）",
+    "en": "Full-course dinner (Japanese-Western fusion)",
+    "id": "Hidangan makan malam lengkap (perpaduan Jepang dan Barat)",
+    "th": "อาหารคอร์สมื้อค่ำ (ผสมผสานญี่ปุ่นและตะวันตก)",
+    "zh": "正餐料理（和洋折衷）"
+   },
+   "address": "沖縄県那覇市久茂地3-29-52",
+   "access": {
+    "ja": "モノレール「県庁前駅」から徒歩約5分 / バス「国内線旅客ターミナル」発125番または120番乗車 / 「松尾バス停」下車徒歩約2分 / タクシー「那覇空港」より約12分",
+    "en": "Monorail: about 5 min walk from Kencho-mae Station / Bus: take No. 125 or 120 from the Domestic Terminal / Get off at Matsuo bus stop, then about 2 min walk / Taxi: about 12 min from Naha Airport",
+    "id": "Monorel: jalan kaki sekitar 5 menit dari Stasiun Kencho-mae / Bus: naik nomor 125 atau 120 dari Terminal Domestik / Turun di halte Matsuo, lalu jalan kaki sekitar 2 menit / Taksi: sekitar 12 menit dari Bandara Naha",
+    "th": "โมโนเรล: เดินประมาณ 5 นาทีจากสถานีเคนโจมาเอะ / รถบัส: ขึ้นสาย 125 หรือ 120 จากอาคารผู้โดยสารภายในประเทศ / ลงที่ป้ายมัตสึโอะ แล้วเดินประมาณ 2 นาที / แท็กซี่: ประมาณ 12 นาทีจากท่าอากาศยานนาฮะ",
+    "zh": "單軌電車：從「縣廳前站」步行約5分鐘 / 巴士：從「國內線航廈」搭乘125號或120號 / 於「松尾」站下車，步行約2分鐘 / 計程車：從「那霸機場」約12分鐘"
+   }
+  },
+  {
+   "n": 2,
+   "slug": "hotel-collective",
+   "area": "naha",
+   "kind": "hotel",
+   "images": [
+    "v12839-1.webp",
+    "v12839-2.webp",
+    "v12839-3.webp",
+    "v12839-4.webp",
+    "v12839-5.webp",
+    "v12839-6.webp"
+   ],
+   "name": {
+    "ja": "ホテル コレクティブ",
+    "en": "Hotel Collective",
+    "id": "Hotel Collective",
+    "th": "โฮเทล คอลเลกทีฟ (Hotel Collective)",
+    "zh": "Hotel Collective(ホテル コレクティブ)"
+   },
+   "desc": {
+    "ja": "『Open the emotion』をスローガンに、ホテルコレクティブの洗練されたホテル空間と、活気に満ちた地元カルチャーの数々が、訪れる人の心と体を飽きることなく刺激し、まだ動いていない感情を呼び覚まします。 スローガンには「さあ、自分だけの物語をはじめましょう。五感の窓を全開にして。驚き・発見・至福・冒険。そのすべての真ん中であなたをお待ちしています」という思いが込められています。",
+    "en": "Under the slogan \"Open the emotion,\" Hotel Collective's refined hotel space and the vibrant local culture around it delight guests in body and mind, awakening feelings you haven't yet felt. The slogan carries this message: \"Come, begin a story that is yours alone. Throw open the windows of your five senses. Surprise, discovery, bliss, adventure. We await you at the heart of it all.\"",
+    "id": "Dengan slogan \"Open the emotion\", ruang hotel Hotel Collective yang elegan dan beragam budaya lokal yang penuh semangat akan terus menyegarkan hati dan raga setiap tamu, serta membangkitkan perasaan yang belum pernah tergerak. Slogan ini membawa pesan: \"Mari mulai kisah Anda sendiri. Bukalah lebar-lebar jendela kelima indra Anda. Kejutan, penemuan, kebahagiaan, petualangan. Kami menanti Anda di tengah semuanya.\"",
+    "th": "ภายใต้สโลแกน \"Open the emotion\" พื้นที่โรงแรมอันเรียบหรูของโฮเทล คอลเลกทีฟ และวัฒนธรรมท้องถิ่นที่เปี่ยมชีวิตชีวา จะกระตุ้นทั้งหัวใจและร่างกายของผู้มาเยือนอย่างไม่รู้เบื่อ และปลุกความรู้สึกที่ยังไม่เคยถูกปลุกให้ตื่นขึ้น สโลแกนนี้แฝงความหมายว่า \"เชิญเริ่มต้นเรื่องราวของคุณเอง เปิดหน้าต่างแห่งประสาทสัมผัสทั้งห้าให้กว้าง ความประหลาดใจ การค้นพบ ความสุข และการผจญภัย เรารอคุณอยู่ตรงใจกลางของทั้งหมดนี้\"",
+    "zh": "以「Open the emotion」為標語,Hotel Collective 精緻的飯店空間與充滿活力的在地文化,將持續刺激來訪者的身心,喚醒尚未被觸動的情感。標語中蘊含著這樣的心意:「來吧,開啟屬於你的專屬故事。敞開五感之窗。驚喜、發現、幸福、冒險。我們就在這一切的中心等待著你。」"
+   },
+   "style": "チャペル式 / 人前式",
+   "party": {
+    "ja": "着席50名様～300名様迄",
+    "en": "Seated parties of 50 to 300 guests",
+    "id": "Resepsi duduk untuk 50 hingga 300 tamu",
+    "th": "งานเลี้ยงแบบนั่งโต๊ะ 50 ถึง 300 ท่าน",
+    "zh": "可容納 50 至 300 位賓客的座席宴會"
+   },
+   "cuisine": {
+    "ja": "折衷卓盛料理・正餐料理",
+    "en": "Eclectic table-style platters / Formal full-course dining",
+    "id": "Hidangan eklektik gaya meja / Hidangan formal",
+    "th": "อาหารจัดเสิร์ฟบนโต๊ะแบบผสมผสาน / อาหารพิธีการแบบเต็มรูปแบบ",
+    "zh": "折衷式桌菜料理 / 正式套餐料理"
+   },
+   "address": "沖縄県那覇市松尾2-5-7",
+   "access": {
+    "ja": "沖縄都市モノレール「県庁前」より徒歩約7分 / 松尾バス停より徒歩0分 / 「那覇空港」よりタクシー利用 所要約15分（料金約1,500～2,000円）",
+    "en": "About 7 min walk from \"Kenchomae\" Station on the Okinawa Urban Monorail / 0 min walk from Matsuo bus stop / About 15 min by taxi from Naha Airport (fare approx. ¥1,500–2,000)",
+    "id": "Sekitar 7 menit berjalan kaki dari Stasiun \"Kenchomae\" Monorel Perkotaan Okinawa / 0 menit berjalan kaki dari halte bus Matsuo / Sekitar 15 menit naik taksi dari Bandara Naha (tarif sekitar ¥1.500–2.000)",
+    "th": "เดินประมาณ 7 นาทีจากสถานี \"เคนโชมาเอะ\" ของโมโนเรลโอกินาวา / เดิน 0 นาทีจากป้ายรถบัสมัตสึโอะ / นั่งแท็กซี่จากสนามบินนาฮะประมาณ 15 นาที (ค่าโดยสารประมาณ 1,500–2,000 เยน)",
+    "zh": "從沖繩都市單軌電車「縣廳前站」步行約7分鐘 / 從松尾公車站步行0分鐘 / 從「那霸機場」搭乘計程車約15分鐘(車資約1,500～2,000日圓)"
+   }
+  },
+  {
+   "n": 3,
+   "slug": "harbor-view-hotel",
+   "area": "naha",
+   "kind": "hotel",
+   "images": [
+    "v290-1.webp",
+    "v290-2.webp",
+    "v290-3.webp",
+    "v290-4.webp",
+    "v290-5.webp",
+    "v290-6.webp"
+   ],
+   "name": {
+    "ja": "沖縄ハーバービューホテル",
+    "en": "Okinawa Harbor View Hotel",
+    "id": "Okinawa Harbor View Hotel",
+    "th": "โอกินาว่า ฮาร์เบอร์ วิว โฮเทล (Okinawa Harbor View Hotel)",
+    "zh": "沖繩Harbor View飯店"
+   },
+   "desc": {
+    "ja": "理想のウェディングをあらゆるシーンでサポートします。 沖縄ハーバービューホテルは歴史と経験をもって、 皆様が「笑顔」で素敵な時間をすごせるよう、心を込めてお手伝いいたします。",
+    "en": "We support your ideal wedding in every moment. With our history and experience, Okinawa Harbor View Hotel will wholeheartedly help you and your guests spend wonderful time together, full of smiles.",
+    "id": "Kami mendukung pernikahan impian Anda di setiap momen. Dengan sejarah dan pengalaman yang dimiliki, Okinawa Harbor View Hotel dengan sepenuh hati membantu Anda dan para tamu menikmati waktu indah yang penuh senyuman.",
+    "th": "เราพร้อมสนับสนุนงานแต่งงานในฝันของคุณในทุกช่วงเวลา ด้วยประวัติศาสตร์และประสบการณ์ โอกินาว่า ฮาร์เบอร์ วิว โฮเทล ขอช่วยดูแลด้วยใจ เพื่อให้ทุกท่านได้ใช้เวลาอันแสนวิเศษพร้อมรอยยิ้ม",
+    "zh": "我們將在每個時刻，全力支持您實現理想中的婚禮。沖繩Harbor View飯店憑藉悠久的歷史與豐富的經驗，竭誠為您與賓客打造充滿笑容的美好時光。"
+   },
+   "style": "チャペル式 / 神前式 / 琉球結婚式 / 人前式",
+   "party": {
+    "ja": "着席10名～420 名迄",
+    "en": "Seated parties from 10 to 420 guests",
+    "id": "Pesta duduk untuk 10 hingga 420 tamu",
+    "th": "งานเลี้ยงแบบนั่งโต๊ะ ตั้งแต่ 10 ถึง 420 ท่าน",
+    "zh": "坐席宴會 10至420位"
+   },
+   "cuisine": {
+    "ja": "和洋中折衷卓盛料理・フランス料理・中国料理・和洋会席",
+    "en": "Japanese-Western-Chinese fusion table-style dishes / French cuisine / Chinese cuisine / Japanese-Western kaiseki",
+    "id": "Hidangan meja gaya perpaduan Jepang-Barat-Tiongkok / Masakan Prancis / Masakan Tiongkok / Kaiseki Jepang-Barat",
+    "th": "อาหารเสิร์ฟบนโต๊ะแบบผสมผสานญี่ปุ่น-ตะวันตก-จีน / อาหารฝรั่งเศส / อาหารจีน / ไคเซกิแบบญี่ปุ่น-ตะวันตก",
+    "zh": "和洋中折衷桌菜料理 / 法國料理 / 中國料理 / 和洋會席"
+   },
+   "address": "沖縄県那覇市泉崎2-46",
+   "access": {
+    "ja": "沖縄都市モノレールゆいレール「壷川駅」「旭橋駅」より徒歩１０分 / 「那覇バスターミナル構内（旭橋）」より徒歩１０分 / 「那覇空港」よりタクシー利用 所要約１０分 （料金約１，５００円前後）",
+    "en": "10-minute walk from Tsubogawa Station or Asahibashi Station on the Okinawa Urban Monorail (Yui Rail) / 10-minute walk from Naha Bus Terminal (Asahibashi) / Approx. 10 minutes by taxi from Naha Airport (fare approx. 1,500 yen)",
+    "id": "Berjalan kaki 10 menit dari Stasiun Tsubogawa atau Stasiun Asahibashi di Okinawa Urban Monorail (Yui Rail) / Berjalan kaki 10 menit dari Terminal Bus Naha (Asahibashi) / Sekitar 10 menit dengan taksi dari Bandara Naha (tarif sekitar 1.500 yen)",
+    "th": "เดินเท้า 10 นาทีจากสถานีสึโบกาวะหรือสถานีอาซาฮิบาชิ ของรถไฟโมโนเรลโอกินาว่า (ยูอิเรล) / เดินเท้า 10 นาทีจากสถานีขนส่งนาฮะ (อาซาฮิบาชิ) / นั่งแท็กซี่จากสนามบินนาฮะ ประมาณ 10 นาที (ค่าโดยสารประมาณ 1,500 เยน)",
+    "zh": "從沖繩都市單軌電車（Yui Rail）「壺川站」「旭橋站」步行10分鐘 / 從「那霸巴士總站（旭橋）」步行10分鐘 / 從「那霸機場」搭乘計程車約10分鐘（車資約1,500日圓左右）"
+   }
+  },
+  {
+   "n": 4,
+   "slug": "the-naha-terrace",
+   "area": "naha",
+   "kind": "hotel",
+   "images": [
+    "v2144-1.webp",
+    "v2144-2.webp",
+    "v2144-3.webp",
+    "v2144-4.webp",
+    "v2144-5.webp",
+    "v2144-6.webp"
+   ],
+   "name": {
+    "ja": "ザ・ナハテラス",
+    "en": "THE NAHA TERRACE",
+    "id": "THE NAHA TERRACE",
+    "th": "เดอะ นาฮะ เทอเรซ (THE NAHA TERRACE)",
+    "zh": "THE NAHA TERRACE（ザ・ナハテラス）"
+   },
+   "desc": {
+    "ja": "天井高4.5ｍ、オフホワイトとブラウンで彩られた上品で落ち着いた空間は、お二人の個性が輝くバンケットルームです。 県産食材を織り交ぜたコンチネンタル料理と本格的なお料理がご堪能いただけます。",
+    "en": "With a ceiling height of 4.5 m, this elegant, calming space in off-white and brown is a banquet room where your individuality shines. Enjoy continental cuisine featuring locally sourced prefectural ingredients, alongside authentic, full-fledged dishes.",
+    "id": "Dengan tinggi langit-langit 4,5 m, ruang yang anggun dan menenangkan dengan nuansa putih gading dan cokelat ini adalah ruang perjamuan tempat kepribadian Anda berdua bersinar. Nikmati hidangan kontinental dengan bahan-bahan lokal dari prefektur serta hidangan otentik yang istimewa.",
+    "th": "ห้องจัดเลี้ยงที่มีเพดานสูง 4.5 เมตร ตกแต่งด้วยโทนสีออฟไวท์และน้ำตาล เป็นพื้นที่สง่างามและให้ความรู้สึกสงบ ที่จะทำให้เอกลักษณ์ของคุณทั้งสองโดดเด่นเปล่งประกาย เพลิดเพลินกับอาหารคอนติเนนทัลที่ใช้วัตถุดิบจากจังหวัด พร้อมอาหารรสชาติต้นตำรับอย่างเต็มอิ่ม",
+    "zh": "挑高4.5公尺，以米白與咖啡色營造出典雅沉靜的空間，是能讓兩位的個性閃耀綻放的宴會廳。可品嚐融入縣產食材的歐陸料理，以及道地的精緻美饌。"
+   },
+   "style": "チャペル式 / 神前式 / 人前式",
+   "party": {
+    "ja": "ご結納：50名様まで可能 / レストランウエディング：70名様まで可能 / 披露宴：300名様まで可能",
+    "en": "Yuino (betrothal ceremony): up to 50 guests / Restaurant wedding: up to 70 guests / Reception: up to 300 guests",
+    "id": "Yuino (upacara pertunangan): hingga 50 tamu / Pernikahan di restoran: hingga 70 tamu / Resepsi: hingga 300 tamu",
+    "th": "พิธีหมั้น (ยุอิโนะ): รองรับได้สูงสุด 50 ท่าน / งานแต่งงานแบบร้านอาหาร: รองรับได้สูงสุด 70 ท่าน / งานเลี้ยงฉลองมงคลสมรส: รองรับได้สูงสุด 300 ท่าน",
+    "zh": "結納儀式：最多可容納50位 / 餐廳婚禮：最多可容納70位 / 婚宴：最多可容納300位"
+   },
+   "cuisine": {
+    "ja": "洋食正餐、和洋卓盛",
+    "en": "Western-style formal course meal, Japanese-Western table-style platters",
+    "id": "Hidangan course formal ala Barat, hidangan Jepang-Barat yang disajikan di meja",
+    "th": "อาหารชุดตะวันตกแบบเป็นทางการ, อาหารญี่ปุ่นและตะวันตกจัดเสิร์ฟบนโต๊ะ",
+    "zh": "西式正式套餐、和洋合璧桌菜"
+   },
+   "address": "沖縄県那覇市おもろまち2-14-1",
+   "access": {
+    "ja": "国道58号線北上 泊交差点を右折。4つ目の信号を左折し坂道を上がった突き当り",
+    "en": "Head north on National Route 58 and turn right at the Tomari intersection. Turn left at the 4th traffic light and go up the slope to the end of the road.",
+    "id": "Susuri Jalan Nasional Rute 58 ke arah utara, lalu belok kanan di persimpangan Tomari. Belok kiri di lampu lalu lintas ke-4, lalu naiki tanjakan hingga ujung jalan.",
+    "th": "ขับไปทางเหนือตามทางหลวงแผ่นดินหมายเลข 58 แล้วเลี้ยวขวาที่สี่แยกโทมาริ จากนั้นเลี้ยวซ้ายที่สัญญาณไฟจราจรที่ 4 แล้วขับขึ้นเนินไปจนสุดทาง",
+    "zh": "沿國道58號北上，在泊路口右轉。於第4個紅綠燈左轉，沿坡道上行直到盡頭。"
+   }
+  },
+  {
+   "n": 5,
+   "slug": "doubletree-shuri-castle",
+   "area": "naha",
+   "kind": "hotel",
+   "images": [
+    "v200-1.webp",
+    "v200-2.webp",
+    "v200-3.webp",
+    "v200-4.webp",
+    "v200-5.webp",
+    "v200-6.webp"
+   ],
+   "name": {
+    "ja": "ダブルツリーbyヒルトン那覇首里城",
+    "en": "DoubleTree by Hilton Naha Shuri Castle",
+    "id": "DoubleTree by Hilton Naha Shuri Castle",
+    "th": "ดับเบิลทรี baย ฮิลตัน นาฮะ ชูริ คาสเซิล (DoubleTree by Hilton Naha Shuri Castle)",
+    "zh": "那霸首里城希爾頓逸林酒店(DoubleTree by Hilton Naha Shuri Castle)"
+   },
+   "desc": {
+    "ja": "おふたりとご家族が夢に描く最良のウエディングをプロデュースし、 おかげさまでその経験と実績は、親子二世代やご友人のご披露宴など多くの「つながり」を生んでまいりました。 わたくしどもが大切にしているのは、人と人とのつながり。 これからも、一年後、十年後、二十年後もここがおふたりの特別な場所でありますように そして、おふたりの末永い幸せにつながりますように。",
+    "en": "We produce the finest wedding that you and your family dream of. Thanks to your support, our experience and track record have created many \"connections,\" from receptions shared by two generations of parents and children to celebrations with friends. What we cherish most is the connection between people. May this remain your special place one year, ten years, even twenty years from now, and may it lead to your lasting happiness.",
+    "id": "Kami mewujudkan pernikahan terbaik yang diimpikan oleh Anda berdua dan keluarga. Berkat dukungan Anda, pengalaman dan rekam jejak kami telah melahirkan banyak \"ikatan\", mulai dari resepsi dua generasi orang tua dan anak hingga pesta bersama sahabat. Yang paling kami hargai adalah ikatan antarmanusia. Semoga tempat ini tetap menjadi tempat istimewa bagi Anda berdua, satu tahun, sepuluh tahun, bahkan dua puluh tahun lagi, dan semoga menjadi bagian dari kebahagiaan Anda selamanya.",
+    "th": "เราสร้างสรรค์งานแต่งงานที่ดีที่สุดตามความฝันของคุณทั้งสองและครอบครัว ด้วยความไว้วางใจจากทุกท่าน ประสบการณ์และผลงานของเราได้สร้าง \"ความผูกพัน\" มากมาย ตั้งแต่งานเลี้ยงของพ่อแม่ลูกสองรุ่นไปจนถึงงานฉลองกับเพื่อนสนิท สิ่งที่เราให้ความสำคัญที่สุดคือความผูกพันระหว่างผู้คน ขอให้ที่นี่เป็นสถานที่พิเศษของคุณทั้งสองตลอดไป ไม่ว่าจะหนึ่งปี สิบปี หรือยี่สิบปีข้างหน้า และขอให้เป็นส่วนหนึ่งของความสุขที่ยืนยาวของคุณทั้งสอง",
+    "zh": "我們為兩位與家人打造夢想中最理想的婚禮。承蒙大家支持,我們的經驗與實績,締造了許多「緣分」,從親子兩代的喜宴到好友們的婚宴皆然。我們最重視的,是人與人之間的連結。願這裡無論一年後、十年後、二十年後,都依然是兩位的特別之地,也願它能連結兩位長久的幸福。"
+   },
+   "style": "チャペル式 / 神前式 / 人前式",
+   "party": {
+    "ja": "着席100名～420名迄",
+    "en": "Seated banquets for 100 to 420 guests",
+    "id": "Jamuan duduk untuk 100 hingga 420 tamu",
+    "th": "จัดเลี้ยงแบบนั่งโต๊ะ 100 ถึง 420 ท่าน",
+    "zh": "可容納100至420位賓客的席位式宴會"
+   },
+   "cuisine": {
+    "ja": "和洋中卓料理・洋食コース料理",
+    "en": "Japanese, Western and Chinese table-style dishes / Western-style course meals",
+    "id": "Hidangan meja ala Jepang, Barat, dan Tiongkok / Menu course ala Barat",
+    "th": "อาหารเสิร์ฟโต๊ะแบบญี่ปุ่น ตะวันตก และจีน / อาหารตะวันตกแบบคอร์ส",
+    "zh": "和洋中桌菜料理 / 西式套餐料理"
+   },
+   "address": "沖縄県那覇市首里山川町1-132-1",
+   "access": {
+    "ja": "ゆいレール「儀保駅」より徒歩約１５分 / 沖縄自動車道那覇Ｉ．Ｃより車で約１０分 / 那覇空港から車で約３０分 タクシー料金約2,100円前後",
+    "en": "About 15 minutes on foot from Gibo Station on the Yui Rail / About 10 minutes by car from Naha I.C. on the Okinawa Expressway / About 30 minutes by car from Naha Airport, taxi fare around 2,100 yen",
+    "id": "Sekitar 15 menit berjalan kaki dari Stasiun Gibo (Yui Rail) / Sekitar 10 menit dengan mobil dari Naha I.C. Jalan Tol Okinawa / Sekitar 30 menit dengan mobil dari Bandara Naha, tarif taksi sekitar 2.100 yen",
+    "th": "เดินเท้าประมาณ 15 นาทีจากสถานีกิโบะ (Gibo) ของรถไฟ Yui Rail / ขับรถประมาณ 10 นาทีจากทางออกนาฮะ (Naha I.C.) ของทางด่วนโอกินาวา / ขับรถประมาณ 30 นาทีจากสนามบินนาฮะ ค่าแท็กซี่ประมาณ 2,100 เยน",
+    "zh": "從Yui Rail單軌電車「儀保站」步行約15分鐘 / 從沖繩自動車道那霸I.C.開車約10分鐘 / 從那霸機場開車約30分鐘,計程車費約2,100日圓左右"
+   }
+  },
+  {
+   "n": 6,
+   "slug": "loisir-hotel-naha",
+   "area": "naha",
+   "kind": "hotel",
+   "images": [
+    "v196-1.webp",
+    "v196-2.webp",
+    "v196-3.webp",
+    "v196-4.webp",
+    "v196-5.webp",
+    "v196-6.webp"
+   ],
+   "name": {
+    "ja": "ロワジールホテル那覇",
+    "en": "Loisir Hotel Naha",
+    "id": "Loisir Hotel Naha",
+    "th": "โลซีร์ โฮเทล นาฮะ (Loisir Hotel Naha)",
+    "zh": "Loisir Hotel Naha 那霸洛瓦吉爾飯店"
+   },
+   "desc": {
+    "ja": "海を臨むホテルの会場でゲストと共に楽しむホテルウエディング パイプオルガンの音色と共に始まる厳粛な挙式。リュクスを纏う瞬間から始まる記憶に残る一日。 二人の大切なゲストを心を込めておもてなしする上質なホテルウエディング",
+    "en": "A hotel wedding to enjoy with your guests in a venue overlooking the sea. A solemn ceremony begins with the sound of the pipe organ. A memorable day that begins the moment you are wrapped in luxury. A refined hotel wedding where you host your two families' and friends' most important guests with all your heart.",
+    "id": "Pernikahan di hotel yang dapat dinikmati bersama para tamu, di tempat resepsi dengan pemandangan laut. Upacara sakral dimulai dengan alunan merdu organ pipa. Hari tak terlupakan yang dimulai sejak saat Anda diselimuti kemewahan. Pernikahan hotel berkelas, tempat Anda menjamu tamu-tamu terpenting kalian berdua dengan sepenuh hati.",
+    "th": "งานแต่งงานในโรงแรมที่คุณจะได้สนุกกับแขกผู้มีเกียรติ ท่ามกลางทัศนียภาพของทะเล พิธีสุดขรึมขลังเริ่มต้นขึ้นพร้อมเสียงออร์แกนท่อ วันที่น่าจดจำซึ่งเริ่มตั้งแต่วินาทีที่คุณได้สวมใส่ความหรูหรา งานแต่งงานในโรงแรมระดับพรีเมียม ที่คุณจะต้อนรับแขกคนสำคัญของคุณทั้งสองด้วยหัวใจ",
+    "zh": "在可眺望大海的飯店會場，與賓客共享的飯店婚禮。莊嚴的儀式在管風琴的樂音中展開。從披上奢華的那一刻起，開啟難忘的一天。以真心款待兩人重要賓客的優質飯店婚禮。"
+   },
+   "style": "チャペル式 / 神前式 / 人前式",
+   "party": {
+    "ja": "着席2名～420名迄",
+    "en": "Seated: 2 to 420 guests",
+    "id": "Duduk: 2 hingga 420 tamu",
+    "th": "แบบนั่งโต๊ะ: ตั้งแต่ 2 ถึง 420 ท่าน",
+    "zh": "入座式：2名～420名"
+   },
+   "cuisine": {
+    "ja": "和洋中コース、洋食正餐、和食会席、洋中コース",
+    "en": "Japanese-Western-Chinese course, Western formal dinner, Japanese kaiseki, Western-Chinese course",
+    "id": "Menu course Jepang-Barat-Tiongkok, jamuan formal Barat, kaiseki Jepang, menu course Barat-Tiongkok",
+    "th": "คอร์สอาหารญี่ปุ่น-ตะวันตก-จีน, อาหารตะวันตกแบบเต็มรูปแบบ, ไคเซกิญี่ปุ่น, คอร์สอาหารตะวันตก-จีน",
+    "zh": "和洋中套餐、西式正餐、日式會席、西式中式套餐"
+   },
+   "address": "沖縄県那覇市西3-2-1",
+   "access": {
+    "ja": "ゆいレール「旭橋駅」より徒歩約１1分 / バス「県庁前駅」「琉銀本店前」「三重城」バス停降車 / 那覇空港から車でうみそらトンネル経由約７分",
+    "en": "About 11 min. walk from Asahibashi Station (Yui Rail) / Get off at the Kenchomae Station, Ryugin Honten-mae or Miegusuku bus stop / About 7 min. by car from Naha Airport via the Umisora Tunnel",
+    "id": "Sekitar 11 menit berjalan kaki dari Stasiun Asahibashi (Yui Rail) / Turun di halte bus Kenchomae Station, Ryugin Honten-mae, atau Miegusuku / Sekitar 7 menit dengan mobil dari Bandara Naha melalui Terowongan Umisora",
+    "th": "เดินจากสถานี Asahibashi (Yui Rail) ประมาณ 11 นาที / ลงที่ป้ายรถบัส Kenchomae Station, Ryugin Honten-mae หรือ Miegusuku / นั่งรถจากท่าอากาศยานนาฮะผ่านอุโมงค์ Umisora ประมาณ 7 นาที",
+    "zh": "從單軌電車（Yui Rail）「旭橋站」步行約11分鐘 / 於巴士「縣廳前站」「琉銀本店前」「三重城」站下車 / 從那霸機場開車經海空隧道約7分鐘"
+   }
+  },
+  {
+   "n": 7,
+   "slug": "hyatt-regency-naha",
+   "area": "naha",
+   "kind": "hotel",
+   "images": [
+    "v6228-1.webp",
+    "v6228-2.webp",
+    "v6228-3.webp",
+    "v6228-4.webp",
+    "v6228-5.webp",
+    "v6228-6.webp"
+   ],
+   "name": {
+    "ja": "ハイアットリージェンシー那覇沖縄",
+    "en": "Hyatt Regency Naha, Okinawa",
+    "id": "Hyatt Regency Naha, Okinawa",
+    "th": "ไฮแอท รีเจนซี่ นาฮะ โอกินาว่า",
+    "zh": "那霸沖繩凱悅酒店"
+   },
+   "desc": {
+    "ja": "レストランウエディングだからこそ叶うおもてなしと 旬の素材をいかしたお料理の数々に魅了され、深く記憶に残る一日の始まり…♡",
+    "en": "Only a restaurant wedding can offer such heartfelt hospitality. Be enchanted by a wide array of dishes made with seasonal ingredients, and begin a day you'll remember forever…♡",
+    "id": "Keramahtamahan istimewa yang hanya bisa diwujudkan lewat pernikahan di restoran. Terpesona oleh beragam hidangan dari bahan-bahan musiman, awal dari hari yang akan dikenang selamanya…♡",
+    "th": "การต้อนรับอันอบอุ่นที่เกิดขึ้นได้เฉพาะงานแต่งงานในร้านอาหาร หลงเสน่ห์อาหารหลากหลายจากวัตถุดิบตามฤดูกาล เริ่มต้นวันที่ประทับใจและอยู่ในความทรงจำไปตลอดกาล…♡",
+    "zh": "正因為是餐廳婚禮,才能帶來這份貼心款待。讓應季食材烹製的多樣料理令人心醉,開啟一個深深烙印在記憶中的美好一天…♡"
+   },
+   "style": "人前式",
+   "party": {
+    "ja": "150名様",
+    "en": "Up to 150 guests",
+    "id": "150 tamu",
+    "th": "150 ท่าน",
+    "zh": "150位"
+   },
+   "cuisine": {
+    "ja": "ブッフェスタイル",
+    "en": "Buffet style",
+    "id": "Gaya prasmanan",
+    "th": "แบบบุฟเฟต์",
+    "zh": "自助餐形式"
+   },
+   "address": "那覇市真牧志3-6-20",
+   "access": {
+    "ja": "ゆいレール牧志駅より徒歩7分",
+    "en": "7-minute walk from Makishi Station on the Yui Rail (Okinawa Monorail)",
+    "id": "7 menit berjalan kaki dari Stasiun Makishi (Yui Rail)",
+    "th": "เดินจากสถานีมากิชิ (ยุยเรล) 7 นาที",
+    "zh": "從單軌電車(Yui Rail)牧志站步行7分鐘"
+   }
+  },
+  {
+   "n": 8,
+   "slug": "marier-oakpine-naha",
+   "area": "naha",
+   "kind": "hotel",
+   "images": [
+    "v174-1.webp",
+    "v174-2.webp",
+    "v174-3.webp",
+    "v174-4.webp",
+    "v174-5.webp",
+    "v174-6.webp"
+   ],
+   "name": {
+    "ja": "マリエールオークパイン那覇",
+    "en": "Mariere Oak Pine Naha",
+    "id": "Mariere Oak Pine Naha",
+    "th": "มาริเอล โอ๊คไพน์ นาฮะ (Mariere Oak Pine Naha)",
+    "zh": "那霸 Mariere Oak Pine 婚宴會館"
+   },
+   "desc": {
+    "ja": "3タイプの披露宴会場を備えるマリエールオークパインは 二人の理想のウエディングをかなえます。",
+    "en": "Featuring three types of reception halls, Mariere Oak Pine makes your ideal wedding come true.",
+    "id": "Dengan tiga jenis ruang resepsi, Mariere Oak Pine mewujudkan pernikahan impian Anda berdua.",
+    "th": "มาริเอล โอ๊คไพน์ มีห้องจัดงานเลี้ยงฉลองมงคลสมรสถึง 3 รูปแบบ พร้อมเนรมิตงานแต่งงานในฝันของคุณทั้งคู่ให้เป็นจริง",
+    "zh": "Mariere Oak Pine 擁有3種類型的宴會廳，為兩位實現理想中的婚禮。"
+   },
+   "style": "チャペル式 / 神前式 / 人前式",
+   "party": {
+    "ja": "450名様",
+    "en": "Up to 450 guests",
+    "id": "450 tamu",
+    "th": "450 ท่าน",
+    "zh": "450位"
+   },
+   "cuisine": {
+    "ja": "和中折衷・中華・会席",
+    "en": "Japanese-Chinese fusion / Chinese / Kaiseki",
+    "id": "Fusion Jepang-Tiongkok / Masakan Tiongkok / Kaiseki",
+    "th": "อาหารผสมผสานญี่ปุ่น-จีน / อาหารจีน / ไคเซกิ",
+    "zh": "和中折衷料理 / 中華料理 / 會席料理"
+   },
+   "address": "沖縄県那覇市古島1-15-11",
+   "access": {
+    "ja": "ゆいレールご利用：古島駅下車 徒歩約1分 / 那覇空港より車で約15分 県道330号線沿い",
+    "en": "By Yui Rail: approx. 1-minute walk from Furujima Station / Approx. 15 minutes by car from Naha Airport, along Prefectural Route 330",
+    "id": "Naik Yui Rail: turun di Stasiun Furujima, berjalan kaki sekitar 1 menit / Sekitar 15 menit dengan mobil dari Bandara Naha, di tepi Jalan Prefektur Nomor 330",
+    "th": "โดยรถไฟยุยเรล: ลงที่สถานีฟุรุจิมะ เดินประมาณ 1 นาที / จากสนามบินนาฮะ นั่งรถประมาณ 15 นาที ตั้งอยู่ริมทางหลวงจังหวัดหมายเลข 330",
+    "zh": "搭乘單軌電車（Yui Rail）：於古島站下車，步行約1分鐘 / 從那霸機場開車約15分鐘，位於縣道330號線沿線"
+   }
+  },
+  {
+   "n": 9,
+   "slug": "laguna-garden-hotel",
+   "area": "central",
+   "kind": "hotel",
+   "images": [
+    "v144-1.webp",
+    "v144-2.webp",
+    "v144-3.webp",
+    "v144-4.webp",
+    "v144-5.webp",
+    "v144-6.webp"
+   ],
+   "name": {
+    "ja": "ラグナガーデンホテル",
+    "en": "Laguna Garden Hotel",
+    "id": "Laguna Garden Hotel",
+    "th": "ลากูน่า การ์เด้น โฮเทล (Laguna Garden Hotel)",
+    "zh": "Laguna Garden Hotel 拉古娜花園酒店"
+   },
+   "desc": {
+    "ja": "潮風と太陽の街、宜野湾ベイサイドリゾートのもと、お二人の描いた夢を叶えられるよう 真心こめたホスピタリティと多彩な演出設備でお手伝いさせて頂きます。",
+    "en": "In Ginowan, a bayside resort town of sea breezes and sunshine, we will help make your dream come true with heartfelt hospitality and a wide range of staging facilities.",
+    "id": "Di Ginowan, kota resor tepi teluk yang diselimuti angin laut dan sinar matahari, kami akan membantu mewujudkan impian Anda berdua dengan keramahtamahan yang tulus dan beragam fasilitas penataan acara.",
+    "th": "ณ เมืองกิโนวัน เมืองรีสอร์ตริมอ่าวที่อบอวลด้วยสายลมทะเลและแสงแดด เราพร้อมช่วยให้ความฝันของคุณทั้งสองเป็นจริง ด้วยการต้อนรับอย่างจริงใจและอุปกรณ์การจัดฉากที่หลากหลาย",
+    "zh": "在洋溢著海風與陽光的宜野灣海灣度假小城,我們以真誠的款待與多樣化的演出設備,幫助兩位實現心中描繪的夢想。"
+   },
+   "style": "チャペル式 / 神前式 / 人前式",
+   "party": {
+    "ja": "着席20～600名迄",
+    "en": "Seated: 20 to 600 guests",
+    "id": "Duduk: 20 hingga 600 tamu",
+    "th": "แบบนั่งโต๊ะ 20 ถึง 600 ท่าน",
+    "zh": "座席 20～600 位"
+   },
+   "cuisine": {
+    "ja": "洋食正餐・和食会席・和洋中折衷（円卓）",
+    "en": "Western-style full-course dinner / Japanese kaiseki / Japanese-Western-Chinese fusion (round tables)",
+    "id": "Hidangan lengkap ala Barat / Kaiseki Jepang / Perpaduan Jepang-Barat-Tiongkok (meja bundar)",
+    "th": "อาหารตะวันตกชุดเต็มรูปแบบ / ไคเซกิญี่ปุ่น / อาหารผสมผสานญี่ปุ่น-ตะวันตก-จีน (โต๊ะกลม)",
+    "zh": "西式正餐 / 日式會席 / 日西中折衷料理(圓桌)"
+   },
+   "address": "宜野湾市真志喜4-1-1",
+   "access": {
+    "ja": "那覇空港から約14km、所要時間は約30分（国道58号線を直進、牧港交差点を左折） / 那覇空港から路線バス： / 琉球バス 99番→「宜野湾球場前」下車、徒歩で約5分 / 沖縄バス120番→「真志喜」下車、徒歩で約15分 / 那覇空港からリムジンバス「花号」→「ラグナガーデンホテル前」下車、所要時間約50～55分 / 那覇空港からエアポートライナー（Aエリア）→「ラグナガーデンホテル前」下車、所要時間約45～50分",
+    "en": "About 14 km from Naha Airport, approx. 30 minutes (go straight on Route 58, turn left at Makiminato intersection) / By route bus from Naha Airport: / Ryukyu Bus No. 99 → get off at \"Ginowan Kyujo-mae\", about 5 minutes on foot / Okinawa Bus No. 120 → get off at \"Mashiki\", about 15 minutes on foot / Limousine Bus \"Hana-go\" from Naha Airport → get off at \"Laguna Garden Hotel-mae\", approx. 50–55 minutes / Airport Liner (Area A) from Naha Airport → get off at \"Laguna Garden Hotel-mae\", approx. 45–50 minutes",
+    "id": "Sekitar 14 km dari Bandara Naha, sekitar 30 menit (lurus di Jalan Raya Nasional 58, belok kiri di persimpangan Makiminato) / Dengan bus rute dari Bandara Naha: / Ryukyu Bus No. 99 → turun di \"Ginowan Kyujo-mae\", berjalan kaki sekitar 5 menit / Okinawa Bus No. 120 → turun di \"Mashiki\", berjalan kaki sekitar 15 menit / Bus Limusin \"Hana-go\" dari Bandara Naha → turun di \"Laguna Garden Hotel-mae\", sekitar 50–55 menit / Airport Liner (Area A) dari Bandara Naha → turun di \"Laguna Garden Hotel-mae\", sekitar 45–50 menit",
+    "th": "ห่างจากท่าอากาศยานนาฮะประมาณ 14 กม. ใช้เวลาประมาณ 30 นาที (ตรงไปตามทางหลวงหมายเลข 58 แล้วเลี้ยวซ้ายที่สี่แยกมากิมินาโตะ) / โดยรถประจำทางจากท่าอากาศยานนาฮะ: / รถบัสริวคิว สาย 99 → ลงที่ \"Ginowan Kyujo-mae\" เดินเท้าประมาณ 5 นาที / รถบัสโอกินาว่า สาย 120 → ลงที่ \"Mashiki\" เดินเท้าประมาณ 15 นาที / รถลีมูซีนบัส \"Hana-go\" จากท่าอากาศยานนาฮะ → ลงที่ \"Laguna Garden Hotel-mae\" ใช้เวลาประมาณ 50–55 นาที / Airport Liner (พื้นที่ A) จากท่าอากาศยานนาฮะ → ลงที่ \"Laguna Garden Hotel-mae\" ใช้เวลาประมาณ 45–50 นาที",
+    "zh": "距離那霸機場約14公里,車程約30分鐘(沿國道58號線直行,於牧港路口左轉) / 從那霸機場搭乘路線巴士: / 琉球巴士99號 →「宜野灣球場前」下車,步行約5分鐘 / 沖繩巴士120號 →「真志喜」下車,步行約15分鐘 / 從那霸機場搭乘利木津巴士「花號」→「Laguna Garden Hotel前」下車,車程約50～55分鐘 / 從那霸機場搭乘機場專線巴士 Airport Liner(A區)→「Laguna Garden Hotel前」下車,車程約45～50分鐘"
+   }
+  },
+  {
+   "n": 10,
+   "slug": "erisurina-nishihara",
+   "area": "central",
+   "kind": "guesthouse",
+   "images": [
+    "v164-1.webp",
+    "v164-2.webp",
+    "v164-3.webp",
+    "v164-4.webp",
+    "v164-5.webp",
+    "v164-6.webp"
+   ],
+   "name": {
+    "ja": "エリスリーナ西原ヒルズガーデン",
+    "en": "Erythrina Nishihara Hills Garden",
+    "id": "Erythrina Nishihara Hills Garden",
+    "th": "เอริทริน่า นิชิฮาระ ฮิลล์ส การ์เดน (Erythrina Nishihara Hills Garden)",
+    "zh": "Erythrina西原Hills Garden(エリスリーナ西原ヒルズガーデン)"
+   },
+   "desc": {
+    "ja": "光が降りそそぐ、緑の丘の上で叶える おもてなし重視のゲストハウスウェディング",
+    "en": "Celebrate on a green hilltop bathed in sunlight, with a guesthouse wedding that puts heartfelt hospitality first",
+    "id": "Wujudkan pernikahan guesthouse yang mengutamakan keramahtamahan di atas bukit hijau yang diselimuti cahaya matahari",
+    "th": "จัดงานแต่งงานแบบเกสต์เฮาส์ที่ใส่ใจการต้อนรับ บนเนินเขาสีเขียวที่แสงอาทิตย์สาดส่อง",
+    "zh": "在灑滿陽光的綠色山丘上,舉辦處處以款待為先的賓館婚禮"
+   },
+   "style": "チャペル式 / 神前式 / 人前式",
+   "party": {
+    "ja": "着席20名～450名迄",
+    "en": "Seated parties of 20 to 450 guests",
+    "id": "Jamuan duduk untuk 20 hingga 450 tamu",
+    "th": "จัดเลี้ยงแบบนั่งโต๊ะ 20 ถึง 450 ท่าน",
+    "zh": "可容納20至450位賓客入座"
+   },
+   "cuisine": {
+    "ja": "和洋折衷円卓料理・洋食コース・和食会席",
+    "en": "Japanese-Western fusion round-table cuisine / Western-style course / Japanese kaiseki",
+    "id": "Hidangan meja bundar perpaduan Jepang-Barat / Menu course ala Barat / Kaiseki Jepang",
+    "th": "อาหารโต๊ะกลมผสมผสานญี่ปุ่นและตะวันตก / คอร์สอาหารตะวันตก / ไคเซกิญี่ปุ่น",
+    "zh": "和洋折衷圓桌料理 / 西式套餐 / 日式會席料理"
+   },
+   "address": "沖縄県西原町字津花波431番地",
+   "access": {
+    "ja": "那覇空港より約４５分 / 沖縄県庁より約20分 / 沖縄市より約30分 / 沖縄自動車道 西原I･Cより約10分",
+    "en": "About 45 minutes from Naha Airport / About 20 minutes from Okinawa Prefectural Office / About 30 minutes from Okinawa City / About 10 minutes from Nishihara I.C. on the Okinawa Expressway",
+    "id": "Sekitar 45 menit dari Bandara Naha / Sekitar 20 menit dari Kantor Pemerintah Prefektur Okinawa / Sekitar 30 menit dari Kota Okinawa / Sekitar 10 menit dari Gerbang Tol Nishihara I.C. di Jalan Tol Okinawa",
+    "th": "ประมาณ 45 นาทีจากสนามบินนาฮะ / ประมาณ 20 นาทีจากศาลาว่าการจังหวัดโอกินาว่า / ประมาณ 30 นาทีจากเมืองโอกินาว่า / ประมาณ 10 นาทีจากทางออกนิชิฮาระ I.C. ของทางด่วนโอกินาว่า",
+    "zh": "距離那霸機場約45分鐘 / 距離沖繩縣廳約20分鐘 / 距離沖繩市約30分鐘 / 距離沖繩自動車道西原I.C.約10分鐘"
+   }
+  },
+  {
+   "n": 11,
+   "slug": "bankoku-shinryokan",
+   "area": "north",
+   "kind": "hotel",
+   "images": [
+    "v905-1.webp",
+    "v905-2.webp",
+    "v905-3.webp",
+    "v905-4.webp",
+    "v905-5.webp",
+    "v905-6.webp"
+   ],
+   "name": {
+    "ja": "万国津梁館",
+    "en": "Bankoku Shinryokan",
+    "id": "Bankoku Shinryokan",
+    "th": "บันโกกุ ชินเรียวกัง (Bankoku Shinryokan)",
+    "zh": "萬國津梁館"
+   },
+   "desc": {
+    "ja": "異なる人生を歩んできた二人が出会い、愛を育み、パートナーとして人生を一緒に歩いていこうと永遠の誓いを交わす。 二人の新たな出発点にふさわしい歴史に名を残した極上の舞台、万国津梁館。 ここでしかできない、最上のリゾートウエディングをあなたに…",
+    "en": "Two people who have walked different paths in life meet, nurture their love, and exchange eternal vows to walk through life together as partners. Bankoku Shinryokan is a superb stage that has left its name in history, a fitting starting point for your new journey. Enjoy the finest resort wedding, one that can only be held here...",
+    "id": "Dua insan yang menjalani kehidupan berbeda bertemu, menumbuhkan cinta, lalu mengucapkan janji abadi untuk melangkah bersama sebagai pasangan hidup. Bankoku Shinryokan adalah panggung istimewa yang namanya tercatat dalam sejarah, titik awal yang sempurna untuk perjalanan baru Anda berdua. Rasakan pernikahan resor terbaik yang hanya bisa diwujudkan di sini...",
+    "th": "สองคนที่เดินผ่านเส้นทางชีวิตที่แตกต่างกัน ได้มาพบกัน บ่มเพาะความรัก และให้คำสัญญาชั่วนิรันดร์ว่าจะก้าวเดินไปด้วยกันในฐานะคู่ชีวิต บันโกกุ ชินเรียวกัง คือเวทีอันยอดเยี่ยมที่ชื่อได้จารึกไว้ในประวัติศาสตร์ เหมาะเป็นจุดเริ่มต้นใหม่ของคุณทั้งสอง ขอมอบงานแต่งงานแบบรีสอร์ทที่ดีที่สุด ซึ่งจัดได้เฉพาะที่นี่เท่านั้น...",
+    "zh": "兩個走過不同人生的人相遇、培養愛情,並許下永恆的誓言,決定以伴侶的身分攜手共度一生。萬國津梁館是一方名留歷史的絕佳舞台,正適合作為兩人全新的起點。為您獻上只有在這裡才能擁有的頂級度假婚禮…"
+   },
+   "style": "チャペル式 / 人前式",
+   "party": {
+    "ja": "カフェテラス： ～50名 、 サミットホール： 50～200名",
+    "en": "Café Terrace: up to 50 guests / Summit Hall: 50–200 guests",
+    "id": "Café Terrace: hingga 50 orang / Summit Hall: 50–200 orang",
+    "th": "คาเฟ่เทอเรซ: ไม่เกิน 50 ท่าน / ซัมมิตฮอลล์: 50–200 ท่าน",
+    "zh": "咖啡露台:最多50人 / 高峰會大廳:50~200人"
+   },
+   "cuisine": {
+    "ja": "フレンチコース、イタリアンコース",
+    "en": "French course / Italian course",
+    "id": "Menu course Prancis / Menu course Italia",
+    "th": "อาหารคอร์สฝรั่งเศส / อาหารคอร์สอิตาเลียน",
+    "zh": "法式套餐 / 義式套餐"
+   },
+   "address": "沖縄県名護市喜瀬1792",
+   "access": {
+    "ja": "那覇空港から車で約100分（高速道路利用）／約120分（一般道）。タクシー料金は約12,000円前後。",
+    "en": "From Naha Airport, approx. 100 minutes by car (via expressway) / approx. 120 minutes (via local roads). Taxi fare is around ¥12,000.",
+    "id": "Dari Bandara Naha sekitar 100 menit dengan mobil (melalui jalan tol) / sekitar 120 menit (melalui jalan biasa). Tarif taksi sekitar 12.000 yen.",
+    "th": "จากสนามบินนาฮะ ขับรถประมาณ 100 นาที (ใช้ทางด่วน) / ประมาณ 120 นาที (ถนนทั่วไป) ค่าแท็กซี่ประมาณ 12,000 เยน",
+    "zh": "從那霸機場開車約100分鐘(走高速公路) / 約120分鐘(走一般道路)。計程車費約12,000日圓上下。"
+   }
+  },
+  {
+   "n": 12,
+   "slug": "pacific-hotel-okinawa",
+   "area": "naha",
+   "kind": "hotel",
+   "images": [
+    "v1982-1.webp",
+    "v1982-2.webp",
+    "v1982-3.webp",
+    "v1982-4.webp",
+    "v1982-5.webp"
+   ],
+   "name": {
+    "ja": "パシフィックホテル沖縄",
+    "en": "Pacific Hotel Okinawa",
+    "id": "Pacific Hotel Okinawa",
+    "th": "แปซิฟิก โฮเทล โอกินาว่า (Pacific Hotel Okinawa)",
+    "zh": "Pacific Hotel Okinawa"
+   },
+   "desc": {
+    "ja": "大切なゲストを最高のおもてなしで。お料理はフレンチ・琉球フレンチ。 和洋折衷卓料理・中華卓料理からお選び頂けます。",
+    "en": "Welcome your treasured guests with the finest hospitality. Choose from French cuisine, Ryukyu French cuisine, Japanese-Western fusion table-style dishes, or Chinese table-style dishes.",
+    "id": "Sambut para tamu terkasih dengan keramahan terbaik. Anda dapat memilih hidangan Prancis, Prancis Ryukyu, hidangan meja perpaduan Jepang-Barat, atau hidangan meja Tiongkok.",
+    "th": "ต้อนรับแขกผู้มีเกียรติด้วยการบริการที่ดีที่สุด เลือกได้ทั้งอาหารฝรั่งเศส อาหารฝรั่งเศสแบบริวกิว อาหารชุดแบบโต๊ะผสมผสานญี่ปุ่นและตะวันตก หรืออาหารชุดแบบโต๊ะจีน",
+    "zh": "以最頂級的款待，迎接您重要的賓客。餐點可選擇法式料理、琉球法式料理、和洋折衷桌菜或中式桌菜。"
+   },
+   "style": "チャペル式 / 神前式 / 琉球結婚式",
+   "party": {
+    "ja": null,
+    "en": null,
+    "id": null,
+    "th": null,
+    "zh": null
+   },
+   "cuisine": {
+    "ja": null,
+    "en": null,
+    "id": null,
+    "th": null,
+    "zh": null
+   },
+   "address": "沖縄県那覇市西3丁目6番1号",
+   "access": {
+    "ja": "車 タクシー：那覇空港から約10分（うみそらトンネル利用で約8分）。ゆいレール：那覇空港駅から旭橋駅まで11分、徒歩約15分。バス：県庁北口バス停から三重城バス停まで約15分、徒歩約1分。",
+    "en": "By car/taxi: about 10 minutes from Naha Airport (about 8 minutes via the Umisora Tunnel). / Yui Rail: 11 minutes from Naha Airport Station to Asahibashi Station, then about 15 minutes on foot. / Bus: about 15 minutes from Kenchokita-guchi bus stop to Miegusuku bus stop, then about 1 minute on foot.",
+    "id": "Mobil/taksi: sekitar 10 menit dari Bandara Naha (sekitar 8 menit melalui Terowongan Umisora). / Yui Rail: 11 menit dari Stasiun Bandara Naha ke Stasiun Asahibashi, lalu berjalan kaki sekitar 15 menit. / Bus: sekitar 15 menit dari halte bus Kenchokita-guchi ke halte bus Miegusuku, lalu berjalan kaki sekitar 1 menit.",
+    "th": "รถยนต์/แท็กซี่: จากสนามบินนาฮะประมาณ 10 นาที (ประมาณ 8 นาทีหากใช้อุโมงค์อุมิโซระ) / ยุยเรล: จากสถานีสนามบินนาฮะถึงสถานีอาซาฮิบาชิ 11 นาที จากนั้นเดินประมาณ 15 นาที / รถบัส: จากป้ายรถบัสเคนโจคิตะกุจิถึงป้ายรถบัสมิเอะกุสุกุประมาณ 15 นาที จากนั้นเดินประมาณ 1 นาที",
+    "zh": "開車／計程車：從那霸機場約10分鐘（利用海空隧道約8分鐘）。/ Yui Rail單軌電車：從那霸機場站到旭橋站11分鐘，再步行約15分鐘。/ 公車：從縣廳北口公車站到三重城公車站約15分鐘，再步行約1分鐘。"
+   }
+  },
+  {
+   "n": 13,
+   "slug": "the-busena-terrace",
+   "area": "north",
+   "kind": "hotel",
+   "images": [
+    "v833-1.webp",
+    "v833-2.webp",
+    "v833-3.webp"
+   ],
+   "name": {
+    "ja": "ザ・ブセナテラス",
+    "en": "The Busena Terrace",
+    "id": "The Busena Terrace",
+    "th": "เดอะ บูเซนะ เทอร์เรซ (The Busena Terrace)",
+    "zh": "The Busena Terrace"
+   },
+   "desc": {
+    "ja": "ライスシャワーのように降り注ぐ光の中、ヴァージンロードの向こうに広がる南国の青い空と海に永遠の愛を誓い合うザ・ブセナテラスのセレモニー…。厳かな中にも華やかに、そしてリゾート感あふれるスタイリッシュな演出が煌めきに満ちた、ラグジュアリーな楽園ウエディングをお約束。",
+    "en": "Showered in light like rice shower petals, you'll exchange vows of eternal love at The Busena Terrace ceremony, with the tropical blue sky and sea stretching beyond the aisle. Solemn yet glamorous, with stylish, resort-inspired touches that sparkle throughout, we promise a luxurious paradise wedding.",
+    "id": "Di bawah cahaya yang tercurah bagaikan hujan beras, ikrar cinta abadi diucapkan di upacara The Busena Terrace, dengan langit dan laut biru tropis yang terbentang di ujung altar. Khidmat namun megah, dengan sentuhan bergaya yang sarat suasana resor dan berkilau di setiap momen, kami menjanjikan pernikahan surgawi yang mewah.",
+    "th": "ท่ามกลางแสงที่สาดส่องราวกับสายฝนข้าวสาร คุณจะได้ให้คำสัตย์สาบานรักนิรันดร์ในพิธีที่ The Busena Terrace โดยมีท้องฟ้าและทะเลสีฟ้าแห่งเมืองร้อนทอดยาวอยู่ปลายเส้นทางเวอร์จิ้นโร้ด ขรึมขลังแต่งดงามหรูหรา เติมเต็มด้วยการจัดงานสุดสไตลิชที่เปี่ยมบรรยากาศรีสอร์ตและเปล่งประกายทุกช่วงเวลา เรามอบสัญญาถึงงานแต่งงานสวรรค์สุดหรู",
+    "zh": "在如同花米雨般灑落的光芒中,於 The Busena Terrace 的婚禮儀式裡,面對紅毯盡頭遼闊的南國藍天與碧海,許下永恆的愛的誓言。莊嚴中不失華麗,並以充滿度假氛圍的時尚演出閃耀每一刻,為您獻上奢華的樂園婚禮。"
+   },
+   "style": "人前式",
+   "party": {
+    "ja": "メインダイニング「ファヌアン」：ホール 15～40名 個室 2～14名、 ファンクションルーム：A 20～40名、B 20～30名、全室 40～90名",
+    "en": "Main Dining \"Fanuan\": Hall 15–40 guests, Private Room 2–14 guests, Function Rooms: A 20–40 guests, B 20–30 guests, All Rooms Combined 40–90 guests",
+    "id": "Restoran Utama \"Fanuan\": Aula 15–40 orang, Ruang Privat 2–14 orang, Function Room: A 20–40 orang, B 20–30 orang, Seluruh Ruangan 40–90 orang",
+    "th": "ห้องอาหารหลัก \"Fanuan\": ฮอลล์ 15–40 ท่าน ห้องส่วนตัว 2–14 ท่าน ฟังก์ชันรูม: A 20–40 ท่าน B 20–30 ท่าน ใช้ทุกห้อง 40–90 ท่าน",
+    "zh": "主餐廳「Fanuan」:大廳 15～40位、包廂 2～14位、宴會廳:A廳 20～40位、B廳 20～30位、全部包場 40～90位"
+   },
+   "cuisine": {
+    "ja": "フレンチコース",
+    "en": "French course",
+    "id": "Hidangan course Prancis",
+    "th": "อาหารฝรั่งเศสแบบคอร์ส",
+    "zh": "法式套餐"
+   },
+   "address": "沖縄県名護市喜瀬1808",
+   "access": {
+    "ja": "那覇空港より国道58号線にて車で約90分 / ※高速自動車道利用の場合 約100分",
+    "en": "Approx. 90 minutes by car from Naha Airport via National Route 58 / *Approx. 100 minutes if using the expressway",
+    "id": "Sekitar 90 menit dengan mobil dari Bandara Naha melalui Jalan Nasional Rute 58 / *Jika menggunakan jalan tol, sekitar 100 menit",
+    "th": "ขับรถจากสนามบินนาฮะผ่านทางหลวงแผ่นดินหมายเลข 58 ประมาณ 90 นาที / *หากใช้ทางด่วน ประมาณ 100 นาที",
+    "zh": "從那霸機場經國道58號線開車約90分鐘 / ※若走高速公路約100分鐘"
+   }
+  },
+  {
+   "n": 14,
+   "slug": "kafuu-resort-fuchaku",
+   "area": "north",
+   "kind": "hotel",
+   "images": [
+    "v226-1.webp",
+    "v226-2.webp",
+    "v226-3.webp",
+    "v226-4.webp",
+    "v226-5.webp"
+   ],
+   "name": {
+    "ja": "カフーリゾートフチャク コンド・ホテル",
+    "en": "Kafuu Resort Fuchaku Condo Hotel",
+    "id": "Kafuu Resort Fuchaku Condo Hotel",
+    "th": "Kafuu Resort Fuchaku Condo Hotel",
+    "zh": "Kafuu Resort Fuchaku Condo Hotel"
+   },
+   "desc": {
+    "ja": "開くと目の前一面に広がる恩納村の海と空 恩納村の海を望むシチュエーションの中、目の前には沖縄の食材を使った色とりどりのお料理が並びます お食事中心のアットホームなパーティから余興やセレモニーを取り入れた披露宴まで 新郎新婦様とご家族 ゲストの皆様との祝宴をお楽しみくださいませります。",
+    "en": "The moment it opens, the sea and sky of Onna Village stretch out before you. With the Onna Village sea as your backdrop, colorful dishes made with Okinawan ingredients are laid out before you. From a homey party centered on the meal to a reception with entertainment and ceremonies, enjoy a celebration with the bride and groom, their families and all your guests.",
+    "id": "Begitu terbuka, laut dan langit Desa Onna terhampar luas di hadapan Anda. Dengan latar laut Desa Onna, hidangan warna-warni dari bahan-bahan khas Okinawa tersaji di depan Anda. Mulai dari pesta hangat yang berfokus pada santapan hingga resepsi dengan hiburan dan upacara, nikmatilah perayaan bersama pengantin, keluarga, dan seluruh tamu.",
+    "th": "ทันทีที่เปิดออก ทะเลและท้องฟ้าของหมู่บ้านออนนะก็ทอดยาวอยู่ตรงหน้า ท่ามกลางบรรยากาศที่มองเห็นทะเลของหมู่บ้านออนนะ อาหารหลากสีสันที่ปรุงจากวัตถุดิบของโอกินาว่าจะถูกจัดเรียงอยู่เบื้องหน้า ตั้งแต่งานเลี้ยงอบอุ่นเป็นกันเองที่เน้นมื้ออาหาร ไปจนถึงงานเลี้ยงฉลองมงคลสมรสที่มีการแสดงและพิธีการ ขอเชิญเพลิดเพลินกับงานฉลองร่วมกับบ่าวสาว ครอบครัว และแขกทุกท่าน",
+    "zh": "一開啟，恩納村的海與天空便遼闊地展現在眼前。在眺望恩納村海景的環境中，使用沖繩食材烹調、色彩繽紛的料理一一呈現於眼前。無論是以美食為主的溫馨派對，還是融入餘興表演與儀式的婚宴，都能與新郎新娘、家人及賓客們共享歡慶時光。"
+   },
+   "style": "チャペル式 / 人前式",
+   "party": {
+    "ja": "着席10～100名迄",
+    "en": "Seated, 10 to 100 guests",
+    "id": "Duduk, 10 hingga 100 orang",
+    "th": "แบบนั่งโต๊ะ 10–100 ท่าน",
+    "zh": "入座式 10～100 位"
+   },
+   "cuisine": {
+    "ja": "創作日本料理・イタリアンフルコース・卓盛り(洋食・和洋折衷)・ブッフェ",
+    "en": "Creative Japanese cuisine / Italian full course / Table-served shared platters (Western, Japanese-Western fusion) / Buffet",
+    "id": "Masakan Jepang kreatif / Hidangan lengkap Italia / Hidangan disajikan di meja (Barat, perpaduan Jepang-Barat) / Prasmanan",
+    "th": "อาหารญี่ปุ่นสร้างสรรค์ / อิตาเลียนฟูลคอร์ส / อาหารจัดเสิร์ฟบนโต๊ะ (อาหารตะวันตก, ผสมผสานญี่ปุ่น-ตะวันตก) / บุฟเฟต์",
+    "zh": "創作日式料理 / 義式全套餐 / 桌菜（西式、和洋折衷） / 自助餐"
+   },
+   "address": "沖縄県国頭郡恩納村字冨着志利福地原246-1",
+   "access": {
+    "ja": "那覇空港から車で約50分(沖縄自動車道利用)",
+    "en": "Approx. 50 minutes by car from Naha Airport (via the Okinawa Expressway)",
+    "id": "Sekitar 50 menit dengan mobil dari Bandara Naha (melalui Jalan Tol Okinawa)",
+    "th": "ขับรถจากสนามบินนาฮะประมาณ 50 นาที (ผ่านทางด่วนโอกินาว่า)",
+    "zh": "從那霸機場開車約 50 分鐘（經沖繩自動車道）"
+   }
+  },
+  {
+   "n": 15,
+   "slug": "rizzan-sea-park-tanchabay",
+   "area": "north",
+   "kind": "hotel",
+   "images": [
+    "v155-1.webp",
+    "v155-2.webp",
+    "v155-3.webp",
+    "v155-4.webp",
+    "v155-5.webp",
+    "v155-6.webp"
+   ],
+   "name": {
+    "ja": "リザンシーパークホテル谷茶ベイ",
+    "en": "Rizzan Sea-Park Hotel Tancha-Bay",
+    "id": "Rizzan Sea-Park Hotel Tancha-Bay",
+    "th": "Rizzan Sea-Park Hotel Tancha-Bay (リザンシーパークホテル谷茶ベイ)",
+    "zh": "Rizzan Sea-Park Hotel Tancha-Bay(リザンシーパークホテル谷茶ベイ)"
+   },
+   "desc": {
+    "ja": "涼やかな海風と優しい波の音に包まれて心からの祝福と笑顔に満たされた特別な1日を いまここで 碧い海と青い空を独占できる至福のひととき。 美しいオーシャンビューと上質のサービスが叶える、あなだだけのオリジナルウエディング。",
+    "en": "Wrapped in a cool sea breeze and the gentle sound of waves, enjoy a special day filled with heartfelt blessings and smiles, right here, right now. Savor a blissful moment with the blue sea and sky all to yourselves. Beautiful ocean views and refined service create an original wedding that is yours alone.",
+    "id": "Diselimuti hembusan angin laut yang sejuk dan suara ombak yang lembut, rasakan hari istimewa yang dipenuhi doa restu dan senyum tulus, di sini dan saat ini. Nikmati momen penuh kebahagiaan dengan laut biru dan langit cerah yang seakan milik Anda sendiri. Pemandangan laut yang indah dan layanan berkualitas mewujudkan pernikahan orisinal yang hanya milik Anda.",
+    "th": "ท่ามกลางสายลมทะเลที่เย็นสบายและเสียงคลื่นแผ่วเบา ขอให้วันพิเศษของคุณเต็มเปี่ยมด้วยคำอวยพรจากใจและรอยยิ้ม ณ ที่นี่ในตอนนี้ ช่วงเวลาแห่งความสุขที่ได้ครอบครองทะเลสีครามและท้องฟ้าสีฟ้าไว้เพียงลำพัง ด้วยวิวมหาสมุทรอันสวยงามและการบริการระดับคุณภาพ เราจะสร้างงานแต่งงานแบบออริจินัลที่มีเพียงคุณเท่านั้น",
+    "zh": "在涼爽海風與輕柔浪聲的環繞下,讓真心的祝福與笑容,盈滿這特別的一天,就在此刻、就在這裡。碧藍的海洋與蔚藍的天空獨屬於你們,是無比幸福的時光。絕美的海景與優質的服務,為你們打造獨一無二的原創婚禮。"
+   },
+   "style": "チャペル式 / 神前式 / 人前式",
+   "party": {
+    "ja": "着席8～350名迄",
+    "en": "Seated, 8 to 350 guests",
+    "id": "Duduk, 8 hingga 350 tamu",
+    "th": "แบบนั่งโต๊ะ 8 ถึง 350 ท่าน",
+    "zh": "入座式 8～350位"
+   },
+   "cuisine": {
+    "ja": "洋食正餐・和食会席・和洋中折衷",
+    "en": "Western-style full-course dinner / Japanese kaiseki / Japanese-Western-Chinese fusion",
+    "id": "Hidangan lengkap ala Barat / Kaiseki Jepang / Perpaduan Jepang-Barat-Tiongkok",
+    "th": "อาหารตะวันตกแบบคอร์สเต็ม / ไคเซกิญี่ปุ่น / อาหารผสมผสานญี่ปุ่น-ตะวันตก-จีน",
+    "zh": "西式正餐 / 日式會席料理 / 和洋中折衷料理"
+   },
+   "address": "沖縄県国頭郡恩納村字谷茶1496",
+   "access": {
+    "ja": "那覇空港から車で60分 石川ＩＣから車で10分",
+    "en": "60 min by car from Naha Airport / 10 min by car from Ishikawa IC",
+    "id": "60 menit dengan mobil dari Bandara Naha / 10 menit dengan mobil dari Ishikawa IC",
+    "th": "ขับรถ 60 นาทีจากท่าอากาศยานนาฮะ / ขับรถ 10 นาทีจากทางแยกอิชิกาวะ (Ishikawa IC)",
+    "zh": "從那霸機場開車60分鐘 / 從石川交流道開車10分鐘"
+   }
+  },
+  {
+   "n": 16,
+   "slug": "naminoue-shrine",
+   "area": "naha",
+   "kind": "chapel",
+   "images": [
+    "v800-1.webp"
+   ],
+   "name": {
+    "ja": "波上宮",
+    "en": "Naminoue Shrine",
+    "id": "Kuil Naminoue (Naminoue-gu)",
+    "th": "ศาลเจ้านามิโนอุเอะ (波上宮)",
+    "zh": "波上宮"
+   },
+   "desc": {
+    "ja": "那覇市にある琉球沖縄八社のひとつ『波上宮』。那覇港を望む高台に位置し、歴史ある社殿は古くから県民に親しまれてきました。",
+    "en": "Naminoue Shrine in Naha City is one of the Eight Shrines of Ryukyu Okinawa. Set on a hilltop overlooking Naha Port, its historic shrine buildings have long been cherished by the people of Okinawa.",
+    "id": "Kuil Naminoue di Kota Naha adalah salah satu dari Delapan Kuil Ryukyu Okinawa. Terletak di dataran tinggi yang menghadap Pelabuhan Naha, bangunan kuilnya yang bersejarah telah lama dicintai oleh masyarakat Okinawa.",
+    "th": "ศาลเจ้านามิโนอุเอะ ตั้งอยู่ในเมืองนาฮะ เป็นหนึ่งในแปดศาลเจ้าแห่งริวกิว โอกินาว่า ตั้งอยู่บนที่สูงที่มองเห็นท่าเรือนาฮะ อาคารศาลเจ้าอันทรงประวัติศาสตร์เป็นที่รักของชาวโอกินาว่ามาตั้งแต่อดีต",
+    "zh": "位於那霸市的「波上宮」，是琉球沖繩八社之一。坐落於俯瞰那霸港的高台上，歷史悠久的社殿自古以來深受沖繩縣民喜愛。"
+   },
+   "style": "神前式",
+   "party": {
+    "ja": null,
+    "en": null,
+    "id": null,
+    "th": null,
+    "zh": null
+   },
+   "cuisine": {
+    "ja": null,
+    "en": null,
+    "id": null,
+    "th": null,
+    "zh": null
+   },
+   "address": "沖縄県那覇市若狭1-25-11",
+   "access": {
+    "ja": "那覇空港から車で15分",
+    "en": "15 minutes by car from Naha Airport",
+    "id": "15 menit dengan mobil dari Bandara Naha",
+    "th": "ขับรถจากสนามบินนาฮะประมาณ 15 นาที",
+    "zh": "從那霸機場開車約15分鐘"
+   }
+  },
+  {
+   "n": 17,
+   "slug": "hotel-yugafu-inn",
+   "area": "north",
+   "kind": "hotel",
+   "images": [
+    "v179-1.webp",
+    "v179-2.webp",
+    "v179-3.webp",
+    "v179-4.webp"
+   ],
+   "name": {
+    "ja": "ホテルゆがふいんおきなわ",
+    "en": "Hotel Yugaf Inn Okinawa",
+    "id": "Hotel Yugaf Inn Okinawa",
+    "th": "โรงแรมยูกาฟุ อินน์ โอกินาวา (Hotel Yugaf Inn Okinawa)",
+    "zh": "Hotel Yugaf Inn Okinawa（ホテルゆがふいんおきなわ）"
+   },
+   "desc": {
+    "ja": "ゆがふいんウエディングは お二人の夢に寄り添いながら、ゲストや大切な方々への想いをくみ、 一つひとつのことに心を込めてお手伝いしています。",
+    "en": "Yugaf Inn Wedding stays close to your dreams as a couple, and with heartfelt care for your guests and loved ones, we pour our hearts into helping with every detail.",
+    "id": "Yugaf Inn Wedding mendampingi impian Anda berdua, dan dengan memahami perasaan Anda terhadap para tamu serta orang-orang tercinta, kami membantu setiap detailnya dengan sepenuh hati.",
+    "th": "Yugaf Inn Wedding อยู่เคียงข้างความฝันของคุณทั้งสอง และใส่ใจความรู้สึกที่มีต่อแขกผู้มีเกียรติและคนสำคัญ ด้วยการช่วยดูแลทุกรายละเอียดอย่างเต็มหัวใจ",
+    "zh": "Yugaf Inn Wedding 貼心陪伴兩位實現夢想，並體貼您對賓客與重要親友的心意，用心協助每一個細節。"
+   },
+   "style": "チャペル式 / 神前式 / 人前式",
+   "party": {
+    "ja": "着席100名～350名迄",
+    "en": "Seated banquets for 100 to 350 guests",
+    "id": "Jamuan duduk untuk 100 hingga 350 tamu",
+    "th": "จัดเลี้ยงแบบนั่งโต๊ะ 100 – 350 ท่าน",
+    "zh": "桌席宴客，可容納100至350位賓客"
+   },
+   "cuisine": {
+    "ja": "和洋折衷・洋食正餐・和食会席・中国料理",
+    "en": "Japanese-Western fusion, Western-style full-course dining, Japanese kaiseki, Chinese cuisine",
+    "id": "Perpaduan Jepang-Barat, hidangan formal ala Barat, kaiseki Jepang, masakan Tiongkok",
+    "th": "อาหารผสมผสานญี่ปุ่นและตะวันตก, อาหารตะวันตกแบบคอร์สเต็มรูปแบบ, ไคเซกิญี่ปุ่น, อาหารจีน",
+    "zh": "和洋折衷、西式正餐、日式會席、中華料理"
+   },
+   "address": "沖縄県名護市字宮里453-1",
+   "access": {
+    "ja": "一般道から沖縄自動車道 那覇I.Cより許田I.Cを降り、58号線沿い名護球場向かい / 高速バス那覇空港線111番利用（所要時間1時間45分） 名護バスターミナル降車 徒歩約5分",
+    "en": "By car: take the Okinawa Expressway from Naha I.C., exit at Kyoda I.C., then follow Route 58 to the venue, opposite Nago Stadium / By express bus: take the Naha Airport Line No. 111 (approx. 1 hour 45 minutes) and get off at Nago Bus Terminal, then walk approx. 5 minutes",
+    "id": "Dengan mobil: masuk Jalan Tol Okinawa dari Naha I.C., keluar di Kyoda I.C., lalu menyusuri Jalan Raya 58 hingga tiba di lokasi, tepat di seberang Nago Stadium / Dengan bus ekspres: naik bus Naha Airport Line nomor 111 (sekitar 1 jam 45 menit), turun di Nago Bus Terminal, lalu berjalan kaki sekitar 5 menit",
+    "th": "โดยรถยนต์: ขึ้นทางด่วนโอกินาวาจากด่านนาฮะ (Naha I.C.) ลงที่ด่านเคียวดะ (Kyoda I.C.) แล้วใช้ทางหลวงหมายเลข 58 ตรงข้ามสนามเบสบอลนาโงะ (Nago Stadium) / โดยรถบัสด่วน: ขึ้นรถบัสสายสนามบินนาฮะ หมายเลข 111 (ใช้เวลาประมาณ 1 ชั่วโมง 45 นาที) ลงที่สถานีขนส่งนาโงะ (Nago Bus Terminal) แล้วเดินต่ออีกประมาณ 5 นาที",
+    "zh": "自行開車：從沖繩自動車道那霸I.C.上交流道，於許田I.C.下，沿58號線前行，就在名護球場對面 / 搭乘高速巴士：搭乘那霸機場線111號（車程約1小時45分鐘），於名護巴士總站下車，步行約5分鐘"
+   }
+  },
+  {
+   "n": 18,
+   "slug": "first-hall",
+   "area": "naha",
+   "kind": "party",
+   "images": [
+    "v798-1.webp"
+   ],
+   "name": {
+    "ja": "1st hall",
+    "en": "1st hall",
+    "id": "1st hall",
+    "th": "1st hall",
+    "zh": "1st hall"
+   },
+   "desc": {
+    "ja": "那覇市・松山に位置し、2次会後のお店探しも楽々な好立地のパーティー会場。市内のどこからでもアクセスしやすいのが『1st hall』のメリット。人数や用途にあわせて選べる3会場からお好きな会場をお選びください。",
+    "en": "Located in Matsuyama, Naha, this party venue is ideally situated, making it easy to find a place to continue the celebration after the after-party. Easy to reach from anywhere in the city, that's the advantage of '1st hall'. Choose your favorite from 3 venues, selected to suit your guest count and purpose.",
+    "id": "Berlokasi di Matsuyama, Naha, venue pesta ini memiliki lokasi yang sangat strategis sehingga mudah mencari tempat lanjutan setelah acara after-party. Kelebihan '1st hall' adalah akses yang mudah dari mana pun di dalam kota. Pilih venue favorit Anda dari 3 ruang yang dapat disesuaikan dengan jumlah tamu dan tujuan acara.",
+    "th": "สถานที่จัดปาร์ตี้ในย่านมัตสึยามะ เมืองนาฮะ ทำเลดีเยี่ยม สะดวกแม้ต้องหาร้านต่อหลังงานเลี้ยงรอบสอง จุดเด่นของ '1st hall' คือเดินทางสะดวกจากทุกพื้นที่ในเมือง เลือกห้องจัดงานที่ถูกใจได้จาก 3 ห้อง ตามจำนวนแขกและวัตถุประสงค์การจัดงาน",
+    "zh": "位於那霸市松山的派對會場，地理位置絕佳，二次會後要找下一攤也輕鬆便利。無論從市內哪個地方前往都很方便，正是「1st hall」的魅力所在。可依人數與用途，從3個會場中挑選您喜愛的場地。"
+   },
+   "style": null,
+   "party": {
+    "ja": null,
+    "en": null,
+    "id": null,
+    "th": null,
+    "zh": null
+   },
+   "cuisine": {
+    "ja": null,
+    "en": null,
+    "id": null,
+    "th": null,
+    "zh": null
+   },
+   "address": "沖縄県那覇市松山2-1-15 沖縄サントリービル6・7F",
+   "access": {
+    "ja": "国道58号線 松山交差点から徒歩1分",
+    "en": "1-minute walk from Matsuyama Intersection on National Route 58",
+    "id": "Berjalan kaki 1 menit dari Persimpangan Matsuyama di Jalan Nasional Rute 58",
+    "th": "เดิน 1 นาทีจากสี่แยกมัตสึยามะ บนทางหลวงแผ่นดินหมายเลข 58",
+    "zh": "從國道58號線松山路口步行1分鐘"
+   }
+  },
+  {
+   "n": 19,
+   "slug": "event-museum-five",
+   "area": "naha",
+   "kind": "party",
+   "images": [
+    "v792-1.webp",
+    "v792-2.webp",
+    "v792-3.webp",
+    "v792-4.webp",
+    "v792-5.webp",
+    "v792-6.webp"
+   ],
+   "name": {
+    "ja": "event museum Five",
+    "en": "event museum Five",
+    "id": "event museum Five",
+    "th": "event museum Five",
+    "zh": "event museum Five"
+   },
+   "desc": {
+    "ja": "那覇・国際通りの真ん中に位置するアクセス抜群のパーティー会場『Five』。最大300名収容の会場を人数に応じて5つのパーティールームとして利用できるのがFiveの魅力。",
+    "en": "Located in the heart of Kokusai-dori Street in Naha, Five is a party venue with outstanding access. Its charm lies in a space that holds up to 300 guests and can be used as 5 separate party rooms, depending on your guest count.",
+    "id": "Terletak di jantung Kokusai-dori, Naha, Five adalah tempat pesta dengan akses yang sangat strategis. Daya tarik Five adalah ruangannya yang dapat menampung hingga 300 tamu dan dapat digunakan sebagai 5 ruang pesta sesuai jumlah tamu.",
+    "th": "Five สถานที่จัดงานปาร์ตี้ที่เดินทางสะดวกเป็นพิเศษ ตั้งอยู่ใจกลางถนนโคคุไซโดริในเมืองนาฮะ จุดเด่นของ Five คือพื้นที่ที่รองรับแขกได้สูงสุด 300 ท่าน และสามารถแบ่งใช้เป็นห้องจัดปาร์ตี้ 5 ห้องตามจำนวนแขก",
+    "zh": "位於那霸國際通正中心的派對場地「Five」，交通極為便利。Five 的魅力在於最多可容納 300 位賓客的空間，能依人數靈活分隔，作為 5 間派對廳使用。"
+   },
+   "style": null,
+   "party": {
+    "ja": null,
+    "en": null,
+    "id": null,
+    "th": null,
+    "zh": null
+   },
+   "cuisine": {
+    "ja": null,
+    "en": null,
+    "id": null,
+    "th": null,
+    "zh": null
+   },
+   "address": "沖縄県那覇市牧志1-2-31 おきなわ屋本社ビル5F",
+   "access": {
+    "ja": "ゆいレール美栄橋駅から5分",
+    "en": "5 minutes from Mieibashi Station on the Yui Rail (Okinawa Monorail)",
+    "id": "5 menit dari Stasiun Mieibashi di Yui Rail (Monorel Okinawa)",
+    "th": "5 นาทีจากสถานีมิเอบาชิของรถไฟฟ้าโมโนเรลยุยเรล (Yui Rail)",
+    "zh": "從單軌電車（Yui Rail）美榮橋站步行 5 分鐘"
+   }
+  },
+  {
+   "n": 20,
+   "slug": "bar-vogue",
+   "area": "naha",
+   "kind": "party",
+   "images": [
+    "v1601-1.webp"
+   ],
+   "name": {
+    "ja": "BAR VOGUE",
+    "en": "BAR VOGUE",
+    "id": "BAR VOGUE",
+    "th": "BAR VOGUE",
+    "zh": "BAR VOGUE"
+   },
+   "desc": {
+    "ja": "「幹事いらず！司会・受付・景品すべて込みのコミコミプラン！！」 30名～90名様収容、3時間完全貸切で安心！幹事も司会もこちらに全部おまかせ！！のコミコミプランはお忙しい新郎新婦様にはオススメです。",
+    "en": "\"No organizer needed! An all-inclusive plan covering emcee, reception and prizes!!\" Accommodates 30 to 90 guests, with peace of mind from a 3-hour fully private booking! Leave everything to us, from organizing to emceeing! This all-inclusive plan is recommended for busy brides and grooms.",
+    "id": "\"Tanpa perlu panitia! Paket all-inclusive lengkap dengan pembawa acara, penerima tamu, dan hadiah!!\" Menampung 30 hingga 90 tamu, tenang dengan sewa eksklusif selama 3 jam! Serahkan semuanya kepada kami, mulai dari penyelenggaraan hingga pembawa acara! Paket all-inclusive ini sangat cocok untuk pengantin yang sibuk.",
+    "th": "\"ไม่ต้องมีผู้จัดงาน! แพ็กเกจรวมทุกอย่าง ทั้งพิธีกร จุดต้อนรับลงทะเบียน และของรางวัล!!\" รองรับแขก 30 ถึง 90 ท่าน เหมาร้านทั้งร้านเป็นเวลา 3 ชั่วโมง อุ่นใจแน่นอน! ไว้ใจให้เราดูแลทั้งการจัดงานและพิธีกรให้ทั้งหมด! แพ็กเกจรวมทุกอย่างนี้แนะนำสำหรับเจ้าบ่าวเจ้าสาวที่ไม่ค่อยมีเวลา",
+    "zh": "「免找幹事!司儀、接待、獎品全部包辦的全包方案!!」可容納30~90位賓客,3小時完全包場,安心無憂!幹事與司儀統統交給我們!這個全包方案特別推薦給忙碌的新郎新娘。"
+   },
+   "style": null,
+   "party": {
+    "ja": "～90名様 ※貸切30名様～",
+    "en": "Up to 90 guests ※Private hire from 30 guests",
+    "id": "Hingga 90 tamu ※Sewa eksklusif mulai dari 30 tamu",
+    "th": "สูงสุด 90 ท่าน ※เหมาร้านตั้งแต่ 30 ท่านขึ้นไป",
+    "zh": "最多90位 ※包場30位起"
+   },
+   "cuisine": {
+    "ja": null,
+    "en": null,
+    "id": null,
+    "th": null,
+    "zh": null
+   },
+   "address": "沖縄県那覇市久茂地2-13-14 ヨーロッピアンビル3F",
+   "access": {
+    "ja": null,
+    "en": null,
+    "id": null,
+    "th": null,
+    "zh": null
+   }
+  }
+ ],
+ "knowledge": [
+  {
+   "category": "general",
+   "image": null,
+   "ja": {
+    "title": "TUTU沖縄について",
+    "body": "TUTU沖縄（ブライダルハウスチュチュ）は、沖縄の結婚式場探し、ドレス、フォトウエディングをお手伝いするブライダルサロンです。那覇市松山の本店と、浦添市のサンエー浦添西海岸PARCO CITY内のカウンターで、ご結婚が決まったらまず無料でご相談いただけます。お見積もり、会場見学の予約、仮押さえまで、すべての手配を担当スタッフにおまかせいただけます。"
+   },
+   "en": {
+    "title": "About TUTU Okinawa",
+    "body": "TUTU Okinawa (Bridal House TUTU) is a bridal salon that helps with finding a wedding venue in Okinawa, dresses and photo weddings. Once you decide to marry, you can first consult for free at the main salon in Matsuyama, Naha, or at the counter inside Sanei Urasoe Nishikaigan PARCO CITY in Urasoe. The staff take care of everything from quotes and venue tour bookings to holding a date."
+   },
+   "id": {
+    "title": "Tentang TUTU Okinawa",
+    "body": "TUTU Okinawa (Bridal House TUTU) adalah salon pengantin yang membantu Anda mencari tempat pernikahan di Okinawa, memilih gaun, serta mengurus photo wedding. Begitu Anda memutuskan untuk menikah, Anda bisa berkonsultasi gratis terlebih dahulu di salon utama kami di Matsuyama, Naha, atau di konter kami di dalam Sanei Urasoe Nishikaigan PARCO CITY, Urasoe. Mulai dari penawaran harga, reservasi kunjungan ke lokasi, hingga penahanan tanggal sementara, semua pengaturan dapat Anda percayakan kepada staf kami."
+   },
+   "th": {
+    "title": "เกี่ยวกับ TUTU Okinawa",
+    "body": "TUTU Okinawa (Bridal House TUTU) เป็นบริดัลซาลอนที่ช่วยดูแลตั้งแต่การหาสถานที่จัดงานแต่งงานในโอกินาว่า ชุดแต่งงาน ไปจนถึงโฟโต้เวดดิ้ง เมื่อตัดสินใจแต่งงานแล้ว คุณสามารถปรึกษาเราได้ฟรีเป็นอย่างแรก ที่สาขาหลักในมัตสึยามะ เมืองนาฮะ หรือที่เคาน์เตอร์ภายใน Sanei Urasoe Nishikaigan PARCO CITY ในเมืองอุราโซเอะ ตั้งแต่ใบเสนอราคา การจองเข้าชมสถานที่ ไปจนถึงการจองวันแบบชั่วคราว ฝากทุกขั้นตอนไว้กับเจ้าหน้าที่ประจำของเราได้เลย"
+   },
+   "zh": {
+    "title": "關於 TUTU 沖繩",
+    "body": "TUTU 沖繩（Bridal House TUTU）是一家婚紗沙龍，協助您尋找沖繩的婚禮會場、挑選禮服，以及拍攝婚紗照。決定結婚後，歡迎先到位於那霸市松山的總店，或浦添市 Sanei Urasoe Nishikaigan PARCO CITY 內的櫃台免費諮詢。從報價、預約參觀會場，到暫時保留日期，所有安排都可以交給專屬的負責人員。"
+   }
+  },
+  {
+   "category": "policies",
+   "image": null,
+   "ja": {
+    "title": "ご相談は無料です",
+    "body": "ご相談はすべて無料です。会場探し、お見積もり、会場見学の予約、空き状況の確認、仮押さえまで、無料で担当スタッフがご案内します。店舗限定のご成約特典もご用意しています。"
+   },
+   "en": {
+    "title": "Consultations are free",
+    "body": "Every consultation is free. The staff guide you through finding a venue, quotes, booking a venue tour, checking availability and holding a date at no charge. There are also benefits only for couples who sign up at the salon."
+   },
+   "id": {
+    "title": "Konsultasi gratis",
+    "body": "Semua konsultasi gratis. Staf kami akan memandu Anda mulai dari mencari lokasi, penawaran harga, reservasi kunjungan ke lokasi, pengecekan ketersediaan, hingga penahanan tanggal sementara, tanpa biaya. Kami juga menyiapkan bonus khusus bagi pasangan yang mendaftar di salon."
+   },
+   "th": {
+    "title": "ปรึกษาฟรี",
+    "body": "ปรึกษาได้ฟรีทุกเรื่อง เจ้าหน้าที่ประจำจะคอยดูแลและแนะนำตั้งแต่การหาสถานที่ ใบเสนอราคา การจองเข้าชมสถานที่ การตรวจสอบวันว่าง ไปจนถึงการจองวันล่วงหน้าชั่วคราว โดยไม่มีค่าใช้จ่าย นอกจากนี้ยังมีสิทธิพิเศษเฉพาะคู่รักที่ทำสัญญาที่ร้านอีกด้วย"
+   },
+   "zh": {
+    "title": "諮詢完全免費",
+    "body": "所有諮詢一律免費。從尋找會場、報價估算、預約參觀會場、確認空檔,到暫時保留日期,都由專屬人員免費為您說明與協助。另外也準備了僅限門市簽約的專屬優惠。"
+   }
+  },
+  {
+   "category": "policies",
+   "image": null,
+   "ja": {
+    "title": "会場の料金について",
+    "body": "このサイトでは、各会場の料金は掲載していません。会場の料金は、人数、日程、ご希望の内容によって変わります。人数・ご予算・ご希望に合わせたお見積もりを、サロンで無料でご案内します。"
+   },
+   "en": {
+    "title": "About venue prices",
+    "body": "This site does not list prices for the venues. A venue price depends on the number of guests, the date and what you wish for. We prepare a quote to match your guest count, budget and wishes, for free at the salon."
+   },
+   "id": {
+    "title": "Tentang harga tempat acara",
+    "body": "Situs ini tidak mencantumkan harga untuk masing-masing tempat acara. Harga tempat acara berbeda-beda tergantung jumlah tamu, tanggal, dan isi acara yang Anda inginkan. Kami menyiapkan penawaran harga yang sesuai dengan jumlah tamu, anggaran, dan keinginan Anda, secara gratis di salon."
+   },
+   "th": {
+    "title": "เกี่ยวกับราคาสถานที่จัดงาน",
+    "body": "เว็บไซต์นี้ไม่ได้แสดงราคาของสถานที่จัดงานแต่ละแห่ง ราคาสถานที่จะแตกต่างกันไปตามจำนวนแขก วันที่จัดงาน และความต้องการของคุณ ทางเราจัดทำใบเสนอราคาให้เหมาะกับจำนวนแขก งบประมาณ และความต้องการของคุณ โดยไม่มีค่าใช้จ่ายที่ซาลอน"
+   },
+   "zh": {
+    "title": "關於會場費用",
+    "body": "本網站未刊載各會場的費用。會場費用會依人數、日期及您希望的內容而有所不同。我們會依照您的人數、預算與需求，在沙龍免費為您提供報價。"
+   }
+  },
+  {
+   "category": "policies",
+   "image": null,
+   "ja": {
+    "title": "ご相談の流れ",
+    "body": "STEP1 ご来店、お電話、WEBからご連絡ください。STEP2 那覇市内や北部・中部・南部の会場から、人数とご予算に合う会場とプランをご提案します。写真だけの結婚式も承ります。STEP3 会場見学の予約、空き状況の確認、お見積もり、仮押さえをスタッフが手配します。STEP4 1,000着以上のドレスから、専任スタイリストがご提案します。STEP5 会場が決まった後も、当日までサポートします。前撮りやフォトウエディングのご提案もできます。STEP6 アルバム、映像、引き出物などもトータルでコーディネートします。"
+   },
+   "en": {
+    "title": "How a consultation works",
+    "body": "STEP 1: Contact us by visiting, phone or the web. STEP 2: We propose venues and plans that fit your guest count and budget, in Naha and in the north, centre and south of Okinawa. We also arrange photo-only weddings. STEP 3: The staff arrange your venue tour, check availability, prepare a quote and hold a date. STEP 4: A dedicated stylist suggests dresses from more than 1,000. STEP 5: We keep supporting you after the venue is decided, until the day, and can suggest pre-wedding shoots and photo weddings. STEP 6: Albums, films and gifts for your guests can be coordinated in one place."
+   },
+   "id": {
+    "title": "Alur konsultasi",
+    "body": "STEP 1: Hubungi kami dengan datang langsung, melalui telepon, atau lewat web. STEP 2: Kami mengusulkan tempat dan paket yang sesuai dengan jumlah tamu dan anggaran Anda, di Kota Naha serta wilayah utara, tengah, dan selatan Okinawa. Kami juga melayani pernikahan khusus foto. STEP 3: Staf kami akan mengatur kunjungan ke tempat acara, memeriksa ketersediaan, menyiapkan penawaran harga, dan menahan tanggal. STEP 4: Stylist khusus akan merekomendasikan gaun dari lebih dari 1.000 pilihan. STEP 5: Setelah tempat acara ditentukan, kami tetap mendampingi Anda hingga hari H, dan dapat mengusulkan sesi foto pre-wedding serta foto pernikahan. STEP 6: Album, video, dan suvenir untuk para tamu juga dapat dikoordinasikan di satu tempat."
+   },
+   "th": {
+    "title": "ขั้นตอนการปรึกษา",
+    "body": "STEP 1: ติดต่อเราได้ทั้งแบบเข้ามาที่ร้าน โทรศัพท์ หรือผ่านเว็บไซต์ STEP 2: เราจะนำเสนอสถานที่และแพ็กเกจที่เหมาะกับจำนวนแขกและงบประมาณของคุณ ทั้งในเมืองนาฮะ รวมถึงโซนเหนือ กลาง และใต้ของโอกินาว่า นอกจากนี้ยังรับจัดงานแต่งแบบถ่ายภาพอย่างเดียวด้วย STEP 3: ทีมงานจะจัดการนัดชมสถานที่ ตรวจสอบวันว่าง จัดทำใบเสนอราคา และจองวันไว้ให้ STEP 4: สไตลิสต์ประจำตัวจะแนะนำชุดจากกว่า 1,000 ชุด STEP 5: หลังจากเลือกสถานที่ได้แล้ว เรายังคงดูแลสนับสนุนคุณไปจนถึงวันงาน และสามารถแนะนำการถ่ายพรีเวดดิ้งและโฟโต้เวดดิ้งได้ STEP 6: อัลบั้ม วิดีโอ และของชำร่วยสำหรับแขก สามารถประสานงานให้ได้ในที่เดียว"
+   },
+   "zh": {
+    "title": "諮詢流程",
+    "body": "STEP 1:歡迎透過到店、電話或網路與我們聯繫。STEP 2:我們會依據賓客人數與預算,從那霸市區以及沖繩北部、中部、南部的會場中,為您推薦合適的會場與方案。也可承辦僅拍攝照片的婚禮。STEP 3:會場參觀的預約、檔期確認、報價以及暫時保留日期,皆由工作人員為您安排。STEP 4:專屬造型師會從1,000件以上的禮服中為您推薦。STEP 5:會場確定後,我們也會持續陪伴您直到婚禮當天,並可為您提案婚紗外拍與婚紗攝影。STEP 6:相簿、影片、賓客禮品等,也能一站式為您整體規劃。"
+   }
+  },
+  {
+   "category": "services",
+   "image": "/images/tutu/consult.webp",
+   "ja": {
+    "title": "無料ブライダル相談",
+    "body": "ご結婚が決まったら、まずはお近くのサロンへ。お見積もり、会場見学の予約、仮押さえまで、すべて無料でご相談いただけます。ご来店、お電話、LINE、WEBからどうぞ。"
+   },
+   "en": {
+    "title": "Free bridal consultation",
+    "body": "Once you decide to marry, start at a salon near you. Quotes, venue tour bookings and holding a date are all free to ask about. You can visit, call, use LINE or the web."
+   },
+   "id": {
+    "title": "Konsultasi Pernikahan Gratis",
+    "body": "Setelah Anda memutuskan untuk menikah, mulailah dari salon terdekat. Penawaran harga, reservasi kunjungan ke tempat acara, hingga penahanan tanggal sementara, semuanya dapat dikonsultasikan secara gratis. Silakan datang langsung, hubungi lewat telepon, LINE, atau melalui web."
+   },
+   "th": {
+    "title": "ปรึกษาเรื่องงานแต่งงานฟรี",
+    "body": "เมื่อตัดสินใจแต่งงานแล้ว เริ่มต้นที่ซาลอนใกล้บ้านคุณได้เลย ทั้งใบเสนอราคา การจองเข้าชมสถานที่จัดงาน ไปจนถึงการจองวันไว้ล่วงหน้าเบื้องต้น ปรึกษาได้ฟรีทั้งหมด ติดต่อได้ทั้งแวะมาที่ร้าน โทรศัพท์ LINE หรือผ่านเว็บไซต์"
+   },
+   "zh": {
+    "title": "免費婚禮諮詢",
+    "body": "決定結婚後,請先來到離您最近的沙龍。從報價、預約參觀場地,到暫時保留日期,都可以免費諮詢。歡迎來店、來電,或透過 LINE、網站與我們聯繫。"
+   }
+  },
+  {
+   "category": "services",
+   "image": "/images/tutu/dress-1.webp",
+   "ja": {
+    "title": "1,000着以上のドレス",
+    "body": "国内ブランドからインポートブランド、人気のタレントドレス、和装まで、1,000着以上の衣裳をそろえています。ウエディングドレスはもちろん、メンズコスチュームも常備しています。"
+   },
+   "en": {
+    "title": "More than 1,000 dresses",
+    "body": "From domestic and import brands to popular celebrity dresses and Japanese attire, we have more than 1,000 outfits. Alongside wedding dresses, men's costumes are always in stock."
+   },
+   "id": {
+    "title": "Lebih dari 1.000 gaun",
+    "body": "Dari brand dalam negeri dan brand impor, gaun selebriti yang populer, hingga busana tradisional Jepang, kami menyediakan lebih dari 1.000 pilihan busana. Selain gaun pengantin, kostum pria juga selalu tersedia."
+   },
+   "th": {
+    "title": "ชุดเดรสมากกว่า 1,000 ชุด",
+    "body": "ตั้งแต่แบรนด์ในประเทศและแบรนด์นำเข้า เดรสสุดฮิตของเหล่าคนดัง ไปจนถึงชุดญี่ปุ่น เรามีชุดให้เลือกมากกว่า 1,000 ชุด นอกจากชุดแต่งงานแล้ว ยังมีชุดสำหรับผู้ชายพร้อมให้บริการเสมอ"
+   },
+   "zh": {
+    "title": "超過1,000件禮服",
+    "body": "從日本國內品牌、進口品牌,到人氣藝人款禮服與和服,我們備有超過1,000件服裝。除了婚紗之外,也常備男士服裝。"
+   }
+  },
+  {
+   "category": "services",
+   "image": "/images/tutu/dress-5.webp",
+   "ja": {
+    "title": "カラードレス・和装・タキシード",
+    "body": "ウエディングドレスのほか、カラードレス、和装、タキシード、参列用の衣裳もご用意しています。サロンでご相談と一緒に衣裳もご覧いただけます。"
+   },
+   "en": {
+    "title": "Colour dresses, Japanese attire and tuxedos",
+    "body": "Besides wedding dresses, we offer colour dresses, Japanese attire, tuxedos and outfits for guests. You can see the outfits while you talk with us at the salon."
+   },
+   "id": {
+    "title": "Gaun berwarna, busana Jepang, dan tuksedo",
+    "body": "Selain gaun pengantin, kami juga menyediakan gaun berwarna, busana Jepang, tuksedo, serta busana untuk tamu undangan. Anda dapat melihat busana-busananya sambil berkonsultasi dengan kami di salon."
+   },
+   "th": {
+    "title": "ชุดราตรีสี ชุดแบบญี่ปุ่น และทักซิโด้",
+    "body": "นอกจากชุดแต่งงานแล้ว เรายังมีชุดราตรีสี ชุดแบบญี่ปุ่น ทักซิโด้ และชุดสำหรับแขกผู้ร่วมงานไว้บริการ คุณสามารถชมชุดต่างๆ ไปพร้อมกับการปรึกษาพูดคุยกับเราที่ซาลอนได้"
+   },
+   "zh": {
+    "title": "彩色禮服、和服與燕尾服",
+    "body": "除了婚紗之外,我們也準備了彩色禮服、和服、燕尾服,以及賓客出席時穿著的服裝。您可以在沙龍與我們討論的同時,一併欣賞各式服裝。"
+   }
+  },
+  {
+   "category": "services",
+   "image": "/images/tutu/styling.webp",
+   "ja": {
+    "title": "専任スタイリストのコーディネート",
+    "body": "初めてのご来店から式当日まで、同じコーディネーターが新婦さまをサポートします。ドレスからアクセサリー、ヘアメイクまで、トータルにコーディネートします。"
+   },
+   "en": {
+    "title": "Total coordination by a dedicated stylist",
+    "body": "The same coordinator supports the bride from her first visit to the wedding day. The dress, accessories, hair and makeup are all coordinated together."
+   },
+   "id": {
+    "title": "Koordinasi menyeluruh oleh stylist khusus",
+    "body": "Koordinator yang sama mendampingi pengantin wanita sejak kunjungan pertama hingga hari pernikahan. Gaun, aksesori, hair dan makeup semuanya dikoordinasikan secara menyeluruh."
+   },
+   "th": {
+    "title": "สไตลิสต์เฉพาะดูแลการจัดคอร์ดิเนตแบบครบวงจร",
+    "body": "ผู้ประสานงานคนเดียวกันจะดูแลเจ้าสาวตั้งแต่การมาเยี่ยมชมครั้งแรกจนถึงวันงานแต่งงาน ตั้งแต่ชุดเดรส เครื่องประดับ ไปจนถึงทำผมและแต่งหน้า เราจัดคอร์ดิเนตให้อย่างลงตัวทั้งหมด"
+   },
+   "zh": {
+    "title": "專屬造型師為您全方位搭配",
+    "body": "從第一次來店到婚禮當天,由同一位統籌師陪伴並支持新娘。從婚紗、配飾到髮型與妝容,都為您整體搭配。"
+   }
+  },
+  {
+   "category": "services",
+   "image": "/images/tutu/makeup.webp",
+   "ja": {
+    "title": "ヘアメイク",
+    "body": "お話をうかがいながら「なりたい花嫁」のイメージをつかみ、メイクの色やヘアアレンジをご提案します。洋装・和装のどちらにも対応します。"
+   },
+   "en": {
+    "title": "Hair and makeup",
+    "body": "We listen to the bride you want to be and suggest makeup colours and hair arrangements for it, for both Western and Japanese attire."
+   },
+   "id": {
+    "title": "Tata Rias Rambut dan Wajah",
+    "body": "Sambil berbincang dengan Anda, kami memahami gambaran \"pengantin impian\" Anda, lalu menyarankan warna riasan dan tata rambut yang sesuai. Kami melayani busana pengantin Barat maupun Jepang."
+   },
+   "th": {
+    "title": "ทำผมและแต่งหน้า",
+    "body": "เราพูดคุยรับฟังเพื่อทำความเข้าใจภาพ \"เจ้าสาวที่คุณอยากเป็น\" แล้วแนะนำสีเมคอัพและการจัดแต่งทรงผมที่เหมาะสม รองรับทั้งชุดแบบตะวันตกและชุดแบบญี่ปุ่น"
+   },
+   "zh": {
+    "title": "髮型與彩妝",
+    "body": "我們會在交談中了解您心目中「理想新娘」的樣貌,並為您提案適合的彩妝色彩與髮型造型。西式禮服與日式禮服皆可搭配。"
+   }
+  },
+  {
+   "category": "services",
+   "image": "/images/tutu/dress-6.webp",
+   "ja": {
+    "title": "ブーケ（フローリスト）",
+    "body": "多くの花嫁を見てきたフローリストが、当日のドレスに映えるように、お顔立ちや雰囲気を生かしたブーケをご提案します。事前の打ち合わせで理想のイメージをお伝えください。"
+   },
+   "en": {
+    "title": "Bouquets by a florist",
+    "body": "A florist who has seen many brides designs a bouquet that suits your dress, your face and your mood. Tell us the image you have in mind at the meeting before the day."
+   },
+   "id": {
+    "title": "Buket dari Florist",
+    "body": "Florist yang telah mendampingi banyak pengantin akan merancang buket yang serasi dengan gaun Anda di hari istimewa, sekaligus menonjolkan kesan wajah dan suasana diri Anda. Silakan sampaikan gambaran ideal Anda pada pertemuan sebelum hari pernikahan."
+   },
+   "th": {
+    "title": "ช่อดอกไม้ (โดยฟลอริสต์)",
+    "body": "ฟลอริสต์ผู้ผ่านการดูแลเจ้าสาวมาแล้วมากมาย จะออกแบบช่อดอกไม้ที่ขับเด่นกับชุดเดรสในวันงาน พร้อมทั้งเสริมบุคลิกหน้าตาและบรรยากาศของคุณ โปรดบอกภาพในฝันของคุณในการนัดหมายพูดคุยก่อนวันงาน"
+   },
+   "zh": {
+    "title": "捧花（花藝師）",
+    "body": "曾經服務過許多新娘的花藝師，會為您設計能在當天婚紗中更顯出色、並展現您臉型與氣質的捧花。請在事前討論時告訴我們您理想中的樣子。"
+   }
+  },
+  {
+   "category": "services",
+   "image": "/images/tutu/terrace.webp",
+   "ja": {
+    "title": "フォトウエディング",
+    "body": "沖縄在住の方限定のベーシックフォトプランは110,000円から、ロケーションフォトとスタジオフォトがお得にかないます。ドレス、タキシード、ヘアメイクなど撮影に必要なものがそろっています。リゾートフォトプランは330,000円からで、ビーチなど沖縄の絶景で撮影できます。"
+   },
+   "en": {
+    "title": "Photo weddings",
+    "body": "The basic photo plan for people living in Okinawa starts from 110,000 yen and covers location and studio photos at a good price. Dresses, tuxedos, hair and makeup and everything needed for the shoot are included. The resort photo plan starts from 330,000 yen and is shot at Okinawa's best locations such as the beach."
+   },
+   "id": {
+    "title": "Pre-wedding Foto",
+    "body": "Paket foto dasar khusus bagi Anda yang tinggal di Okinawa mulai dari 110,000 yen, dengan harga terjangkau untuk foto lokasi dan foto studio. Gaun, tuksedo, tata rambut dan riasan, serta semua yang diperlukan untuk sesi pemotretan sudah termasuk. Paket foto resor mulai dari 330,000 yen, dengan pemotretan di pemandangan terindah Okinawa, seperti pantai."
+   },
+   "th": {
+    "title": "ถ่ายภาพพรีเวดดิ้ง",
+    "body": "แพ็กเกจถ่ายภาพเบสิกสำหรับผู้ที่อาศัยอยู่ในโอกินาว่าเท่านั้น เริ่มต้นที่ 110,000 เยน ถ่ายภาพนอกสถานที่และภาพในสตูดิโอได้ในราคาคุ้มค่า รวมชุดเดรส ทักซิโด้ ทำผมและแต่งหน้า และสิ่งจำเป็นสำหรับการถ่ายภาพไว้ครบ แพ็กเกจถ่ายภาพแบบรีสอร์ตเริ่มต้นที่ 330,000 เยน ถ่ายภาพท่ามกลางทิวทัศน์อันงดงามของโอกินาว่า เช่น ชายหาด"
+   },
+   "zh": {
+    "title": "婚紗攝影",
+    "body": "僅限居住於沖繩的民眾使用的基本攝影方案，110,000 日圓起，即可以優惠的價格拍攝外景與棚內婚紗照。禮服、燕尾服、髮妝等拍攝所需的一切都已包含在內。度假攝影方案 330,000 日圓起，可在海灘等沖繩絕美景點拍攝。"
+   }
+  },
+  {
+   "category": "services",
+   "image": "/images/tutu/chapel-outside.webp",
+   "ja": {
+    "title": "TUTUのリゾートチャペル",
+    "body": "TUTUがおすすめするリゾートチャペルとして、ラソール・ガーデン・アリビラ、モントレ・ルメール教会、アリビラ・グローリー教会、ルネッサンス・リベーラ教会などがあります。リゾートチャペルでの挙式と、那覇市内のホテルでの披露宴を組み合わせることもできます。"
+   },
+   "en": {
+    "title": "TUTU's resort chapels",
+    "body": "Resort chapels we recommend include La Sol Garden Alivila, Chapelle Monterey Le Maire, Alivila Glory Church and Renaissance Rivera Church. You can also hold the ceremony at a resort chapel and the reception at a hotel in Naha."
+   },
+   "id": {
+    "title": "Kapel resor TUTU",
+    "body": "Kapel resor yang direkomendasikan TUTU antara lain La Sol Garden Alivila, Chapelle Monterey Le Maire, Alivila Glory Church, dan Renaissance Rivera Church. Anda juga dapat memadukan upacara pernikahan di kapel resor dengan resepsi di hotel di kota Naha."
+   },
+   "th": {
+    "title": "โบสถ์รีสอร์ทของ TUTU",
+    "body": "โบสถ์รีสอร์ทที่ TUTU แนะนำ ได้แก่ La Sol Garden Alivila, Chapelle Monterey Le Maire, Alivila Glory Church และ Renaissance Rivera Church เป็นต้น นอกจากนี้ยังสามารถจัดพิธีแต่งงานที่โบสถ์รีสอร์ท และจัดงานเลี้ยงฉลองที่โรงแรมในเมืองนาฮะได้ด้วย"
+   },
+   "zh": {
+    "title": "TUTU 的度假教堂",
+    "body": "TUTU 推薦的度假教堂包括 La Sol Garden Alivila、Chapelle Monterey Le Maire、Alivila Glory Church 與 Renaissance Rivera Church 等。也可以選擇在度假教堂舉行婚禮儀式,再於那霸市內的飯店舉辦喜宴。"
+   }
+  },
+  {
+   "category": "services",
+   "image": "/images/tutu/garden.webp",
+   "ja": {
+    "title": "ご成約特典",
+    "body": "店舗限定のご成約特典があります。会場によっては、TUTUリゾートチャペルでのロケーション前撮りフォトを特別価格でご案内、ご両家ご両親の衣裳レンタルが最大50％OFF、参列着物レンタルが50％OFFなどの特典があります。詳しくはスタッフにお尋ねください。"
+   },
+   "en": {
+    "title": "Benefits for signing up",
+    "body": "There are benefits only for couples who sign up at the salon. Depending on the venue, these include a location pre-wedding photo shoot at a TUTU resort chapel at a special price, up to 50% off outfit rental for both sets of parents and 50% off kimono rental for guests. Please ask the staff for details."
+   },
+   "id": {
+    "title": "Keuntungan Khusus Saat Mendaftar",
+    "body": "Ada keuntungan khusus yang hanya tersedia bagi pasangan yang mendaftar di salon. Tergantung pada lokasi acara, keuntungan tersebut meliputi sesi foto pre-wedding di lokasi pada TUTU resort chapel dengan harga spesial, diskon hingga 50% untuk sewa busana orang tua kedua belah pihak, dan diskon 50% untuk sewa kimono bagi tamu yang hadir. Silakan tanyakan detailnya kepada staf kami."
+   },
+   "th": {
+    "title": "สิทธิพิเศษสำหรับผู้ทำสัญญา",
+    "body": "เรามีสิทธิพิเศษเฉพาะคู่รักที่ทำสัญญาที่ร้านเท่านั้น ทั้งนี้ขึ้นอยู่กับสถานที่จัดงาน เช่น ถ่ายภาพพรีเวดดิ้งนอกสถานที่ที่ TUTU resort chapel ในราคาพิเศษ ส่วนลดสูงสุด 50% สำหรับการเช่าชุดของบิดามารดาทั้งสองฝ่าย และส่วนลด 50% สำหรับการเช่ากิโมโนของผู้ร่วมงาน สอบถามรายละเอียดเพิ่มเติมได้ที่เจ้าหน้าที่"
+   },
+   "zh": {
+    "title": "簽約專屬優惠",
+    "body": "凡在店內簽約的新人，即可享有門市限定的簽約優惠。依婚宴場地不同，優惠包含以特別價格提供於 TUTU resort chapel 拍攝外景婚紗照、雙方父母禮服租借最高5折優惠（最高50% OFF），以及賓客和服租借5折優惠（50% OFF）等。詳情請洽詢工作人員。"
+   }
+  },
+  {
+   "category": "access",
+   "image": null,
+   "ja": {
+    "title": "店舗案内・営業時間",
+    "body": "TUTU沖縄 那覇本店：〒900-0032 沖縄県那覇市松山2丁目3-15。営業時間は10:00〜19:00、水曜定休（祝日は通常営業）。電話 098-951-0222。サンエー浦添西海岸 PARCO CITY店：〒901-2123 沖縄県浦添市西洲3-1-1 PARCO CITY 1F。営業時間は10:00〜20:00。電話 098-877-1122。"
+   },
+   "en": {
+    "title": "Salons and opening hours",
+    "body": "TUTU Okinawa Naha main salon: 2-3-15 Matsuyama, Naha, Okinawa 900-0032. Open 10:00 to 19:00, closed on Wednesdays (open on public holidays). Phone 098-951-0222. Sanei Urasoe Nishikaigan PARCO CITY salon: 3-1-1 Nishizu, Urasoe, Okinawa 901-2123, PARCO CITY 1F. Open 10:00 to 20:00. Phone 098-877-1122."
+   },
+   "id": {
+    "title": "Informasi Salon & Jam Operasional",
+    "body": "TUTU Okinawa Salon Utama Naha: 2-3-15 Matsuyama, Naha, Okinawa 900-0032. Buka pukul 10:00 hingga 19:00, tutup setiap hari Rabu (tetap buka pada hari libur nasional). Telepon 098-951-0222. Salon Sanei Urasoe Nishikaigan PARCO CITY: 3-1-1 Nishizu, Urasoe, Okinawa 901-2123, PARCO CITY 1F. Buka pukul 10:00 hingga 20:00. Telepon 098-877-1122."
+   },
+   "th": {
+    "title": "ข้อมูลร้านและเวลาทำการ",
+    "body": "TUTU Okinawa สาขาหลัก นาฮะ: 2-3-15 Matsuyama, Naha, Okinawa 900-0032 เปิดให้บริการ 10:00 ถึง 19:00 น. ปิดทุกวันพุธ (เปิดตามปกติในวันหยุดนักขัตฤกษ์) โทร 098-951-0222 สาขา Sanei Urasoe Nishikaigan PARCO CITY: 3-1-1 Nishizu, Urasoe, Okinawa 901-2123 PARCO CITY ชั้น 1 เปิดให้บริการ 10:00 ถึง 20:00 น. โทร 098-877-1122"
+   },
+   "zh": {
+    "title": "店鋪資訊・營業時間",
+    "body": "TUTU沖繩 那霸總店：〒900-0032 沖繩縣那霸市松山2丁目3-15。營業時間為10:00～19:00，每週三公休（國定假日照常營業）。電話 098-951-0222。Sanei 浦添西海岸 PARCO CITY店：〒901-2123 沖繩縣浦添市西洲3-1-1 PARCO CITY 1F。營業時間為10:00～20:00。電話 098-877-1122。"
+   }
+  },
+  {
+   "category": "faq",
+   "image": null,
+   "ja": {
+    "title": "相談に費用はかかりますか？",
+    "body": "いいえ、ご相談はすべて無料です。会場探し、お見積もり、会場見学の予約、仮押さえまで、無料で担当スタッフがご案内します。"
+   },
+   "en": {
+    "title": "Does a consultation cost anything?",
+    "body": "No, every consultation is free. The staff guide you through finding a venue, quotes, venue tour bookings and holding a date at no charge."
+   },
+   "id": {
+    "title": "Apakah konsultasi dikenakan biaya?",
+    "body": "Tidak, semua konsultasi gratis. Staf kami akan membantu Anda mulai dari mencari lokasi, penawaran harga, reservasi kunjungan ke lokasi, hingga penahanan tanggal sementara, semuanya tanpa biaya."
+   },
+   "th": {
+    "title": "การปรึกษามีค่าใช้จ่ายหรือไม่",
+    "body": "ไม่มีค่าใช้จ่ายค่ะ การปรึกษาทุกรูปแบบฟรี เจ้าหน้าที่จะดูแลและแนะนำตั้งแต่การค้นหาสถานที่จัดงาน การขอใบเสนอราคา การจองเข้าชมสถานที่ ไปจนถึงการจองวันไว้ล่วงหน้าชั่วคราว โดยไม่เสียค่าใช้จ่ายใดๆ"
+   },
+   "zh": {
+    "title": "諮詢需要費用嗎？",
+    "body": "不需要，所有諮詢皆為免費。從尋找場地、報價估算、預約參觀場地，到暫時保留日期，都由專屬服務人員免費為您介紹與協助。"
+   }
+  },
+  {
+   "category": "faq",
+   "image": null,
+   "ja": {
+    "title": "会場の料金はいくらですか？",
+    "body": "会場の料金は、人数、日程、ご希望によって変わるため、このサイトには掲載していません。サロンで、人数・ご予算・ご希望に合わせたお見積もりを無料でご案内します。フォトウエディングは、沖縄在住の方限定のベーシックプランが110,000円から、リゾートプランが330,000円からです。"
+   },
+   "en": {
+    "title": "How much does a venue cost?",
+    "body": "The price depends on the number of guests, the date and your wishes, so it is not listed on this site. At the salon we prepare a quote for your guest count, budget and wishes, for free. For photo weddings, the basic plan for people living in Okinawa starts from 110,000 yen and the resort plan from 330,000 yen."
+   },
+   "id": {
+    "title": "Berapa biaya untuk venue?",
+    "body": "Biaya venue berbeda-beda tergantung jumlah tamu, tanggal, dan keinginan Anda, sehingga tidak kami cantumkan di situs ini. Di salon, kami menyiapkan penawaran harga yang disesuaikan dengan jumlah tamu, anggaran, dan keinginan Anda, secara gratis. Untuk photo wedding, paket Basic khusus bagi warga yang tinggal di Okinawa mulai dari 110,000 yen, dan paket Resort mulai dari 330,000 yen."
+   },
+   "th": {
+    "title": "ค่าใช้จ่ายของสถานที่จัดงานเท่าไรคะ?",
+    "body": "ค่าใช้จ่ายของสถานที่จัดงานจะแตกต่างกันไปตามจำนวนแขก วันที่ และความต้องการของคุณ จึงไม่ได้ระบุไว้บนเว็บไซต์นี้ ที่ซาลอน เรายินดีจัดทำใบเสนอราคาให้ตามจำนวนแขก งบประมาณ และความต้องการของคุณ โดยไม่มีค่าใช้จ่าย สำหรับโฟโต้เวดดิ้ง แพ็กเกจเบสิกสำหรับผู้ที่อาศัยอยู่ในโอกินาวะเท่านั้น เริ่มต้นที่ 110,000 เยน และแพ็กเกจรีสอร์ทเริ่มต้นที่ 330,000 เยน"
+   },
+   "zh": {
+    "title": "場地費用是多少呢？",
+    "body": "場地費用會依人數、日期及您的需求而有所不同，因此本網站並未刊載。在沙龍，我們會依據您的人數、預算與需求，免費為您提供報價。婚紗攝影方面，限沖繩居民的基本方案從110,000日圓起，度假方案從330,000日圓起。"
+   }
+  },
+  {
+   "category": "faq",
+   "image": null,
+   "ja": {
+    "title": "写真だけの結婚式もできますか？",
+    "body": "はい、写真だけの結婚式（フォトウエディング）も承っています。スタジオでの撮影や、チャペル、ビーチ、思い出の場所での撮影など、どのようなスタイルにも対応します。"
+   },
+   "en": {
+    "title": "Can I have a photo-only wedding?",
+    "body": "Yes, we also arrange photo-only weddings. We can shoot in the studio, at a chapel or beach, or at a place that is special to you."
+   },
+   "id": {
+    "title": "Apakah bisa melakukan pernikahan hanya dengan foto?",
+    "body": "Ya, kami juga menerima pernikahan hanya dengan foto (foto pernikahan/photo wedding). Kami melayani berbagai gaya, mulai dari pemotretan di studio, di kapel, di pantai, hingga di tempat yang penuh kenangan bagi Anda."
+   },
+   "th": {
+    "title": "สามารถจัดงานแต่งงานแบบถ่ายภาพอย่างเดียวได้ไหมคะ?",
+    "body": "ได้ค่ะ เรารับจัดงานแต่งงานแบบถ่ายภาพอย่างเดียว (โฟโต้เวดดิ้ง) ด้วยเช่นกัน ไม่ว่าจะเป็นการถ่ายภาพในสตูดิโอ ที่โบสถ์ ที่ชายหาด หรือสถานที่แห่งความทรงจำของคุณ เรายินดีดูแลทุกสไตล์ค่ะ"
+   },
+   "zh": {
+    "title": "可以只拍照、不舉辦婚禮嗎？",
+    "body": "可以的，我們也承辦只拍照的婚禮（婚紗攝影）。無論是在攝影棚、教堂、海灘，或是充滿回憶的地方拍攝，各種風格我們都能配合。"
+   }
+  },
+  {
+   "category": "faq",
+   "image": null,
+   "ja": {
+    "title": "予約なしで相談できますか？",
+    "body": "ご来店、お電話、WEBからご連絡ください。日程を確認して担当スタッフがご案内します。確実にご案内するため、このサイトから相談日をリクエストいただくのがおすすめです。"
+   },
+   "en": {
+    "title": "Can I come without a booking?",
+    "body": "You can contact us by visiting, phone or the web, and the staff will confirm a time. To be sure we can help you, we recommend requesting a day through this site."
+   },
+   "id": {
+    "title": "Apakah saya bisa berkonsultasi tanpa reservasi?",
+    "body": "Silakan hubungi kami dengan datang langsung ke salon, melalui telepon, atau lewat web. Staf kami akan memastikan jadwal dan mendampingi Anda. Agar kami dapat melayani Anda dengan pasti, kami menyarankan Anda mengajukan permintaan tanggal konsultasi melalui situs ini."
+   },
+   "th": {
+    "title": "สามารถเข้ามาปรึกษาโดยไม่ได้จองล่วงหน้าได้ไหมคะ?",
+    "body": "คุณสามารถติดต่อเราได้ทั้งการแวะมาที่ร้าน ทางโทรศัพท์ หรือทางเว็บไซต์ ทางทีมงานจะตรวจสอบวันและเวลา แล้วเจ้าหน้าที่ผู้รับผิดชอบจะดูแลคุณค่ะ เพื่อให้เราสามารถดูแลคุณได้อย่างแน่นอน เราขอแนะนำให้ส่งคำขอวันปรึกษาผ่านเว็บไซต์นี้ค่ะ"
+   },
+   "zh": {
+    "title": "沒有預約也可以諮詢嗎？",
+    "body": "歡迎您親自到店、來電或透過網站與我們聯繫。我們會確認日期與時間，並由負責的工作人員為您服務。為了能確實為您安排，建議您透過本網站申請諮詢日期。"
+   }
+  },
+  {
+   "category": "faq",
+   "image": null,
+   "ja": {
+    "title": "どんな会場がありますか？",
+    "body": "ホテルウエディング、ゲストハウス・レストラン、独立型チャペル、2次会・結納の会場など、那覇市内と中部、北部・恩納エリアの会場をご紹介しています。挙式スタイルは、チャペル式、神前式、琉球結婚式、人前式から選べる会場があります。人数やご希望をお伝えいただければ、おすすめの会場をご提案します。"
+   },
+   "en": {
+    "title": "What kinds of venues are there?",
+    "body": "We introduce hotel weddings, guest houses and restaurants, stand-alone chapels and venues for after-parties and engagement meals, in Naha, the central area and the north including Onna. Some venues offer a choice of chapel, Shinto, Ryukyu-style or guest-witnessed (non-religious) ceremonies. Tell us your guest count and wishes and we will suggest venues."
+   },
+   "id": {
+    "title": "Venue apa saja yang tersedia?",
+    "body": "Kami memperkenalkan berbagai venue di area Kota Naha, wilayah tengah, serta wilayah utara termasuk Onna, mulai dari pernikahan di hotel, guest house dan restoran, kapel mandiri, hingga tempat untuk after-party dan makan malam pertunangan. Beberapa venue memungkinkan Anda memilih gaya upacara: kapel, Shinto, pernikahan ala Ryukyu, atau upacara non-religius yang disaksikan para tamu. Beritahukan jumlah tamu dan keinginan Anda, dan kami akan merekomendasikan venue yang sesuai."
+   },
+   "th": {
+    "title": "มีสถานที่จัดงานแบบไหนบ้างคะ?",
+    "body": "เราขอแนะนำสถานที่จัดงานในเขตเมืองนาฮะ พื้นที่ตอนกลาง และตอนเหนือรวมถึงโอนนะ ไม่ว่าจะเป็นงานแต่งงานในโรงแรม เกสต์เฮาส์และร้านอาหาร โบสถ์แบบแยกอาคารอิสระ รวมถึงสถานที่สำหรับงานเลี้ยงหลังพิธี (After-party) และงานหมั้น บางสถานที่สามารถเลือกรูปแบบพิธีได้ทั้งแบบโบสถ์ แบบชินโต แบบริวคิว หรือแบบมีแขกเป็นสักขีพยาน (ไม่เกี่ยวกับศาสนา) หากบอกจำนวนแขกและความต้องการของคุณให้เราทราบ เราจะแนะนำสถานที่ที่เหมาะสมให้ค่ะ"
+   },
+   "zh": {
+    "title": "有哪些場地呢？",
+    "body": "我們為您介紹那霸市區、中部以及包含恩納在內的北部地區的場地，包括飯店婚禮、Guest House・餐廳、獨立式教堂，以及喜宴後續派對與訂婚宴的場地等。部分場地可選擇教堂式、神前式、琉球婚禮或人前式（由賓客見證的無宗教儀式）。只要告訴我們賓客人數與您的期望，我們就會為您推薦合適的場地。"
+   }
+  }
+ ]
+}

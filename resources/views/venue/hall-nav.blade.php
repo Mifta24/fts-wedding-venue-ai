@@ -38,7 +38,11 @@
                         <span class="hall-nav-name">{{ $item->translatedName($locale) }}</span>
                         @if ($item->size_sqm && ! $venue->isPlanCatalog())<span class="hall-nav-size">{{ $item->size_sqm }}&nbsp;m²</span>@endif
                     </span>
-                    <span class="hall-nav-price">{{ $labels['from'] }} {{ $price($item->base_price, "\u{00A0}") }} {{ $planInfo['per_event'] ?? $labels['per_event'] }}</span>
+                    @if ($venue->showsPrices())
+                        <span class="hall-nav-price">{{ $labels['from'] }} {{ $price($item->base_price, "\u{00A0}") }} {{ $planInfo['per_event'] ?? $labels['per_event'] }}</span>
+                    @else
+                        <span class="hall-nav-price">{{ $planInfo['kinds'][$item->setting] ?? '' }}</span>
+                    @endif
                 </span>
                 <span class="hall-nav-go" aria-hidden="true">→</span>
             </a>

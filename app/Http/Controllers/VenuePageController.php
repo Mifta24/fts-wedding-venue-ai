@@ -341,14 +341,18 @@ class VenuePageController extends Controller
             ->whereIn('category', [VenueKnowledgeItem::CATEGORY_SERVICES, VenueKnowledgeItem::CATEGORY_CATERING])
             ->orderBy('sort_order')->get());
 
+        $guide = $venue->isPlanCatalog() && ! $venue->showsPrices() ? $venue->planInfoFor($locale) : [];
+        $eventTypes = $guide['event_types'] ?? $this->eventTypeLabels($locale);
+
         $labels = [
             ...$this->labels($locale),
             // A plan-catalog venue may call this chapter something else (Js'Acul: "Options").
             ...($venue->isPlanCatalog() && ! empty($venue->planInfoFor($locale)['menu_options']) ? ['menu_services' => $venue->planInfoFor($locale)['menu_options']] : []),
-            'setting_labels_json' => json_encode(self::hallTerms($locale)['setting'], JSON_UNESCAPED_UNICODE),
-            'event_labels_json' => json_encode($this->eventTypeLabels($locale), JSON_UNESCAPED_UNICODE),
+            ...($guide['labels'] ?? []),
+            'setting_labels_json' => json_encode($guide['kinds'] ?? self::hallTerms($locale)['setting'], JSON_UNESCAPED_UNICODE),
+            'event_labels_json' => json_encode($eventTypes, JSON_UNESCAPED_UNICODE),
         ];
-        $lobby = $this->lobbyLabels($locale);
+        $lobby = [...$this->lobbyLabels($locale), ...($guide['lobby'] ?? [])];
         $fx = app(CurrencyConverter::class);
         $currency = $fx->currencyFor($venue, $locale);
 
@@ -366,9 +370,9 @@ class VenuePageController extends Controller
             'labels' => $labels,
             'lobby' => $lobby,
             'hallTerms' => self::hallTerms($locale),
-            'eventTypes' => $this->eventTypeLabels($locale),
-            'wizard' => $this->wizardLabels($venue, $locale),
-            'narration' => self::narration($locale),
+            'eventTypes' => $eventTypes,
+            'wizard' => [...$this->wizardLabels($venue, $locale), ...($guide['wizard'] ?? [])],
+            'narration' => [...self::narration($locale), ...($guide['narration'] ?? [])],
             'hallNarrations' => $this->hallNarrations($venue, $halls, $locale),
             'staffLinks' => $this->handover->forStaff($venue, $locale),
             'today' => now($venue->timezone)->toDateString(),
@@ -432,7 +436,7 @@ class VenuePageController extends Controller
      */
     private function stageMenu(Venue $venue, string $locale, array $labels, array $lobby): array
     {
-        $tour = self::narration($locale);
+        $tour = [...self::narration($locale), ...($venue->showsPrices() ? [] : ($venue->planInfoFor($locale)['narration'] ?? []))];
         $url = fn (string $name) => route("venue.{$name}", ['venueSlug' => $venue->slug, 'lang' => $locale]);
 
         return [
@@ -453,7 +457,7 @@ class VenuePageController extends Controller
      */
     private function sceneNarrations(Venue $venue, Collection $services, string $locale): array
     {
-        $templates = self::narration($locale);
+        $templates = [...self::narration($locale), ...($venue->showsPrices() ? [] : ($venue->planInfoFor($locale)['narration'] ?? []))];
         $separator = in_array($locale, ['ja', 'zh'], true) ? '、' : '; ';
         $time = fn (?string $value) => $value ? substr($value, 0, 5) : null;
 
@@ -504,7 +508,7 @@ class VenuePageController extends Controller
         $planInfo = $venue->isPlanCatalog() ? $venue->planInfoFor($locale) : [];
         $intro = str_replace(
             [':count', ':price'],
-            [(string) $halls->count(), $money($halls->min('base_price'))],
+            [(string) $halls->count(), $venue->showsPrices() ? $money($halls->min('base_price')) : ''],
             $planInfo['intro'] ?? $templates[$halls->count() === 1 ? 'halls_one' : 'halls']
         );
 
@@ -513,7 +517,9 @@ class VenuePageController extends Controller
 
             // A package is priced per outfit combination, with no room, seating or guest capacity to describe.
             if ($venue->isPlanCatalog()) {
-                $parts[] = str_replace(':price', $money($hall->base_price), $planInfo['price_sentence'] ?? $templates['price']);
+                $parts[] = $venue->showsPrices()
+                    ? str_replace(':price', $money($hall->base_price), $planInfo['price_sentence'] ?? $templates['price'])
+                    : ($planInfo['price_sentence'] ?? null);
 
                 return [$hall->slug => implode(' ', array_filter($parts))];
             }

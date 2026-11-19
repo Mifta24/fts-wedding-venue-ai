@@ -228,6 +228,17 @@ class VenueConciergeTools
     /**
      * Every active plan with its starting price, for "what plans do you have?".
      */
+    /**
+     * A partner venue of a guide site has no price to show: drop every amount from the card and its text.
+     *
+     * @param  array<string, mixed>  $card
+     * @return array<string, mixed>
+     */
+    private function withoutPrices(array $card): array
+    {
+        return array_diff_key($card, array_flip(['total_price', 'deposit_total', 'currency', 'discount_percent', 'starting_price', 'min_guests', 'max_guests', 'size_sqm']));
+    }
+
     private function showPlans(): array
     {
         $halls = $this->venue->halls()->where('is_active', true)->with(['venue', 'images'])->orderBy('sort_order')->limit(24)->get();
@@ -249,14 +260,14 @@ class VenueConciergeTools
             'catering_included' => $hall->catering_included,
             'event_date' => null,
             'discount_percent' => 0,
-            'total_price' => app(CurrencyConverter::class)->convert((float) $hall->base_price, $this->venue, $currency),
+            'total_price' => $this->venue->showsPrices() ? app(CurrencyConverter::class)->convert((float) $hall->base_price, $this->venue, $currency) : null,
             'deposit_total' => 0,
             'currency' => $currency,
             'thumbnail_url' => $hall->images->first()?->image_source,
-        ])->values()->all();
+        ])->map(fn (array $plan) => $this->venue->showsPrices() ? $plan : $this->withoutPrices($plan))->values()->all();
 
         return [
-            'text' => json_encode(['note' => 'Starting prices, before any date surcharge. Ask for the date and guest count to check a real date.', 'plans' => $plans], JSON_UNESCAPED_UNICODE),
+            'text' => json_encode(['note' => $this->venue->showsPrices() ? 'Starting prices, before any date surcharge. Ask for the date and guest count to check a real date.' : 'These are partner venues. No price is published for them: never state or estimate one. Say the TUTU salon prepares a free quote.', 'plans' => $plans], JSON_UNESCAPED_UNICODE),
             'ui' => ['type' => 'hall_results', 'event_date' => null, 'guests' => null, 'halls' => $plans],
         ];
     }
@@ -328,6 +339,10 @@ class VenueConciergeTools
             ];
         }
 
+        if (! $this->venue->showsPrices()) {
+            $matches = array_map(fn (array $match) => $this->withoutPrices($match), $matches);
+        }
+
         if (empty($matches)) {
             return [
                 'text' => 'No hall is free on that date for that many guests. Tell the couple honestly and offer to check a different date, a nearby weekday or another setting, or call request_human_handover if they want to join the waiting list or need a custom arrangement.',
@@ -335,7 +350,7 @@ class VenueConciergeTools
             ];
         }
 
-        usort($matches, fn ($a, $b) => $a['total_price'] <=> $b['total_price']);
+        usort($matches, fn ($a, $b) => ($a['total_price'] ?? 0) <=> ($b['total_price'] ?? 0));
 
         return [
             'text' => json_encode($matches, JSON_UNESCAPED_UNICODE),
@@ -363,7 +378,7 @@ class VenueConciergeTools
 
         $currency = new CurrencyConverter;
         $shown = $currency->currencyFor($this->venue, $this->locale);
-        $detail = [
+        $detail = $this->venue->showsPrices() ? [
             'hall_slug' => $hall->slug,
             'name' => $hall->translatedName($this->locale),
             'description' => $hall->translatedDescription($this->locale),
@@ -386,6 +401,15 @@ class VenueConciergeTools
             'weekday_discount_percent' => $this->venue->weekday_discount_percent,
             'deposit_percent' => $this->venue->deposit_percent,
             'note' => 'starting_price is a per-event rental rate before any weekday discount and is indicative only — always call check_availability for the exact price on a real date.',
+        ] : [
+            'hall_slug' => $hall->slug,
+            'name' => $hall->translatedName($this->locale),
+            'description' => $hall->translatedDescription($this->locale),
+            'setting' => $hall->setting,
+            'details' => $hall->translations[$this->locale]['details'] ?? $hall->translations['en']['details'] ?? [],
+            'note' => 'This is a partner venue of the TUTU salon. No price is published for it: never state or estimate one. Say the TUTU salon prepares a free quote. Use only the details above.',
+        ];
+        $detail += [
             'images' => $images->map(fn ($img) => [
                 'url' => $img->image_source,
                 'tags' => $img->tags,
@@ -424,7 +448,7 @@ class VenueConciergeTools
             'available' => true,
             'hall_slug' => $hall->slug,
             'name' => $hall->translatedName($this->locale),
-            ...$quote,
+            ...($this->venue->showsPrices() ? $quote : ['event_date' => $quote['event_date']]),
         ];
 
         return [
@@ -443,7 +467,11 @@ class VenueConciergeTools
         $eventDate = $this->parseDate($input['event_date']);
         $guests = (int) $input['guests'];
 
-        if (! $hall->fitsGuests($guests) || $guests > ReservationService::MAX_GUESTS) {
+        if (! $this->venue->showsPrices() && $guests > 20) {
+            return ['text' => 'A visit to the salon takes up to 20 people. For a bigger group call request_human_handover.', 'ui' => null];
+        }
+
+        if ($this->venue->showsPrices() && (! $hall->fitsGuests($guests) || $guests > ReservationService::MAX_GUESTS)) {
             return ['text' => 'This hall cannot hold that many guests. Suggest a larger hall, or call request_human_handover with reason custom_package for a split-room arrangement.', 'ui' => null];
         }
 
@@ -473,9 +501,11 @@ class VenueConciergeTools
             'event_date' => $eventDate->toDateString(),
             'event_type' => $booking->event_type,
             'guests' => $guests,
-            'total_price' => (float) $booking->total_price,
-            'deposit_amount' => (float) $booking->deposit_amount,
-            'currency' => $booking->billedCurrency(),
+            ...($this->venue->showsPrices() ? [
+                'total_price' => (float) $booking->total_price,
+                'deposit_amount' => (float) $booking->deposit_amount,
+                'currency' => $booking->billedCurrency(),
+            ] : []),
             'status' => 'pending_confirmation',
         ];
 

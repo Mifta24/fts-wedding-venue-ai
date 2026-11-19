@@ -97,6 +97,7 @@
                 <h2 class="mt-0!">{{ $hallName }}</h2>
                 <p class="hall-scene-description">{{ $hall->translatedDescription($locale) }}</p>
 
+                @if ($venue->showsPrices())
                 <div class="hall-scene-rate">
                     <p><span class="hall-scene-rate-label">{{ $venue->isPlanCatalog() ? ($venue->planInfoFor($locale)['rate_label'] ?? $lobby['rate_label']) : $lobby['rate_label'] }}</span> <span class="hall-scene-rate-amount"><strong>{{ $money($hall->base_price) }}</strong> <span class="hall-scene-rate-label">{{ $venue->isPlanCatalog() ? ($venue->planInfoFor($locale)['per_event'] ?? $lobby['rate_per_event']) : $lobby['rate_per_event'] }}</span></span></p>
                     @if ($venue->weekday_discount_percent > 0)
@@ -107,6 +108,17 @@
                     @endif
                     <p class="hall-scene-note">{{ $lobby['availability_note'] }}</p>
                 </div>
+                @else
+                    @php $facts = $hall->translations[$locale]['details'] ?? $hall->translations['en']['details'] ?? []; @endphp
+                    @if ($facts)
+                        <dl class="hall-scene-facts hall-scene-guide-facts">
+                            @foreach ($facts as $fact)
+                                <div><dt>{{ $fact['label'] }}</dt><dd>{{ $fact['value'] }}</dd></div>
+                            @endforeach
+                        </dl>
+                    @endif
+                    <p class="hall-scene-note">{{ $lobby['availability_note'] }}</p>
+                @endif
 
                 <div class="mt-5 flex flex-wrap gap-3">
                     <a href="{{ route('venue.reservation', ['venueSlug' => $venue->slug, 'lang' => $locale, 'hall' => $hall->slug]) }}" data-stage-exit data-tour-line="{{ $narration['tour_reservation'] }}" class="lobby-action">{{ $lobby['reserve_hall'] }} <span aria-hidden="true">↗</span></a>
@@ -115,7 +127,7 @@
 
                 @if ($venue->isPlanCatalog())
                     @php $info = $venue->planInfoFor($locale); @endphp
-                    @if (! empty($hall->price_options))
+                    @if ($venue->showsPrices() && ! empty($hall->price_options))
                         <div class="plan-block">
                             <h3 class="hall-scene-subheading">{{ $info['prices_heading'] ?? '' }}</h3>
                             <table class="plan-prices">

@@ -198,10 +198,19 @@ class Venue extends Model
         return in_array($this->public_status, ['published', 'unlisted'], true);
     }
 
-    /** A venue that sells packages per location instead of renting halls. */
+    /** A venue that sells packages per location (or only introduces partner venues) instead of renting halls. */
     public function isPlanCatalog(): bool
     {
-        return $this->catalog_mode === 'plan';
+        return in_array($this->catalog_mode, ['plan', 'guide'], true);
+    }
+
+    /**
+     * A guide lists partner venues but sells none of them: there is no rate to show, quote or hold a deposit on,
+     * so every price, total and deposit stays out of the pages, the chat and the date request.
+     */
+    public function showsPrices(): bool
+    {
+        return $this->catalog_mode !== 'guide';
     }
 
     /** Visitors must enter the access code before any public page opens. */

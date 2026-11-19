@@ -118,7 +118,7 @@ class ReservationController extends Controller
         $venue = $this->publishedVenue($venueSlug);
         $locale = $this->locale($request, $venue);
 
-        $data = $request->validate($this->eventRules($venue), $this->validationMessages($locale));
+        $data = $request->validate($this->eventRules($venue), $this->validationMessages($venue, $locale));
         [$hall, $eventDate, $extraHours] = $this->resolveEvent($venue, $data, $locale);
 
         $quote = $this->reservations->quote($hall, $eventDate, $extraHours, locale: $locale);
@@ -129,7 +129,7 @@ class ReservationController extends Controller
 
         return response()->json([
             'available' => true,
-            ...$quote,
+            ...($venue->showsPrices() ? $quote : ['event_date' => $quote['event_date']]),
         ]);
     }
 
@@ -137,7 +137,7 @@ class ReservationController extends Controller
     {
         $venue = $this->publishedVenue($venueSlug);
         $locale = $this->locale($request, $venue);
-        $messages = self::MESSAGES[$locale];
+        $messages = $this->messages($venue, $locale);
 
         $data = $request->validate([
             ...$this->eventRules($venue),
@@ -146,7 +146,7 @@ class ReservationController extends Controller
             'contact_value' => ['required', 'string', 'max:120'],
             'special_request' => ['nullable', 'string', 'max:500'],
             'client_token' => ['nullable', 'uuid'],
-        ], $this->validationMessages($locale));
+        ], $this->validationMessages($venue, $locale));
 
         $isEmail = $data['contact_type'] === 'email';
 
@@ -184,9 +184,11 @@ class ReservationController extends Controller
         return response()->json([
             'reference' => $booking->reference,
             'status' => $booking->status,
-            'total' => (float) $booking->total_price,
-            'deposit' => (float) $booking->deposit_amount,
-            'currency' => $booking->billedCurrency(),
+            ...($venue->showsPrices() ? [
+                'total' => (float) $booking->total_price,
+                'deposit' => (float) $booking->deposit_amount,
+                'currency' => $booking->billedCurrency(),
+            ] : []),
             'handover' => $this->handover->forBooking($venue, $booking, $locale),
         ], 201);
     }
@@ -202,7 +204,7 @@ class ReservationController extends Controller
             'hall_slug' => ['required', 'string', 'max:120'],
             'event_date' => ['required', 'date_format:Y-m-d', 'after_or_equal:'.$today],
             'event_type' => ['required', Rule::in(Booking::EVENT_TYPES)],
-            'guests' => ['required', 'integer', 'min:1', 'max:'.ReservationService::MAX_GUESTS],
+            'guests' => ['required', 'integer', 'min:1', 'max:'.($venue->showsPrices() ? ReservationService::MAX_GUESTS : 20)],
             'extra_hours' => ['nullable', 'integer', 'min:0', 'max:'.Hall::MAX_EXTRA_HOURS],
             'locale' => ['nullable', Rule::in(self::SUPPORTED_LOCALES)],
         ];
@@ -211,9 +213,9 @@ class ReservationController extends Controller
     /**
      * @return array<string, string>
      */
-    private function validationMessages(string $locale): array
+    private function validationMessages(Venue $venue, string $locale): array
     {
-        $messages = self::MESSAGES[$locale];
+        $messages = $this->messages($venue, $locale);
 
         return [
             'required' => $messages['invalid'],
@@ -233,7 +235,7 @@ class ReservationController extends Controller
      */
     private function resolveEvent(Venue $venue, array $data, string $locale): array
     {
-        $messages = self::MESSAGES[$locale];
+        $messages = $this->messages($venue, $locale);
 
         $hall = $venue->halls()->where('is_active', true)->where('slug', $data['hall_slug'])->first();
 
@@ -265,20 +267,20 @@ class ReservationController extends Controller
             ->with('venue')
             ->orderBy('sort_order')
             ->get()
-            ->filter(fn (Hall $hall) => $hall->fitsGuests($guests))
-            ->map(function (Hall $hall) use ($eventDate, $locale) {
+            ->filter(fn (Hall $hall) => ! $venue->showsPrices() || $hall->fitsGuests($guests))
+            ->map(function (Hall $hall) use ($venue, $eventDate, $locale) {
                 $quote = $this->reservations->quote($hall, $eventDate, locale: $locale);
 
                 return $quote ? [
                     'slug' => $hall->slug,
                     'name' => $hall->translatedName($locale),
-                    'total' => $quote['grand_total'],
+                    ...($venue->showsPrices() ? ['total' => $quote['grand_total']] : []),
                 ] : null;
             })
             ->filter()
             ->values();
 
-        $message = self::MESSAGES[$locale]['unavailable'];
+        $message = $this->messages($venue, $locale)['unavailable'];
 
         return response()->json([
             'message' => $message,
@@ -286,6 +288,19 @@ class ReservationController extends Controller
             'alternatives' => $alternatives,
             'currency' => app(CurrencyConverter::class)->currencyFor($venue, $locale),
         ], 422);
+    }
+
+    /**
+     * The error messages of one language. A guide site is booking a consultation, not renting a hall,
+     * so it brings its own wording for the ones that talk about halls and wedding dates.
+     *
+     * @return array<string, string>
+     */
+    private function messages(Venue $venue, string $locale): array
+    {
+        $own = $venue->showsPrices() ? [] : ($venue->planInfoFor($locale)['wizard'] ?? []);
+
+        return [...self::MESSAGES[$locale], ...array_intersect_key($own, self::MESSAGES[$locale])];
     }
 
     private function locale(Request $request, Venue $venue): string

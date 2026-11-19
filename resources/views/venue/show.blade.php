@@ -44,6 +44,37 @@
         </div>
     </x-slot:welcome>
 
+    @unless ($venue->showsPrices())
+        {{-- Consultation lounge (guide sites): the AI sits at a desk in the middle, the menu is on the left and the photos shown along with her explanation are on the right. --}}
+        @php
+            $lounge = [
+                'ja' => ['映像・資料', 'AIの説明に連動して表示されます'],
+                'en' => ['Photos & materials', 'Shown along with the AI\'s explanation'],
+                'id' => ['Foto & materi', 'Tampil sesuai penjelasan AI'],
+                'th' => ['ภาพและเอกสาร', 'แสดงประกอบคำอธิบายของ AI'],
+                'zh' => ['影像・資料', '隨 AI 的說明同步顯示'],
+            ][$locale] ?? ['Photos & materials', 'Shown along with the AI\'s explanation'];
+            $slides = ['reception', 'terrace', 'chapel-inside', 'chapel-outside', 'garden', 'consult'];
+        @endphp
+        <div class="lounge-desk" aria-hidden="true"></div>
+        <aside class="lounge-media" aria-label="{{ $lounge[0] }}" data-lounge>
+            <p class="lounge-media-title">{{ $lounge[0] }}</p>
+            <div class="lounge-slides" data-lounge-slides>
+                @foreach ($slides as $slide)
+                    <img src="/images/tutu/{{ $slide }}.webp" alt="" loading="{{ $loop->first ? 'eager' : 'lazy' }}" @if($loop->first) class="is-active" @endif>
+                @endforeach
+            </div>
+            <p class="lounge-media-note">{{ $lounge[1] }}</p>
+            <p class="lounge-media-intro">{{ $lobby['intro'] }}</p>
+            @if ($halls->isNotEmpty())
+                <div class="lounge-cta">
+                    <a href="{{ $hallsItem['href'] }}" class="lobby-action lobby-action-signal" data-stage-exit data-tour-line="{{ $hallsItem['tour'] }}" data-topic="{{ $hallsItem['topic'] }}">{{ $lobby['cta_halls'] }}</a>
+                    <a href="{{ $reservationItem['href'] }}" class="lobby-action-ghost" data-stage-exit data-tour-line="{{ $reservationItem['tour'] }}" data-topic="{{ $reservationItem['topic'] }}">{{ $lobby['start_booking'] }}</a>
+                </div>
+            @endif
+        </aside>
+    @endunless
+
     @php $films = $venue->filmsFor($locale); @endphp
     @if ($films)
         <div class="lobby-films" data-films>

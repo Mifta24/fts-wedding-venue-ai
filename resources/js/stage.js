@@ -354,3 +354,17 @@ function initLobbyPhotos() {
 }
 
 initLobbyPhotos();
+
+// Consultation lounge (guide sites): the photos on the right change every few seconds, like material shown along with the AI's talk.
+function initLounge() {
+    const slides = [...document.querySelectorAll('[data-lounge-slides] img')];
+    if (slides.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let current = 0;
+    window.setInterval(() => {
+        slides[current].classList.remove('is-active');
+        current = (current + 1) % slides.length;
+        slides[current].classList.add('is-active');
+    }, 5000);
+}
+
+initLounge();

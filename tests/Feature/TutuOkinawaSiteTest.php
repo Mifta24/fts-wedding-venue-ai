@@ -6,6 +6,7 @@ use App\Models\Conversation;
 use App\Models\Venue;
 use App\Services\Concierge\ConciergeService;
 use App\Services\Concierge\VenueConciergeTools;
+use Database\Seeders\JsAculSeeder;
 use Database\Seeders\TutuOkinawaSeeder;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -167,6 +168,27 @@ class TutuOkinawaSiteTest extends TestCase
             ->assertOk()->json('message.content');
 
         $this->assertStringContainsString('110,000', $reply);
+    }
+
+    public function test_the_lobby_is_a_consultation_lounge_with_the_concierge_seated_and_photos_on_the_side(): void
+    {
+        $this->seedSite();
+
+        $html = $this->get('/tutu-okinawa?lang=en')->assertOk()->getContent();
+        $this->assertStringContainsString('data-pose="consulting"', $html);
+        $this->assertStringContainsString('class="lounge-desk"', $html);
+        $this->assertStringContainsString('data-lounge-slides', $html);
+        $this->assertStringContainsString('theme-tutu', $html);
+    }
+
+    public function test_the_other_chapters_and_the_other_sites_keep_the_stage_layout(): void
+    {
+        $this->seedSite();
+        $jsacul = (new JsAculSeeder);
+        $jsacul->setContainer(app())->setCommand(new Command)->__invoke();
+
+        $this->assertStringNotContainsString('lounge-desk', $this->get('/tutu-okinawa/halls?lang=en')->assertOk()->getContent());
+        $this->assertStringNotContainsString('lounge-desk', $this->get('/jsacul?lang=en')->assertOk()->getContent());
     }
 
     public function test_the_other_sites_still_show_their_prices(): void

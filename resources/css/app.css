@@ -1073,3 +1073,8 @@ a.info-fact:hover { border-color: var(--text); }
 .chat-bar input { text-overflow: ellipsis; }
 .chat-bar input::placeholder { text-overflow: ellipsis; }
 .chat-bar .chat-mic { width: 40px; min-height: 40px; align-self: center; border-radius: 999px; }
+
+/* Small kicker labels (venue name above the headline, chapter labels): white, bigger, on a dark glass pill so they read on the pale sky */
+.theme-jsacul .stage-welcome .lobby-eyebrow, .theme-jsacul .hall-scene .lobby-eyebrow, .theme-jsacul .lobby-content > .lobby-eyebrow, .theme-jsacul .chapter-eyebrow { display: inline-block; padding: 7px 16px; border-radius: 999px; background: #16161ab3; backdrop-filter: blur(8px); color: #fff; font-size: 13px; font-weight: 600; letter-spacing: .12em; text-shadow: none; }
+.theme-jsacul .stage-welcome .lobby-eyebrow::before { width: 22px; margin-right: 10px; background: var(--gold); opacity: 1; }
+@media (max-width: 899px) { .theme-jsacul .stage-welcome .lobby-eyebrow, .theme-jsacul .lobby-content > .lobby-eyebrow { font-size: 12px; padding: 6px 13px; } }

@@ -1124,9 +1124,10 @@ a.info-fact:hover { border-color: var(--text); }
 /* TUTU lounge: a bright consultation room. The AI sits behind a desk in the middle, the menu is on the left, and the photos shown with her talk are on the right (a face-to-face feel, as Mr Yoshi's mock-up). Lobby only; other chapters keep the stage layout. */
 .theme-tutu .lounge-desk, .theme-tutu .lounge-media { display: none; }
 @media (min-width: 1100px) {
-    .theme-tutu .stage[data-scene="lobby"] { --rail: clamp(200px, 17vw, 270px); --lounge-side: clamp(280px, 22vw, 340px); --char-ratio: .644; --char-h: calc((100dvh - var(--header)) * .86); --char-right: auto; --char-w: calc(var(--char-h) * var(--char-ratio)); --desk-h: calc(var(--dock) + 44px); background: radial-gradient(ellipse at 50% 35%, #ffffff 0, #fdf3f6 55%, #f6dfe6 100%); }
-    .theme-tutu .stage[data-scene="lobby"] .stage-image { display: none; }
-    .theme-tutu .stage[data-scene="lobby"] .stage-shade { background: none; }
+    .theme-tutu .stage[data-scene="lobby"] { --rail: clamp(200px, 17vw, 270px); --lounge-side: clamp(280px, 22vw, 340px); --char-ratio: .644; --char-h: calc((100dvh - var(--header)) * .86); --char-right: auto; --char-w: calc(var(--char-h) * var(--char-ratio)); --desk-h: calc(var(--dock) + 30px); background: radial-gradient(ellipse at 50% 35%, #ffffff 0, #fdf3f6 55%, #f6dfe6 100%); }
+    .theme-tutu .stage[data-scene="lobby"] .stage-image { object-position: 50% 30%; filter: saturate(.92); }
+    .theme-tutu .stage[data-scene="lobby"] .stage-shade { background: linear-gradient(90deg, #fff7f98c 0, #fff7f933 24%, #fff7f91a 50%, #fff7f933 76%, #fff7f98c 100%), linear-gradient(180deg, #ffffff59 0, #ffffff00 28%); }
+    .theme-tutu .stage[data-scene="lobby"] .stage-character { filter: drop-shadow(0 6px 22px #3a1a2a66) drop-shadow(0 0 2px #3a1a2a40); }
     .theme-tutu .stage[data-scene="lobby"] .stage-character { right: auto; left: 50%; transform: translateX(-50%); bottom: calc(var(--desk-h) - 30px); height: var(--char-h); z-index: 2; filter: drop-shadow(0 14px 24px #5a1f334d); }
     .theme-tutu .stage[data-scene="lobby"] .lounge-desk { display: block; position: absolute; z-index: 3; left: 50%; width: min(760px, calc(100% - var(--rail) - var(--lounge-side) - var(--gap) * 6)); transform: translateX(-50%); bottom: 0; height: var(--desk-h); border-radius: 26px 26px 0 0; background: linear-gradient(180deg, #ffffff 0, #f3e3e8 100%); border: 1px solid #be284b2e; border-bottom: 0; box-shadow: 0 -12px 34px #5a1f3338, inset 0 3px 0 #fff; }
     .theme-tutu .stage[data-scene="lobby"] .stage-welcome { display: none; }

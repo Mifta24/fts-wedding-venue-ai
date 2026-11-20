@@ -179,6 +179,8 @@ class TutuOkinawaSiteTest extends TestCase
         $this->assertStringContainsString('class="lounge-desk"', $html);
         $this->assertStringContainsString('data-lounge-slides', $html);
         $this->assertStringContainsString('theme-tutu', $html);
+        // The lobby sits in front of the bright chapel photo, not a plain white wall.
+        $this->assertStringContainsString('/images/tutu/lounge.webp', $html);
     }
 
     public function test_the_other_chapters_and_the_other_sites_keep_the_stage_layout(): void
@@ -189,6 +191,7 @@ class TutuOkinawaSiteTest extends TestCase
 
         $this->assertStringNotContainsString('lounge-desk', $this->get('/tutu-okinawa/halls?lang=en')->assertOk()->getContent());
         $this->assertStringNotContainsString('lounge-desk', $this->get('/jsacul?lang=en')->assertOk()->getContent());
+        $this->assertStringNotContainsString('tutu/lounge.webp', $this->get('/tutu-okinawa/halls?lang=en')->assertOk()->getContent());
     }
 
     public function test_the_other_sites_still_show_their_prices(): void

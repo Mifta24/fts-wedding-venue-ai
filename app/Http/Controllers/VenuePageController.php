@@ -414,8 +414,14 @@ class VenuePageController extends Controller
             $photo = [...self::SCENE_PHOTOS['lobby'], 'image' => $cover];
         }
 
-        // A guide site's lobby is a consultation lounge: the concierge sits at a desk, half-length, facing the visitor.
-        $pose = ! $venue->showsPrices() && $scene === 'lobby'
+        // A guide site's lobby is a consultation lounge: the concierge sits at a desk, half-length, facing the visitor,
+        // in front of the site's own bright lounge photo (lounge.webp beside the cover) when it has one.
+        $lounge = ! $venue->showsPrices() && $scene === 'lobby';
+        if ($lounge && $ownCover && is_file(public_path(dirname($venue->cover_path).'/lounge.webp'))) {
+            $photo = [...$photo, 'image' => asset(ltrim(dirname($venue->cover_path), '/').'/lounge.webp')];
+        }
+
+        $pose = $lounge
             ? 'consulting'
             : (self::SCENE_POSES[['hall' => 'halls'][$scene] ?? $scene] ?? 'standing');
 

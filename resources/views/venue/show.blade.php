@@ -56,7 +56,6 @@
             ][$locale] ?? ['Photos & materials', 'Shown along with the AI\'s explanation'];
             $slides = ['reception', 'terrace', 'chapel-inside', 'chapel-outside', 'garden', 'consult'];
         @endphp
-        <div class="lounge-desk" aria-hidden="true"></div>
         <aside class="lounge-media" aria-label="{{ $lounge[0] }}" data-lounge>
             <p class="lounge-media-title">{{ $lounge[0] }}</p>
             <div class="lounge-slides" data-lounge-slides>

@@ -176,11 +176,22 @@ class TutuOkinawaSiteTest extends TestCase
 
         $html = $this->get('/tutu-okinawa?lang=en')->assertOk()->getContent();
         $this->assertStringContainsString('data-pose="consulting"', $html);
-        $this->assertStringContainsString('class="lounge-desk"', $html);
         $this->assertStringContainsString('data-lounge-slides', $html);
         $this->assertStringContainsString('theme-tutu', $html);
         // The lobby sits in front of the bright chapel photo, not a plain white wall.
         $this->assertStringContainsString('/images/tutu/lounge.webp', $html);
+    }
+
+    public function test_every_chapter_keeps_the_bright_concept_photo_and_the_lobby_has_no_desk_bar(): void
+    {
+        $this->seedSite();
+
+        foreach (['halls' => 'scene-halls', 'services' => 'scene-services', 'info' => 'scene-info', 'staff' => 'scene-staff', 'reservation' => 'scene-reservation'] as $path => $photo) {
+            $this->assertStringContainsString("/images/tutu/{$photo}.webp", $this->get("/tutu-okinawa/{$path}?lang=en")->assertOk()->getContent(), $path);
+            $this->assertFileExists(public_path("images/tutu/{$photo}.webp"));
+        }
+        $this->assertStringNotContainsString('lounge-desk', $this->get('/tutu-okinawa?lang=en')->getContent());
+        $this->assertStringContainsString('lounge-media', $this->get('/tutu-okinawa?lang=en')->getContent());
     }
 
     public function test_the_other_chapters_and_the_other_sites_keep_the_stage_layout(): void
@@ -189,8 +200,8 @@ class TutuOkinawaSiteTest extends TestCase
         $jsacul = (new JsAculSeeder);
         $jsacul->setContainer(app())->setCommand(new Command)->__invoke();
 
-        $this->assertStringNotContainsString('lounge-desk', $this->get('/tutu-okinawa/halls?lang=en')->assertOk()->getContent());
-        $this->assertStringNotContainsString('lounge-desk', $this->get('/jsacul?lang=en')->assertOk()->getContent());
+        $this->assertStringNotContainsString('lounge-media', $this->get('/tutu-okinawa/halls?lang=en')->assertOk()->getContent());
+        $this->assertStringNotContainsString('lounge-media', $this->get('/jsacul?lang=en')->assertOk()->getContent());
         $this->assertStringNotContainsString('tutu/lounge.webp', $this->get('/tutu-okinawa/halls?lang=en')->assertOk()->getContent());
     }
 

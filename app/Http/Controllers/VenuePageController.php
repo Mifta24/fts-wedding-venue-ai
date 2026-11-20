@@ -421,6 +421,16 @@ class VenuePageController extends Controller
             $photo = [...$photo, 'image' => asset(ltrim(dirname($venue->cover_path), '/').'/lounge.webp')];
         }
 
+        // Guide sites with a photo for the chapter (scene-{chapter}.webp beside the cover) keep one bright
+        // concept across every page instead of the stock scenes.
+        if (! $venue->showsPrices() && $ownCover) {
+            $key = ['hall' => 'halls', 'service' => 'services'][$scene] ?? $scene;
+            $dir = dirname($venue->cover_path);
+            if (! $lounge && is_file(public_path($dir.'/scene-'.$key.'.webp'))) {
+                $photo = [...$photo, 'image' => asset(ltrim($dir, '/').'/scene-'.$key.'.webp')];
+            }
+        }
+
         $pose = $lounge
             ? 'consulting'
             : (self::SCENE_POSES[['hall' => 'halls'][$scene] ?? $scene] ?? 'standing');

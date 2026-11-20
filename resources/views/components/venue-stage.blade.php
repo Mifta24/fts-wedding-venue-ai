@@ -38,7 +38,6 @@
     <meta name="twitter:description" content="{{ $pageDescription }}">
     <meta name="twitter:image" content="{{ $pageImage }}">
     <script>try{var d=JSON.parse(sessionStorage.getItem('venue_direct')||'null');sessionStorage.removeItem('venue_direct');var sec=function(p){var m=/^(.*?\/(?:halls|services))(?:\/|$)/.exec(p);return m&&m[1]},r=document.referrer?new URL(document.referrer):null,same=r&&r.origin===location.origin&&sec(r.pathname)&&sec(r.pathname)===sec(location.pathname);if(same||(d&&d.path===location.pathname&&Date.now()-d.at<30000))document.documentElement.classList.add('stage-direct')}catch(e){}</script>
-    @fonts
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="stage-page antialiased{{ $venue->theme ? ' theme-'.$venue->theme : '' }}" style="--concierge-image: url('{{ $backdrop['avatarImage'] }}'); --stage-focus: {{ $backdrop['focus'] }}; --stage-focus-mobile: {{ $backdrop['focusMobile'] }}; --concierge-zoom: {{ $backdrop['avatarZoom'] }}; --concierge-focus: {{ $backdrop['avatarFocus'] }}">

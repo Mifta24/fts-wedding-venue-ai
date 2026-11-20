@@ -426,8 +426,10 @@ class VenuePageController extends Controller
         if (! $venue->showsPrices() && $ownCover) {
             $key = ['hall' => 'halls', 'service' => 'services'][$scene] ?? $scene;
             $dir = dirname($venue->cover_path);
-            if (! $lounge && is_file(public_path($dir.'/scene-'.$key.'.webp'))) {
-                $photo = [...$photo, 'image' => asset(ltrim($dir, '/').'/scene-'.$key.'.webp')];
+            $file = public_path($dir.'/scene-'.$key.'.webp');
+            if (! $lounge && is_file($file)) {
+                // ?v= the file's age: a replaced photo is never served from a browser's 4-hour cache.
+                $photo = [...$photo, 'image' => asset(ltrim($dir, '/').'/scene-'.$key.'.webp').'?v='.filemtime($file)];
             }
         }
 

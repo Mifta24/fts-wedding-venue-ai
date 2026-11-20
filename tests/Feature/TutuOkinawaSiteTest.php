@@ -170,6 +170,19 @@ class TutuOkinawaSiteTest extends TestCase
         $this->assertStringContainsString('110,000', $reply);
     }
 
+    public function test_the_about_page_carries_the_company_message_profile_and_history(): void
+    {
+        $this->seedSite();
+
+        $ja = $this->get('/tutu-okinawa/info?lang=ja')->assertOk();
+        $ja->assertSee('会社案内')->assertSee('メッセージ')->assertSee('会社概要')->assertSee('沿革')
+            ->assertSee('株式会社ブライダルハウス チュチュ')->assertSee('1980年5月20日')->assertSee('小川 義昭')
+            ->assertSee('2025年 ラソールシーリゾート設立')->assertDontSee('Naha、Japanにございます');
+
+        $this->get('/tutu-okinawa/info?lang=en')->assertOk()
+            ->assertSee('Company profile', false)->assertSee('Founded: May 20, 1980', false)->assertSee('Message from Bridal House TUTU', false);
+    }
+
     public function test_asking_to_see_photos_puts_the_venues_on_screen_even_when_the_model_only_talks(): void
     {
         config(['services.local_llm.base_url' => 'http://llm.test', 'services.local_llm.api_key' => 'k', 'services.local_llm.model' => 'm']);

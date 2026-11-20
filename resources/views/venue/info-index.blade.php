@@ -47,7 +47,7 @@
                 @endif
             </div>
 
-            <p class="info-address">{{ $venue->address }}, {{ $venue->city }}, {{ $venue->country }}</p>
+            <p class="info-address">{{ collect([$venue->address, str_contains((string) $venue->address, (string) $venue->city) ? null : $venue->city, $venue->country])->filter()->implode(', ') }}</p>
 
             @if ($sections->count() > 1)
                 <div class="info-tabs">

@@ -552,7 +552,8 @@
     "availability_note": "相談日は、TUTUのスタッフが最終確認いたします。",
     "location": "サロンの場所",
     "stat_from": "提携会場",
-    "stat_capacity": "ご相談"
+    "stat_capacity": "ご相談",
+    "info_tab_about": "会社案内"
    },
    "en": {
     "info_hours": "Opening hours",
@@ -564,7 +565,8 @@
     "availability_note": "The day of your consultation is confirmed by the TUTU staff.",
     "location": "Find the salon",
     "stat_from": "Partner venues",
-    "stat_capacity": "Consultation"
+    "stat_capacity": "Consultation",
+    "info_tab_about": "Company"
    },
    "id": {
     "info_hours": "Jam operasional",
@@ -576,7 +578,8 @@
     "availability_note": "Tanggal konsultasi akan dikonfirmasi oleh staf TUTU pada akhirnya.",
     "location": "Lokasi salon",
     "stat_from": "Venue mitra",
-    "stat_capacity": "Konsultasi"
+    "stat_capacity": "Konsultasi",
+    "info_tab_about": "Perusahaan"
    },
    "th": {
     "info_hours": "เวลาทำการ",
@@ -588,7 +591,8 @@
     "availability_note": "วันปรึกษาจะได้รับการยืนยันขั้นสุดท้ายโดยเจ้าหน้าที่ของ TUTU",
     "location": "ที่ตั้งของร้าน",
     "stat_from": "สถานที่จัดงานพันธมิตร",
-    "stat_capacity": "การปรึกษา"
+    "stat_capacity": "การปรึกษา",
+    "info_tab_about": "บริษัท"
    },
    "zh": {
     "info_hours": "營業時間",
@@ -600,7 +604,8 @@
     "availability_note": "諮詢日期將由 TUTU 的工作人員做最後確認。",
     "location": "沙龍位置",
     "stat_from": "合作會場",
-    "stat_capacity": "諮詢"
+    "stat_capacity": "諮詢",
+    "info_tab_about": "公司簡介"
    }
   },
   "extra_narration": {
@@ -611,7 +616,8 @@
     "tour_info": "TUTUのご案内を開きます。",
     "info_welcome": "TUTU沖縄へようこそ。",
     "info_hours": "サロンの営業時間は:inから:outまでです。",
-    "info_more": "以下に、住所、ご相談について、よくあるご質問を掲載しています。ご不明な点はお気軽にお尋ねください。"
+    "info_more": "会社のメッセージ・概要・沿革と、住所、ご相談について、よくあるご質問を掲載しています。ご不明な点はお気軽にお尋ねください。",
+    "info_place": "那覇本店と浦添のサロンで、ご相談を承っております。"
    },
    "en": {
     "tour_halls": "Opening the venue guide.",
@@ -620,7 +626,8 @@
     "tour_info": "Opening the information about TUTU.",
     "info_welcome": "Welcome to TUTU Okinawa.",
     "info_hours": "The salon is open from :in to :out.",
-    "info_more": "Below you will find the address, how a consultation works and frequently asked questions. Just ask me if anything is unclear."
+    "info_more": "Below you will find the address, how a consultation works and frequently asked questions. Just ask me if anything is unclear.",
+    "info_place": "You can visit our Naha main salon or our Urasoe salon."
    },
    "id": {
     "tour_halls": "Membuka panduan venue.",
@@ -629,7 +636,8 @@
     "tour_info": "Membuka informasi tentang TUTU.",
     "info_welcome": "Selamat datang di TUTU Okinawa.",
     "info_hours": "Jam buka salon adalah pukul :in hingga :out.",
-    "info_more": "Di bawah ini tersedia alamat, informasi tentang konsultasi, dan pertanyaan yang sering diajukan. Jika ada yang kurang jelas, silakan tanyakan kepada saya."
+    "info_more": "Di bawah ini tersedia alamat, informasi tentang konsultasi, dan pertanyaan yang sering diajukan. Jika ada yang kurang jelas, silakan tanyakan kepada saya.",
+    "info_place": "Anda dapat berkunjung ke salon utama kami di Naha atau salon kami di Urasoe."
    },
    "th": {
     "tour_halls": "กำลังเปิดคู่มือสถานที่จัดงานค่ะ",
@@ -638,7 +646,8 @@
     "tour_info": "กำลังเปิดข้อมูลเกี่ยวกับ TUTU ค่ะ",
     "info_welcome": "ยินดีต้อนรับสู่ TUTU Okinawa ค่ะ",
     "info_hours": "ซาลอนเปิดให้บริการตั้งแต่เวลา :in ถึง :out ค่ะ",
-    "info_more": "ด้านล่างนี้มีที่อยู่ ข้อมูลเกี่ยวกับการปรึกษา และคำถามที่พบบ่อยค่ะ หากมีสิ่งใดไม่ชัดเจน สอบถามได้เลยนะคะ"
+    "info_more": "ด้านล่างนี้มีที่อยู่ ข้อมูลเกี่ยวกับการปรึกษา และคำถามที่พบบ่อยค่ะ หากมีสิ่งใดไม่ชัดเจน สอบถามได้เลยนะคะ",
+    "info_place": "คุณสามารถแวะมาได้ที่ซาลอนหลักในนาฮะ หรือซาลอนในอุราโซเอะ"
    },
    "zh": {
     "tour_halls": "為您開啟會場介紹。",
@@ -647,7 +656,8 @@
     "tour_info": "為您開啟 TUTU 的相關介紹。",
     "info_welcome": "歡迎來到 TUTU Okinawa。",
     "info_hours": "沙龍的營業時間為 :in 至 :out。",
-    "info_more": "下方刊載了地址、諮詢說明以及常見問題。如有任何不清楚的地方,歡迎隨時詢問我。"
+    "info_more": "下方刊載了地址、諮詢說明以及常見問題。如有任何不清楚的地方,歡迎隨時詢問我。",
+    "info_place": "歡迎蒞臨我們位於那霸的總店或浦添的沙龍。"
    }
   }
  },
@@ -1755,6 +1765,78 @@
    "zh": {
     "title": "關於 TUTU 沖繩",
     "body": "TUTU 沖繩（Bridal House TUTU）是一家婚紗沙龍，協助您尋找沖繩的婚禮會場、挑選禮服，以及拍攝婚紗照。決定結婚後，歡迎先到位於那霸市松山的總店，或浦添市 Sanei Urasoe Nishikaigan PARCO CITY 內的櫃台免費諮詢。從報價、預約參觀會場，到暫時保留日期，所有安排都可以交給專屬的負責人員。"
+   }
+  },
+  {
+   "category": "general",
+   "image": null,
+   "ja": {
+    "title": "メッセージ",
+    "body": "質の高いご満足を提供しながら、社会の幸せづくりに貢献していく。一組のお客さまにかけがえのない感動を贈る。その使命に向き合うため、「商品の質を落とさない、徹底してお客さまのサービスを落とさない、認知度を落とさない」を基本姿勢に、質の高いご満足という価値のご提供に努めています。創業以来、時代と次代を見つめるブライダルハウスチュチュは、これからも出会いと絆を大切に育みながら、お客さまの幸せづくりを通して社会に貢献してまいります。"
+   },
+   "en": {
+    "title": "Message from Bridal House TUTU",
+    "body": "While providing high-quality satisfaction, we aim to contribute to a happier society. Our mission is to give each couple an irreplaceable moment of joy. To live up to it, our basic stance is never to lower the quality of our products, never to lower our thorough service to customers, and never to lower our reputation, and we work to deliver the value of high-quality satisfaction. Since its founding, Bridal House TUTU has kept its eyes on the present and the next generation, and will keep nurturing encounters and bonds, contributing to society by creating happiness for our customers."
+   },
+   "id": {
+    "title": "Pesan dari Bridal House TUTU",
+    "body": "Sambil memberikan kepuasan berkualitas tinggi, kami berupaya berkontribusi pada kebahagiaan masyarakat. Misi kami adalah menghadirkan kebahagiaan yang tak tergantikan bagi setiap pasangan. Untuk mewujudkannya, sikap dasar kami adalah tidak menurunkan kualitas produk, tidak menurunkan layanan kepada pelanggan, dan tidak menurunkan reputasi, demi memberikan nilai kepuasan berkualitas tinggi. Sejak berdiri, Bridal House TUTU terus memandang zaman kini dan generasi berikutnya, dan akan terus merawat pertemuan dan ikatan, serta berkontribusi pada masyarakat melalui kebahagiaan para pelanggan."
+   },
+   "th": {
+    "title": "ข้อความจาก Bridal House TUTU",
+    "body": "เรามุ่งมอบความพึงพอใจที่มีคุณภาพสูง พร้อมสร้างความสุขให้แก่สังคม พันธกิจของเราคือการมอบความประทับใจที่หาที่เปรียบไม่ได้ให้กับคู่รักทุกคู่ เพื่อให้บรรลุพันธกิจนี้ เรายึดมั่นว่าจะไม่ลดคุณภาพของสินค้า ไม่ลดคุณภาพการบริการลูกค้า และไม่ลดชื่อเสียงของแบรนด์ เพื่อมอบคุณค่าแห่งความพึงพอใจที่มีคุณภาพสูง ตั้งแต่ก่อตั้งมา Bridal House TUTU มองทั้งยุคสมัยปัจจุบันและยุคถัดไป และจะยังคงดูแลการพบกันและสายสัมพันธ์ต่อไป เพื่อสร้างความสุขให้ลูกค้าและมีส่วนช่วยสังคม"
+   },
+   "zh": {
+    "title": "Bridal House TUTU 的寄語",
+    "body": "我們在提供高品質滿意度的同時，致力於為社會創造幸福。我們的使命，是為每一對新人帶來無可取代的感動。為了實現這個使命，我們的基本態度是：不降低商品品質、不降低對顧客的周到服務、不降低品牌的知名度，努力提供高品質滿意度這項價值。自創業以來，Bridal House TUTU 一直關注時代與下一個時代，今後也將珍惜相遇與羈絆，並透過為顧客創造幸福來回饋社會。"
+   }
+  },
+  {
+   "category": "general",
+   "image": null,
+   "ja": {
+    "title": "会社概要",
+    "body": "社名：株式会社ブライダルハウス チュチュ\n創立：1980年5月20日\n代表者：代表取締役社長 小川 義昭\n資本金：3,000万円\n営業品目：貸衣裳全般 / ブライダルプロデュース / 教会式運営 / リゾートウエディングプロデュース\n本社：札幌市中央区南1条西28丁目 TUTU BLD.\n沖縄支社（株式会社ブライダルハウス チュチュ沖縄）：沖縄県那覇市松山2丁目3-15 TUTU BLD.\n支店：札幌、青山、銀座、名古屋、大阪、京都、岡山、熊本、沖縄\n沖縄の施設：ラソールガーデン・アリビラ クリスティア教会、アリビラ・グローリー教会、モントレ・ルメール教会、ルネッサンス・リベーラ教会、ラソールシーリゾート"
+   },
+   "en": {
+    "title": "Company profile",
+    "body": "Company name: Bridal House TUTU Co., Ltd\nFounded: May 20, 1980\nRepresentative: Yoshiaki Ogawa, President and CEO\nCapital: 30 million yen\nBusiness: wedding attire rental, bridal production, chapel ceremony operation and resort wedding production\nHead office: TUTU BLD., 2-28 Minami 1-jo Nishi, Chuo-ku, Sapporo\nOkinawa branch company (Bridal House TUTU Okinawa Co., Ltd.): TUTU BLD., 2-3-15 Matsuyama, Naha, Okinawa\nBranches: Sapporo, Aoyama, Ginza, Nagoya, Osaka, Kyoto, Okayama, Kumamoto and Okinawa\nFacilities in Okinawa: La Sol Garden Alivila (Christia Chapel), Alivila Glory Chapel, Monterey Lumiere Chapel, Renaissance Riviera Chapel and La Sol Sea Resort"
+   },
+   "id": {
+    "title": "Profil perusahaan",
+    "body": "Nama perusahaan: Bridal House TUTU Co., Ltd\nDidirikan: 20 Mei 1980\nPerwakilan: Yoshiaki Ogawa, Presiden Direktur\nModal: 30 juta yen\nBidang usaha: penyewaan busana pengantin, produksi pernikahan, pengelolaan upacara di kapel, dan produksi resort wedding\nKantor pusat: TUTU BLD., Chuo-ku, Sapporo\nKantor cabang Okinawa (Bridal House TUTU Okinawa Co., Ltd.): TUTU BLD., 2-3-15 Matsuyama, Naha, Okinawa\nCabang: Sapporo, Aoyama, Ginza, Nagoya, Osaka, Kyoto, Okayama, Kumamoto, dan Okinawa\nFasilitas di Okinawa: La Sol Garden Alivila (Kapel Christia), Kapel Alivila Glory, Kapel Monterey Lumiere, Kapel Renaissance Riviera, dan La Sol Sea Resort"
+   },
+   "th": {
+    "title": "ข้อมูลบริษัท",
+    "body": "ชื่อบริษัท: Bridal House TUTU Co., Ltd\nก่อตั้ง: 20 พฤษภาคม 1980 ผู้แทน: Yoshiaki Ogawa ประธานบริษัท ทุนจดทะเบียน: 30 ล้านเยน ธุรกิจ: เช่าชุดแต่งงาน โปรดิวซ์งานแต่งงาน บริหารพิธีในโบสถ์ และโปรดิวซ์รีสอร์ทเวดดิ้ง สำนักงานใหญ่: TUTU BLD\nเมืองซัปโปโร สาขาโอกินาว่า (Bridal House TUTU Okinawa Co., Ltd.): TUTU BLD\n2-3-15 Matsuyama, Naha, Okinawa สาขา: ซัปโปโร, อาโอยามะ, กินซ่า, นาโกย่า, โอซาก้า, เกียวโต, โอคายามะ, คุมาโมโตะ และโอกินาว่า สถานที่ในโอกินาว่า: La Sol Garden Alivila (Christia Chapel), Alivila Glory Chapel, Monterey Lumiere Chapel, Renaissance Riviera Chapel และ La Sol Sea Resort"
+   },
+   "zh": {
+    "title": "公司簡介",
+    "body": "公司名稱：株式会社 Bridal House TUTU\n創立：1980年5月20日\n代表人：代表取締役社長 小川義昭\n資本額：3,000萬日圓\n營業項目：婚紗禮服租借、婚禮策劃、教堂儀式營運、度假婚禮策劃\n總公司：札幌市中央區南1條西28丁目 TUTU BLD.\n沖繩分公司（株式会社 Bridal House TUTU 沖繩）：沖繩縣那霸市松山2丁目3-15 TUTU BLD.\n分店：札幌、青山、銀座、名古屋、大阪、京都、岡山、熊本、沖繩\n沖繩的設施：ラソールガーデン・アリビラ（Christia 教堂）、Alivila Glory 教堂、Monterey Lumiere 教堂、Renaissance Riviera 教堂、ラソールシーリゾート"
+   }
+  },
+  {
+   "category": "general",
+   "image": null,
+   "ja": {
+    "title": "沿革",
+    "body": "1977年 株式会社オガワ設立\n1979年 株式会社グラン設立\n1983年 株式会社ブライダルハウスチュチュ設立\n1993年 東京営業所開設\n1998年 大阪営業所開設\n1999年 株式会社ブライダルハウスチュチュ沖縄設立\n2004年 本社社屋を移転建設\n2011年 岡山営業所、プロノビアス青山を開設\n2012年 京都営業所、銀座営業所を開設\n2013年 ザ・リュクス銀座設立\n2014年 ラソールガーデン大阪設立\n2017年 名古屋営業所開設\n2019年 ラソールガーデン熊本設立、熊本営業所開設\n2023年 ラソールガーデン札幌設立\n2025年 ラソールシーリゾート設立"
+   },
+   "en": {
+    "title": "History",
+    "body": "1977: Ogawa Co., Ltd. established\n1979: Gran Co., Ltd. established\n1983: Bridal House TUTU Co., Ltd. established\n1993: Tokyo office opened\n1998: Osaka office opened\n1999: Bridal House TUTU Okinawa Co., Ltd. established\n2004: new head office building completed\n2011: Okayama office and Pronovias Aoyama opened\n2012: Kyoto and Ginza offices opened\n2013: The Luxe Ginza established\n2014: La Sol Garden Osaka established\n2017: Nagoya office opened\n2019: La Sol Garden Kumamoto established and Kumamoto office opened\n2023: La Sol Garden Sapporo established\n2025: La Sol Sea Resort established"
+   },
+   "id": {
+    "title": "Sejarah",
+    "body": "1977: Ogawa Co., Ltd. didirikan\n1979: Gran Co., Ltd. didirikan\n1983: Bridal House TUTU Co., Ltd. didirikan\n1993: kantor Tokyo dibuka\n1998: kantor Osaka dibuka\n1999: Bridal House TUTU Okinawa Co., Ltd. didirikan\n2004: gedung kantor pusat baru selesai dibangun\n2011: kantor Okayama dan Pronovias Aoyama dibuka\n2012: kantor Kyoto dan Ginza dibuka\n2013: The Luxe Ginza didirikan\n2014: La Sol Garden Osaka didirikan\n2017: kantor Nagoya dibuka\n2019: La Sol Garden Kumamoto didirikan dan kantor Kumamoto dibuka\n2023: La Sol Garden Sapporo didirikan\n2025: La Sol Sea Resort didirikan"
+   },
+   "th": {
+    "title": "ประวัติบริษัท",
+    "body": "1977: ก่อตั้ง Ogawa Co., Ltd\n1979: ก่อตั้ง Gran Co., Ltd\n1983: ก่อตั้ง Bridal House TUTU Co., Ltd\n1993: เปิดสำนักงานโตเกียว 1998: เปิดสำนักงานโอซาก้า 1999: ก่อตั้ง Bridal House TUTU Okinawa Co., Ltd\n2004: ย้ายและสร้างอาคารสำนักงานใหญ่ใหม่ 2011: เปิดสำนักงานโอคายามะ และ Pronovias Aoyama 2012: เปิดสำนักงานเกียวโตและกินซ่า 2013: ก่อตั้ง The Luxe Ginza 2014: ก่อตั้ง La Sol Garden Osaka 2017: เปิดสำนักงานนาโกย่า 2019: ก่อตั้ง La Sol Garden Kumamoto และเปิดสำนักงานคุมาโมโตะ 2023: ก่อตั้ง La Sol Garden Sapporo 2025: ก่อตั้ง La Sol Sea Resort"
+   },
+   "zh": {
+    "title": "沿革",
+    "body": "1977年 設立 Ogawa 株式会社\n1979年 設立 Gran 株式会社\n1983年 設立 株式会社 Bridal House TUTU\n1993年 開設東京營業所\n1998年 開設大阪營業所\n1999年 設立 株式会社 Bridal House TUTU 沖繩\n2004年 總公司大樓遷移新建\n2011年 開設岡山營業所與 Pronovias 青山\n2012年 開設京都營業所與銀座營業所\n2013年 設立 The Luxe 銀座\n2014年 設立 La Sol Garden 大阪\n2017年 開設名古屋營業所\n2019年 設立 La Sol Garden 熊本並開設熊本營業所\n2023年 設立 La Sol Garden 札幌\n2025年 設立 La Sol Sea Resort"
    }
   },
   {

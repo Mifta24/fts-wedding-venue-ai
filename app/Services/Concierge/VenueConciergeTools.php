@@ -152,7 +152,7 @@ class VenueConciergeTools
             'get_hall_detail' => $this->getHallDetail($input),
             'check_availability' => $this->checkAvailability($input),
             'create_booking_request' => $this->createBookingRequest($input),
-            'show_plans' => $this->showPlans(),
+            'show_plans' => $this->showPlans($input),
             'show_options' => $this->showOptions(),
             'request_human_handover' => $this->requestHumanHandover($input),
             default => ['text' => "Unknown tool: {$name}", 'ui' => null],
@@ -239,9 +239,57 @@ class VenueConciergeTools
         return array_diff_key($card, array_flip(['total_price', 'deposit_total', 'currency', 'discount_percent', 'starting_price', 'min_guests', 'max_guests', 'size_sqm']));
     }
 
-    private function showPlans(): array
+    /**
+     * [smallest, largest] party a partner venue lists ("6 to 80 guests", "up to 400 (6F) / up to 200 (7F)"), or null when it lists none.
+     *
+     * @return array{0: int, 1: int}|null
+     */
+    private function partySize(Hall $hall): ?array
+    {
+        $row = collect($hall->translations['ja']['details'] ?? [])->firstWhere('key', 'party');
+        $text = mb_convert_kana((string) ($row['value'] ?? ''), 'n');
+        $low = null;
+        $high = null;
+
+        // One part per hall or floor ("～400名（6F） / ～200名（7F）"): "up to N" and a lone number start from one guest.
+        foreach (explode('/', $text) as $part) {
+            $part = preg_replace('/\d+\s*[Ff]\b/u', '', $part);
+
+            if (preg_match_all('/\d+/', $part, $m) === 0) {
+                continue;
+            }
+
+            $numbers = array_map('intval', $m[0]);
+            $upTo = preg_match('/^\s*[～〜~]/u', $part) === 1 || count($numbers) === 1;
+            $from = $upTo ? 1 : min($numbers);
+
+            $low = $low === null ? $from : min($low, $from);
+            $high = $high === null ? max($numbers) : max($high, max($numbers));
+        }
+
+        return $low === null ? null : [$low, $high];
+    }
+
+    private function showPlans(array $input = []): array
     {
         $halls = $this->venue->halls()->where('is_active', true)->with(['venue', 'images'])->orderBy('sort_order')->limit(24)->get();
+
+        // "Venues for about 30 people": keep the ones whose listed party size takes that many (a venue that lists none stays).
+        $guests = isset($input['guests']) ? (int) $input['guests'] : 0;
+        $narrowed = false;
+
+        if ($guests > 0 && ! $this->venue->showsPrices()) {
+            $fitting = $halls->filter(function (Hall $hall) use ($guests) {
+                $range = $this->partySize($hall);
+
+                return $range === null || ($guests >= $range[0] && $guests <= $range[1]);
+            })->values();
+
+            if ($fitting->isNotEmpty()) {
+                $halls = $fitting;
+                $narrowed = true;
+            }
+        }
 
         if ($halls->isEmpty()) {
             return ['text' => 'This venue has no plan listed yet. Tell the couple honestly and offer to connect them with the team.', 'ui' => null];
@@ -267,7 +315,7 @@ class VenueConciergeTools
         ])->map(fn (array $plan) => $this->venue->showsPrices() ? $plan : $this->withoutPrices($plan))->values()->all();
 
         return [
-            'text' => json_encode(['note' => $this->venue->showsPrices() ? 'Starting prices, before any date surcharge. Ask for the date and guest count to check a real date.' : 'These are partner venues. No price is published for them: never state or estimate one. Say the TUTU salon prepares a free quote.', 'plans' => $plans], JSON_UNESCAPED_UNICODE),
+            'text' => json_encode(['note' => $this->venue->showsPrices() ? 'Starting prices, before any date surcharge. Ask for the date and guest count to check a real date.' : 'These are partner venues. No price is published for them: never state or estimate one. Say the TUTU salon prepares a free quote.'.($narrowed ? " Only the venues whose listed party size takes about {$guests} guests are shown: say so." : ''), 'plans' => $plans], JSON_UNESCAPED_UNICODE),
             'ui' => ['type' => 'hall_results', 'event_date' => null, 'guests' => null, 'halls' => $plans],
         ];
     }

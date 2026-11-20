@@ -49,6 +49,11 @@ class ConciergeService
      */
     private const PHOTO_PATTERN = '/\b(?:photos?|pictures?|images?|gallery|galleries|pics?)\b(?!\s*(?:wedding|shoot|plan|package))|写真(?!ウェディング)|画像|foto(?!\s*(?:pre|wedding|pernikahan|prewed))|gambar|รูป(?!ถ่าย\s*(?:แต่งงาน))|ภาพถ่าย|照片|相片|圖片|图片/iu';
 
+    /**
+     * Asking to talk to a person at TUTU: the conversation goes to the staff at once, nothing more to ask first.
+     */
+    private const STAFF_PATTERN = '/(?:talk|speak|chat|connect|put\s+me|get\s+me|contact|reach|call)\b.{0,24}\b(?:staff|human|a\s+person|real\s+person|someone|representative|consultant|coordinator|planner)\b|\b(?:staff|human|real\s+person|representative|consultant)\b.{0,16}\b(?:please|now)\b|スタッフ(?:と|に|へ).{0,10}(?:話|相談|つなが|繋が|連絡|代わ)|(?:話|相談|連絡).{0,6}スタッフ|担当者|人と話|bicara\b.{0,20}\b(?:staf|staff|orang|petugas|manusia)|hubungi\b.{0,16}\b(?:staf|staff|petugas)|(?:คุย|พูด|ติดต่อ).{0,12}(?:พนักงาน|เจ้าหน้าที่|ทีมงาน)|(?:联系|聯絡|聯繫|联络|找|和|跟|與|与).{0,6}(?:工作人员|工作人員|客服|顧問|顾问|真人)/iu';
+
     private const DRESS_PATTERN = '/dress|gown|ドレス|衣装|gaun|ชุด|婚紗|婚纱|礼服|禮服/iu';
 
     private const OPTIONS_PATTERN = '/\boptions?\b|\badd-?ons?\b|\bextra\s+services?\b|\bwedding\s+services?\b|opsi|layanan\s+tambahan|オプション/iu';
@@ -182,9 +187,17 @@ class ConciergeService
             }
         }
 
+        // "I want to talk to the staff": hand over now, with what the client has said so far.
+        if (! $venue->showsPrices() && preg_match(self::STAFF_PATTERN, $message) === 1) {
+            return ['name' => 'request_human_handover', 'input' => ['reason' => 'special_request', 'summary' => $this->handoverSummary($conversation)], 'always' => true];
+        }
+
         // "Show me the photos": the venues' photos open on screen at once; never "they are on the top page".
+        // "...for about 30 people" narrows them to the venues that hold that many.
         if (! $venue->showsPrices() && preg_match(self::PHOTO_PATTERN, $message) === 1 && preg_match(self::DRESS_PATTERN, $message) !== 1) {
-            return ['name' => 'show_plans', 'input' => [], 'always' => false];
+            $guests = self::guestsIn($message);
+
+            return ['name' => 'show_plans', 'input' => $guests !== null ? ['guests' => $guests] : [], 'always' => false];
         }
 
         if (preg_match(self::OPTIONS_PATTERN, $message) === 1) {
@@ -202,6 +215,31 @@ class ConciergeService
         }
 
         return null;
+    }
+
+    /**
+     * The party size a client mentions ("30人", "about 40 guests", "20 orang"), or null.
+     */
+    public static function guestsIn(string $message): ?int
+    {
+        $message = mb_convert_kana($message, 'n');
+
+        if (preg_match('/(\d{1,3})\s*(?:人|名|位|guests?|people|persons?|pax|orang|tamu|ท่าน|คน)/iu', $message, $m) === 1) {
+            $n = (int) $m[1];
+
+            return $n >= 1 && $n <= 999 ? $n : null;
+        }
+
+        return null;
+    }
+
+    /** What the staff need to read first: the client's own words so far, oldest first. */
+    private function handoverSummary(Conversation $conversation): string
+    {
+        $said = $conversation->messages()->where('role', ConversationMessage::ROLE_CLIENT)->reorder('id', 'desc')->limit(6)->pluck('content')
+            ->map(fn ($text) => trim((string) $text))->filter()->reverse()->values()->all();
+
+        return 'The client asked to talk to the TUTU staff (language: '.$conversation->locale.'). Their messages so far: '.implode(' | ', $said);
     }
 
     /**

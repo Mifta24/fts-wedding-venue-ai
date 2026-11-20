@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Conversation;
+use App\Models\HandoverRequest;
 use App\Models\Venue;
 use App\Services\Concierge\ConciergeService;
 use App\Services\Concierge\VenueConciergeTools;
@@ -196,6 +197,39 @@ class TutuOkinawaSiteTest extends TestCase
         $this->assertSame('hall_results', $cards[0]['type']);
         $this->assertCount(21, $cards[0]['halls']);
         $this->assertNotEmpty($cards[0]['halls'][0]['thumbnail_url']);
+    }
+
+    public function test_photos_for_a_party_size_show_only_the_venues_that_take_that_many(): void
+    {
+        config(['services.local_llm.base_url' => 'http://llm.test', 'services.local_llm.api_key' => 'k', 'services.local_llm.model' => 'm']);
+        $this->seedSite();
+        Http::fake(['llm.test/*' => Http::response(['choices' => [['message' => ['content' => 'Here they are.'], 'finish_reason' => 'stop']]])]);
+
+        $token = $this->postJson('/tutu-okinawa/concierge/start', ['locale' => 'ja'])->assertOk()->json('client_token');
+        $cards = $this->postJson('/tutu-okinawa/concierge/message', ['client_token' => $token, 'message' => '30人ぐらいが入れる会場の写真を見せてください'])
+            ->assertOk()->json('message.ui_payload');
+
+        $slugs = collect($cards[0]['halls'])->pluck('hall_slug');
+        $this->assertLessThan(21, $slugs->count());
+        $this->assertContains('southwest-grand-hotel', $slugs->all()); // 6 to 80 guests
+        $this->assertContains('hyatt-regency-naha', $slugs->all()); // up to 150 guests
+        $this->assertContains('southgate-hotel', $slugs->all()); // up to 400 / 200 / 104
+        $this->assertNotContains('hotel-collective', $slugs->all()); // seated 50 to 300: too big for 30
+    }
+
+    public function test_asking_for_the_staff_hands_the_conversation_over_at_once(): void
+    {
+        config(['services.local_llm.base_url' => 'http://llm.test', 'services.local_llm.api_key' => 'k', 'services.local_llm.model' => 'm']);
+        $this->seedSite();
+        Http::fake(['llm.test/*' => Http::response(['choices' => [['message' => ['content' => 'Our salon is in Naha.'], 'finish_reason' => 'stop']]])]);
+
+        $token = $this->postJson('/tutu-okinawa/concierge/start', ['locale' => 'ja'])->assertOk()->json('client_token');
+        $payload = $this->postJson('/tutu-okinawa/concierge/message', ['client_token' => $token, 'message' => 'TUTUのスタッフと話したいです。'])
+            ->assertOk()->json('message.ui_payload');
+
+        $this->assertSame('handover', $payload[0]['type']);
+        $this->assertSame(1, HandoverRequest::count());
+        $this->assertStringContainsString('スタッフ', HandoverRequest::first()->summary);
     }
 
     public function test_a_venue_named_in_any_site_language_opens_its_gallery(): void

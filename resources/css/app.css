@@ -1129,7 +1129,7 @@ a.info-fact:hover { border-color: var(--text); }
 /* TUTU lounge: a bright consultation room. The venue is the star: the menu is on the left, the photos in the middle, and the AI is only the assistant, at the right edge (Mr Yoshi: 'our assistant is just assistant, wedding is main'). Lobby only; other chapters keep the stage layout. */
 .theme-tutu .lounge-media { display: none; }
 @media (min-width: 1100px) {
-    .theme-tutu .stage[data-scene="lobby"] { --lounge-w: clamp(460px, 46vw, 760px); background: #fbf3f5; }
+    .theme-tutu .stage[data-scene="lobby"] { --lounge-w: clamp(330px, 27vw, 500px); background: #fbf3f5; }
     .theme-tutu .stage[data-scene="lobby"] .stage-image { object-position: 50% 30%; filter: saturate(.92); }
     .theme-tutu .stage[data-scene="lobby"] .stage-shade { background: linear-gradient(90deg, #fff7f98c 0, #fff7f933 24%, #fff7f91a 50%, #fff7f933 76%, #fff7f98c 100%), linear-gradient(180deg, #ffffff59 0, #ffffff00 28%); }
     .theme-tutu .stage[data-scene="lobby"] .stage-welcome { display: none; }

@@ -170,6 +170,62 @@ class TutuOkinawaSiteTest extends TestCase
         $this->assertStringContainsString('110,000', $reply);
     }
 
+    public function test_asking_to_see_photos_puts_the_venues_on_screen_even_when_the_model_only_talks(): void
+    {
+        config(['services.local_llm.base_url' => 'http://llm.test', 'services.local_llm.api_key' => 'k', 'services.local_llm.model' => 'm']);
+        $this->seedSite();
+        Http::fake(['llm.test/*' => Http::response(['choices' => [['message' => ['content' => 'The photos are on the top page.'], 'finish_reason' => 'stop']]])]);
+
+        $token = $this->postJson('/tutu-okinawa/concierge/start', ['locale' => 'en'])->assertOk()->json('client_token');
+        $cards = $this->postJson('/tutu-okinawa/concierge/message', ['client_token' => $token, 'message' => 'Show me all the photos of the venues please'])
+            ->assertOk()->json('message.ui_payload');
+
+        $this->assertSame('hall_results', $cards[0]['type']);
+        $this->assertCount(21, $cards[0]['halls']);
+        $this->assertNotEmpty($cards[0]['halls'][0]['thumbnail_url']);
+    }
+
+    public function test_a_venue_named_in_any_site_language_opens_its_gallery(): void
+    {
+        config(['services.local_llm.base_url' => 'http://llm.test', 'services.local_llm.api_key' => 'k', 'services.local_llm.model' => 'm']);
+        $this->seedSite();
+        Http::fake(['llm.test/*' => Http::response(['choices' => [['message' => ['content' => 'Here you are.'], 'finish_reason' => 'stop']]])]);
+
+        $token = $this->postJson('/tutu-okinawa/concierge/start', ['locale' => 'en'])->assertOk()->json('client_token');
+        $cards = $this->postJson('/tutu-okinawa/concierge/message', ['client_token' => $token, 'message' => 'Show me photos of The Busena Terrace'])
+            ->assertOk()->json('message.ui_payload');
+
+        $this->assertSame('hall_detail', $cards[0]['type']);
+        $this->assertSame('the-busena-terrace', $cards[0]['hall']['hall_slug']);
+        $this->assertNotEmpty($cards[0]['hall']['images']);
+    }
+
+    public function test_asking_about_a_photo_wedding_does_not_open_the_venue_photos(): void
+    {
+        config(['services.local_llm.base_url' => 'http://llm.test', 'services.local_llm.api_key' => 'k', 'services.local_llm.model' => 'm']);
+        $this->seedSite();
+        Http::fake(['llm.test/*' => Http::response(['choices' => [['message' => ['content' => 'We offer photo weddings.'], 'finish_reason' => 'stop']]])]);
+
+        $token = $this->postJson('/tutu-okinawa/concierge/start', ['locale' => 'en'])->assertOk()->json('client_token');
+        $payload = $this->postJson('/tutu-okinawa/concierge/message', ['client_token' => $token, 'message' => 'Tell me about the photo wedding plan'])
+            ->assertOk()->json('message.ui_payload');
+
+        $this->assertEmpty(collect($payload)->where('type', 'hall_results')->all());
+    }
+
+    public function test_the_prompt_ends_a_visit_by_asking_guests_and_image_then_handing_over(): void
+    {
+        $this->seedSite();
+        $venue = Venue::where('slug', 'tutu-okinawa')->first();
+        $conversation = app(ConciergeService::class)->startConversation($venue, 'en');
+        $method = new \ReflectionMethod(ConciergeService::class, 'buildSystemPrompt');
+        $prompt = $method->invoke(app(ConciergeService::class), $venue, $conversation);
+
+        $this->assertStringContainsString('how many guests', $prompt);
+        $this->assertStringContainsString('request_human_handover', $prompt);
+        $this->assertStringContainsString('Never tell them the photos are on another page', $prompt);
+    }
+
     public function test_the_lobby_is_a_consultation_lounge_with_the_concierge_seated_and_photos_on_the_side(): void
     {
         $this->seedSite();

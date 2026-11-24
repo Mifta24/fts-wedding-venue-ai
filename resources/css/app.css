@@ -1074,6 +1074,14 @@ a.info-fact:hover { border-color: var(--text); }
     .stage:has(.lobby-films) .stage-welcome { bottom: calc(var(--dock) + 8px + 68px + 14px); }
 }
 
+/* Voice call button (one tap: concierge greets, listens, answers aloud, listens again) */
+.chat-bar .chat-call { display: inline-flex; align-items: center; justify-content: center; width: 40px; min-height: 40px; align-self: center; padding: 0; border-radius: 999px; border: 1px solid #ffffff40; background: #ffffff1a; color: white; transition: background .2s ease, color .2s ease; }
+.chat-bar .chat-call[hidden] { display: none; }
+.chat-bar .chat-call:hover:not(:disabled):not(.is-calling) { background: #ffffff33; }
+.chat-bar .chat-call:disabled { opacity: .45; cursor: not-allowed; }
+.chat-bar .chat-call.is-calling { border-color: #3f9b6a; background: #3f9b6a; color: white; animation: mic-pulse 1.4s ease-out infinite; }
+@media (prefers-reduced-motion: reduce) { .chat-bar .chat-call.is-calling { animation: none; } }
+
 /* Voice reply toggle (concierge reads its answers aloud); hidden where nothing can speak the language */
 .chat-bar .chat-voice { display: inline-flex; align-items: center; justify-content: center; width: 40px; min-height: 40px; align-self: center; padding: 0; border-radius: 999px; border: 1px solid #ffffff40; background: #ffffff1a; color: white; transition: background .2s ease, color .2s ease; }
 .chat-bar .chat-voice[hidden] { display: none; }

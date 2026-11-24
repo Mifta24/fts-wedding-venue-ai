@@ -16,6 +16,9 @@
             data-label-mic-nospeech="{{ $labels['chat_mic_nospeech'] }}"
             data-label-voice="{{ $labels['chat_voice'] }}"
             data-label-voice-on="{{ $labels['chat_voice_on'] }}"
+            data-label-call="{{ $labels['chat_call'] }}"
+            data-label-call-on="{{ $labels['chat_call_on'] }}"
+            data-label-call-ended="{{ $labels['chat_call_ended'] }}"
             data-tts-enabled="{{ config('services.tts.enabled') && config('services.tts.api_key') ? '1' : '0' }}"
             data-tts-url="{{ route('concierge.speech', $venue->slug) }}"
             data-label-open="{{ $labels['chat_open'] }}"
@@ -97,6 +100,9 @@
                 >
                 <button type="button" data-chat-mic class="chat-mic" aria-label="{{ $labels['chat_mic'] }}" aria-pressed="false" title="{{ $labels['chat_mic'] }}" hidden>
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+                </button>
+                <button type="button" data-chat-call class="chat-call" aria-label="{{ $labels['chat_call'] }}" aria-pressed="false" title="{{ $labels['chat_call'] }}" hidden>
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
                 </button>
                 <button type="button" data-chat-voice class="chat-voice" aria-label="{{ $labels['chat_voice'] }}" aria-pressed="false" title="{{ $labels['chat_voice'] }}" hidden>
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>

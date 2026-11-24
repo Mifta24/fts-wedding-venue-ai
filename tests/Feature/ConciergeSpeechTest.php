@@ -42,6 +42,14 @@ class ConciergeSpeechTest extends TestCase
         $this->get('/demo?lang=en')->assertSee('data-tts-enabled="1"', false);
     }
 
+    public function test_chat_has_a_voice_call_button_with_labels_in_every_language(): void
+    {
+        $this->token();
+        foreach (['id' => 'panggilan suara', 'en' => 'voice call', 'ja' => '通話する', 'th' => 'โทรด้วยเสียง', 'zh' => '語音通話'] as $lang => $needle) {
+            $this->get("/demo?lang={$lang}")->assertSee('data-chat-call', false)->assertSee($needle)->assertSee('data-label-call-ended', false);
+        }
+    }
+
     public function test_voice_labels_exist_in_every_language(): void
     {
         $this->token();

@@ -33,6 +33,9 @@ function initConcierge() {
             micNoSpeech: root.dataset.labelMicNospeech,
             voice: root.dataset.labelVoice,
             voiceOn: root.dataset.labelVoiceOn,
+            call: root.dataset.labelCall,
+            callOn: root.dataset.labelCallOn,
+            callEnded: root.dataset.labelCallEnded,
             open: root.dataset.labelOpen,
             close: root.dataset.labelClose,
             intro: root.dataset.labelIntro,
@@ -73,6 +76,7 @@ function initConcierge() {
     const inputEl = root.querySelector('[data-chat-input]');
     const micEl = root.querySelector('[data-chat-mic]');
     const voiceEl = root.querySelector('[data-chat-voice]');
+    const callEl = root.querySelector('[data-chat-call]');
     const submitEl = root.querySelector('[data-chat-submit]');
     const statusBanner = root.querySelector('[data-status-banner]');
     const chatStatus = root.querySelector('[data-chat-status]');
@@ -144,6 +148,7 @@ function initConcierge() {
 
     function finishClosePanel({ restoreFocus = true } = {}) {
         isOpen = false;
+        endCall();
         stopListening({ discard: true });
         stopReading();
         syncPanelState();
@@ -661,6 +666,7 @@ function initConcierge() {
         submitEl.disabled = disabled;
         if (micEl) micEl.disabled = disabled;
         if (voiceEl) voiceEl.disabled = !ready;
+        if (callEl) callEl.disabled = !ready || handedOver;
         if (disabled) stopListening({ discard: true });
         if (launcher) launcher.disabled = busy || !ready;
         if (newChatButton) newChatButton.disabled = busy || !ready;
@@ -677,6 +683,7 @@ function initConcierge() {
 
     function showHandedOverBanner() {
         handedOver = true;
+        endCall({ quiet: true });
         statusBanner.textContent = config.labels.handedOver;
         statusBanner.classList.remove('hidden');
         setChatStatus(config.labels.statusWaiting, 'waiting');
@@ -910,7 +917,15 @@ function initConcierge() {
         try {
             const data = await api(config.messageUrl, { client_token: clientToken, message: text, ...uiContext() });
             renderMessage(data.message, true);
-            if (voiceReplies || spoken) readAloud(data.message.content);
+            if (inCall) {
+                // In a call the concierge always answers aloud, then the mic opens again by itself.
+                silentRounds = 0;
+                if (data.status === 'handed_over') endCall({ quiet: true });
+                else if (data.message.content) readAloud(data.message.content, continueCall);
+                else continueCall();
+            } else if (voiceReplies || spoken) {
+                readAloud(data.message.content);
+            }
             setChatStatus(config.labels.statusSent, 'sent');
             window.venueSound?.play('incoming');
             knownMessageCount += 2; // the client message just sent + the reply just rendered
@@ -919,6 +934,7 @@ function initConcierge() {
             }
         } catch (err) {
             messagesEl.appendChild(errorCard(text, err));
+            endCall({ quiet: true });
         } finally {
             setBusy(false);
             scrollToBottom();
@@ -979,6 +995,7 @@ function initConcierge() {
         closeShowcase();
         hideDraftDialog();
         stopPolling();
+        endCall();
         stopReading();
 
         localStorage.removeItem(config.storageKey);
@@ -1056,9 +1073,17 @@ function initConcierge() {
             if (micDiscard) return;
 
             if (micFailure === 'not-allowed' || micFailure === 'service-not-allowed') {
+                endCall({ quiet: true });
                 setChatStatus(config.labels.micDenied, 'error');
             } else if (!transcript && micFailure !== 'aborted') {
-                setChatStatus(config.labels.micNoSpeech, 'error');
+                if (inCall) {
+                    // Nobody spoke: try once more, then hang up so the mic never stays open for nothing.
+                    silentRounds += 1;
+                    if (silentRounds >= 2) endCall();
+                    else continueCall();
+                } else {
+                    setChatStatus(config.labels.micNoSpeech, 'error');
+                }
             } else if (transcript && !busy && !handedOver) {
                 inputEl.value = '';
                 sendMessage(transcript, { spoken: true });
@@ -1100,15 +1125,72 @@ function initConcierge() {
         voiceEl?.classList.remove('is-speaking');
     }
 
-    function readAloud(text) {
+    function readAloud(text, then) {
         if (!text || !isOpen) return;
 
         sayAloud(text, {
             lang: voiceLocale,
             preference: 'female',
             onstart: () => voiceEl?.classList.add('is-speaking'),
-            onend: () => voiceEl?.classList.remove('is-speaking'),
+            onend: () => {
+                voiceEl?.classList.remove('is-speaking');
+                then?.();
+            },
         });
+    }
+
+    // Voice call: one tap, then talk. The concierge greets, listens, answers aloud and listens again,
+    // until the guest hangs up (tap again), closes the chat, or two rounds pass in silence.
+    let inCall = false;
+    let silentRounds = 0;
+
+    function renderCallButton() {
+        if (!callEl) return;
+
+        const label = inCall ? config.labels.callOn : config.labels.call;
+        callEl.classList.toggle('is-calling', inCall);
+        callEl.setAttribute('aria-pressed', String(inCall));
+        callEl.setAttribute('aria-label', label);
+        callEl.title = label;
+    }
+
+    function continueCall() {
+        if (!inCall) return;
+        window.setTimeout(() => {
+            if (inCall && !busy && !recognition) startListening();
+        }, 350);
+    }
+
+    function endCall({ quiet = false } = {}) {
+        if (!inCall) return;
+
+        inCall = false;
+        silentRounds = 0;
+        stopListening({ discard: true });
+        stopReading();
+        renderCallButton();
+        if (!quiet) setChatStatus(config.labels.callEnded, 'sent');
+    }
+
+    function startCall() {
+        if (!ready || busy || handedOver || !SpeechRecognitionClass) return;
+
+        unlockVoice();
+        openPanel();
+        inCall = true;
+        silentRounds = 0;
+        setChatStatus('', '');
+        renderCallButton();
+
+        // The greeting is the chat's own intro line; with nothing to say, the mic simply opens.
+        if (knownMessageCount === 0 && config.labels.intro) readAloud(config.labels.intro, continueCall);
+        else startListening();
+    }
+
+    if (callEl && SpeechRecognitionClass) {
+        callEl.hidden = false;
+        renderCallButton();
+        callEl.addEventListener('click', () => (inCall ? endCall() : startCall()));
     }
 
     function renderVoiceButton() {

@@ -103,6 +103,7 @@ function initConcierge() {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     function setChatStatus(text, tone = '') {
+        if (tone === 'error' && text) showcaseCaption(text);
         if (!chatStatus) return;
 
         chatStatus.textContent = text || '';
@@ -460,6 +461,19 @@ function initConcierge() {
         }
     }
 
+    const plainText = (text) => String(text).replace(/!\[[^\]]*\]\([^)]*\)/g, '').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/[*_`#>]+/g, '').trim();
+
+    let captionText = '';
+
+    function showcaseCaption(text) {
+        captionText = text || '';
+        const caption = showcaseEl?.querySelector('[data-showcase-caption]');
+        if (!caption) return;
+
+        caption.textContent = text || '';
+        caption.hidden = !text;
+    }
+
     function closeShowcase() {
         if (!showcaseEl) return;
 
@@ -486,6 +500,21 @@ function initConcierge() {
             </div>
         `;
         wrap.querySelector('.showcase-panel').appendChild(body);
+
+        // The photo window covers the chat bar, so the guest can speak from right here.
+        if (SpeechRecognitionClass) {
+            wrap.classList.add('has-mic');
+            const dock = document.createElement('div');
+            dock.className = 'showcase-voice';
+            dock.innerHTML = `
+                <p class="showcase-caption" data-showcase-caption aria-live="polite" hidden></p>
+                <button type="button" class="showcase-mic" data-showcase-mic aria-pressed="false" aria-label="${esc(config.labels.mic)}" title="${esc(config.labels.mic)}">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+                </button>`;
+            dock.querySelector('[data-showcase-mic]').addEventListener('click', toggleMic);
+            wrap.appendChild(dock);
+        }
+
         wrap.addEventListener('click', (event) => {
             if (event.target.closest('[data-showcase-close]')) closeShowcase();
         });
@@ -495,6 +524,8 @@ function initConcierge() {
         showcaseEl = wrap;
         wrap.querySelector('.showcase-close').focus({ preventScroll: true });
         animateCounts(wrap);
+        if (recognition) wrap.querySelector('[data-showcase-mic]')?.classList.add('is-listening');
+        showcaseCaption(captionText); // a window opened by the answer keeps showing that answer
     }
 
     /** Every photo of a hall, big in the middle of the screen, drifting slowly like a film still. */
@@ -913,10 +944,12 @@ function initConcierge() {
         window.venueSound?.play('sent');
         scrollToBottom();
         setBusy(true);
+        showcaseCaption(config.labels.thinking);
 
         try {
             const data = await api(config.messageUrl, { client_token: clientToken, message: text, ...uiContext() });
             renderMessage(data.message, true);
+            showcaseCaption(data.message.content ? plainText(data.message.content) : '');
             if (inCall) {
                 // In a call the concierge always answers aloud, then the mic opens again by itself.
                 silentRounds = 0;
@@ -935,6 +968,7 @@ function initConcierge() {
         } catch (err) {
             messagesEl.appendChild(errorCard(text, err));
             endCall({ quiet: true });
+            showcaseCaption('');
         } finally {
             setBusy(false);
             scrollToBottom();
@@ -1037,6 +1071,14 @@ function initConcierge() {
         micEl.setAttribute('aria-label', label);
         micEl.title = label;
         inputEl.placeholder = value ? config.labels.micListening : config.labels.placeholder;
+
+        document.querySelectorAll('[data-showcase-mic]').forEach((button) => {
+            button.classList.toggle('is-listening', value);
+            button.setAttribute('aria-pressed', String(value));
+            button.setAttribute('aria-label', label);
+            button.title = label;
+        });
+        if (value) showcaseCaption(config.labels.micListening);
     }
 
     function stopListening({ discard = false } = {}) {
@@ -1100,13 +1142,15 @@ function initConcierge() {
         }
     }
 
+    function toggleMic() {
+        unlockVoice(); // a tap now lets the spoken answer start later on iPhone
+        if (recognition) stopListening();
+        else startListening();
+    }
+
     if (micEl && SpeechRecognitionClass) {
         micEl.hidden = false;
-        micEl.addEventListener('click', () => {
-            unlockVoice(); // a tap now lets the spoken answer start later on iPhone
-            if (recognition) stopListening();
-            else startListening();
-        });
+        micEl.addEventListener('click', toggleMic);
     }
 
     // Voice replies: the concierge reads its answers aloud (device voice, or the site's cloud voice when switched on).
@@ -1188,7 +1232,10 @@ function initConcierge() {
     }
 
     if (callEl && SpeechRecognitionClass) {
-        callEl.hidden = false;
+        // A call without a voice to answer would be silent: show the button only where the language can be spoken.
+        canSpeakLocale(speechLocales[config.locale] || 'en-US').then((possible) => {
+            callEl.hidden = !possible;
+        });
         renderCallButton();
         callEl.addEventListener('click', () => (inCall ? endCall() : startCall()));
     }

@@ -721,6 +721,15 @@ a.info-fact:hover { border-color: var(--text); }
 .showcase { position: absolute; inset: 0; z-index: 20; display: grid; place-items: center; padding: calc(var(--header) + 16px) 20px 20px; }
 .showcase-backdrop { position: absolute; inset: 0; background: radial-gradient(ellipse at center, #1f141999, #1f1419e6); backdrop-filter: blur(8px); animation: stage-fade .35s ease backwards; }
 .showcase-panel { position: relative; width: min(1040px, 100%); max-height: 100%; overflow-y: auto; overscroll-behavior: contain; border-radius: 20px; background: var(--ivory); color: var(--text); box-shadow: 0 40px 90px -20px #000, inset 0 0 0 1px #e3c27c59, inset 0 0 0 6px #f6efe6, inset 0 0 0 7px #e3c27c33; animation: showcase-in .6s var(--ease-cine) backwards; scrollbar-width: thin; }
+.showcase.has-mic { padding-bottom: 96px; }
+.showcase-voice { position: absolute; z-index: 2; left: 50%; bottom: 20px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; width: min(560px, calc(100% - 32px)); pointer-events: none; }
+.showcase-voice > * { pointer-events: auto; }
+.showcase-caption { max-width: 100%; margin: 0; padding: 8px 16px; border-radius: 14px; background: #16161acc; backdrop-filter: blur(8px); color: #fff; font-size: 14px; line-height: 1.45; text-align: center; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.showcase-caption[hidden] { display: none; }
+.showcase-mic { display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; padding: 0; border-radius: 999px; border: 1px solid #e3c27c; background: #fff; color: #2a2118; box-shadow: 0 10px 30px -8px #000; cursor: pointer; transition: background .2s ease, color .2s ease; }
+.showcase-mic:hover:not(.is-listening) { background: #f6ecd6; }
+.showcase-mic.is-listening { border-color: #c4574f; background: #c4574f; color: #fff; animation: mic-pulse 1.4s ease-out infinite; }
+@media (prefers-reduced-motion: reduce) { .showcase-mic.is-listening { animation: none; } }
 .showcase.is-closing .showcase-backdrop { animation: stage-fade .3s ease reverse forwards; }
 .showcase.is-closing .showcase-panel { animation: showcase-out .3s ease forwards; }
 .showcase-close { position: absolute; z-index: 3; top: 12px; right: 12px; display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); font-size: 24px; line-height: 1; cursor: pointer; transition: background .2s, color .2s, transform .3s var(--ease-cine); }

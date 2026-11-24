@@ -44,6 +44,11 @@ class AppServiceProvider extends ServiceProvider
             Limit::perMinute(40)->by('ip:'.$request->ip()),
         ]);
 
+        RateLimiter::for('concierge-speech', fn (Request $request) => [
+            Limit::perMinute(10)->by('speech-conversation:'.($request->input('client_token') ?: $request->ip())),
+            Limit::perMinute(30)->by('speech-ip:'.$request->ip()),
+        ]);
+
         RateLimiter::for('concierge-history', fn (Request $request) => Limit::perMinute(60)->by('history:'.$request->ip()));
     }
 }

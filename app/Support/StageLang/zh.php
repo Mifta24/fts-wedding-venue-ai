@@ -112,6 +112,8 @@ return [
         'chat_mic_listening' => '聆聽中… 點一下停止',
         'chat_mic_denied' => '麥克風存取被封鎖,請在瀏覽器設定中允許。',
         'chat_mic_nospeech' => '沒聽清楚,請再試一次。',
+        'chat_voice' => '以語音朗讀禮賓的回覆',
+        'chat_voice_on' => '語音回覆已開啟 — 點一下關閉',
         'chat_send' => '送出',
         'chat_open' => '與 AI 禮賓顧問聊聊',
         'chat_close' => '關閉對話',

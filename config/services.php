@@ -45,6 +45,19 @@ return [
         'model' => env('LOCAL_LLM_MODEL'),
     ],
 
+    // Optional cloud voice for the concierge (OpenAI-compatible POST {base_url}/audio/speech).
+    // Off by default: the chat and narrator then use the guest's own device voice, which is free.
+    'tts' => [
+        'enabled' => (bool) env('TTS_ENABLED', false),
+        'base_url' => env('TTS_BASE_URL', 'https://api.openai.com/v1'),
+        'api_key' => env('TTS_API_KEY'),
+        'model' => env('TTS_MODEL', 'gpt-4o-mini-tts'),
+        'voice' => env('TTS_VOICE', 'nova'),
+        'max_chars' => (int) env('TTS_MAX_CHARS', 600),
+        // Hard stop on spend: audio generated per day (cached repeats are free). 0 = no cap.
+        'daily_limit' => (int) env('TTS_DAILY_LIMIT', 400),
+    ],
+
     // Daily exchange rates for per-language pricing (ECB via Frankfurter). Empty disables conversion.
     'fx' => [
         'feed' => env('FX_FEED_URL', 'https://api.frankfurter.dev/v1/latest'),

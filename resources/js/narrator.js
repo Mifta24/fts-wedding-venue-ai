@@ -1,7 +1,9 @@
+import { canSpeakLocale, speak as say, stop as stopVoice, unlock } from './voice';
+
 /**
  * The AI concierge introducing a scene: types the intro like speech, animates
  * the avatar and sound bars while "speaking", and can read it aloud with the
- * browser's speech synthesis when the client asks (never automatically).
+ * browser's speech synthesis (or the site's cloud voice, see voice.js) when the client asks (never automatically).
  * The full text is always in the DOM for screen readers and no-JS visitors.
  */
 function initNarrators() {
@@ -9,67 +11,8 @@ function initNarrators() {
     if (!narrators.length) return;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const canSpeak = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
     const played = new Set();
     const states = new Map();
-    const voicesReady = canSpeak ? new Promise((resolve) => {
-        const finish = (allowEmpty = false) => {
-            if (window.speechSynthesis.getVoices().length || allowEmpty) {
-                window.speechSynthesis.removeEventListener('voiceschanged', finish);
-                resolve();
-            }
-        };
-
-        window.speechSynthesis.addEventListener('voiceschanged', finish);
-        finish();
-        window.setTimeout(() => finish(true), 800);
-    }) : Promise.resolve();
-
-    function voicesForLocale(lang) {
-        const requested = lang.toLowerCase();
-        const language = requested.split('-')[0];
-
-        return window.speechSynthesis.getVoices()
-            .filter((voice) => voice.lang?.toLowerCase().startsWith(language))
-            .sort((first, second) => {
-                const firstExact = first.lang.toLowerCase() === requested ? 1 : 0;
-                const secondExact = second.lang.toLowerCase() === requested ? 1 : 0;
-
-                return secondExact - firstExact;
-            });
-    }
-
-    function maleVoiceName(voice) {
-        return /\b(otoya|ichiro|takumi|male|man)\b/i.test(`${voice.name} ${voice.voiceURI || ''}`);
-    }
-
-    function chooseVoice(element) {
-        const lang = element.dataset.lang;
-        const voices = voicesForLocale(lang);
-        if (!voices.length) return null;
-
-        const femaleNames = /\b(kyoko|ayumi|haruka|nanami|mizuki|yuna|sachiko|eiko|akari|hina|mai|female|woman|girl)\b/i;
-        const maleNames = /\b(otoya|ichiro|takumi|male|man)\b/i;
-        const preferredFemaleVoice = voices.find((voice) => femaleNames.test(`${voice.name} ${voice.voiceURI || ''}`));
-
-        if (element.dataset.voicePreference === 'female' && preferredFemaleVoice) {
-            return preferredFemaleVoice;
-        }
-
-        return voices
-            .map((voice, index) => {
-                const name = `${voice.name} ${voice.voiceURI || ''}`;
-                let score = (voice.lang.toLowerCase() === lang.toLowerCase() ? 30 : 0) + (voice.localService ? 4 : 0) - index;
-
-                if (element.dataset.voicePreference === 'female') {
-                    if (femaleNames.test(name)) score += 100;
-                    if (maleNames.test(name)) score -= 100;
-                }
-
-                return { voice, score };
-            })
-            .sort((first, second) => second.score - first.score)[0].voice;
-    }
 
     const fullText = (element) => element.querySelector('[data-narrator-text]').dataset.text;
     const isVisible = (element) => element.getClientRects().length > 0;
@@ -116,7 +59,7 @@ function initNarrators() {
         if (!state?.speaking) return;
 
         state.speaking = false;
-        if (canSpeak) window.speechSynthesis.cancel();
+        stopVoice();
         const button = element.querySelector('[data-narrator-listen]');
         button.textContent = element.dataset.listenLabel;
         if (!state.timer) element.classList.remove('is-speaking');
@@ -152,7 +95,7 @@ function initNarrators() {
         states.get(element).timer = window.setTimeout(step, 180);
     }
 
-    async function speak(element) {
+    function speak(element) {
         const state = states.get(element);
         const button = element.querySelector('[data-narrator-listen]');
 
@@ -161,24 +104,22 @@ function initNarrators() {
             return;
         }
 
-        window.speechSynthesis.cancel();
+        unlock();
+        // Anything else being read (another narrator, a chat reply) stops first.
+        states.forEach((other, otherElement) => {
+            if (otherElement !== element && other.speaking) stopSpeech(otherElement);
+        });
         state.speaking = true;
         button.textContent = element.dataset.stopLabel;
         element.classList.add('is-speaking');
 
-        await voicesReady;
-        if (!state.speaking) return;
-
-        const utterance = new SpeechSynthesisUtterance(fullText(element));
-        utterance.lang = element.dataset.lang;
-        const voice = chooseVoice(element);
-        if (voice) utterance.voice = voice;
-        if (element.dataset.lang === 'ja-JP' && (!voice || maleVoiceName(voice))) utterance.pitch = 1.12;
-        utterance.onend = utterance.onerror = () => {
-            if (state.speaking) stopSpeech(element);
-        };
-
-        window.speechSynthesis.speak(utterance);
+        say(fullText(element), {
+            lang: element.dataset.lang,
+            preference: element.dataset.voicePreference,
+            onend: () => {
+                if (state.speaking) stopSpeech(element);
+            },
+        });
     }
 
     function refresh() {
@@ -211,7 +152,7 @@ function initNarrators() {
         states.set(element, { timer: null, speaking: false, active: false });
 
         const listen = element.querySelector('[data-narrator-listen]');
-        listen.hidden = !canSpeak;
+        listen.hidden = true;
         listen.addEventListener('click', () => speak(element));
         element.querySelector('[data-narrator-skip]').addEventListener('click', () => halt(element));
     });
@@ -219,19 +160,14 @@ function initNarrators() {
     // A browser can support speech synthesis in general but still ship with
     // no voice for this client's language — reading the text with whatever
     // default voice it falls back to just produces the wrong language, so
-    // hide the control rather than mislead the client.
-    if (canSpeak) {
-        voicesReady.then(() => {
-            narrators.forEach((element) => {
-                if (!voicesForLocale(element.dataset.lang).length) {
-                    element.querySelector('[data-narrator-listen]').hidden = true;
-                }
-            });
+    // hide the control rather than mislead the client (unless the cloud voice covers it).
+    narrators.forEach((element) => {
+        canSpeakLocale(element.dataset.lang).then((possible) => {
+            element.querySelector('[data-narrator-listen]').hidden = !possible;
         });
-    }
+    });
 
     window.addEventListener('hashchange', () => window.requestAnimationFrame(refresh));
-    window.addEventListener('pagehide', () => { if (canSpeak) window.speechSynthesis.cancel(); });
     window.requestAnimationFrame(refresh);
 }
 

@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\VenueSettingController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\ConciergeChatController;
+use App\Http\Controllers\ConciergeSpeechController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\VenueAccessController;
@@ -90,5 +91,6 @@ Route::prefix('{venueSlug}')->middleware(VenueAccessGate::class)->group(function
         Route::post('start', [ConciergeChatController::class, 'start'])->middleware('throttle:concierge-start')->name('start');
         Route::post('message', [ConciergeChatController::class, 'message'])->middleware('throttle:concierge-message')->name('message');
         Route::get('history', [ConciergeChatController::class, 'history'])->middleware('throttle:concierge-history')->name('history');
+        Route::post('speech', [ConciergeSpeechController::class, 'speak'])->middleware('throttle:concierge-speech')->name('speech');
     });
 });

@@ -1,4 +1,5 @@
 import { formatMoney } from './money';
+import { canSpeakLocale, speak as sayAloud, stop as stopVoice, unlock as unlockVoice } from './voice';
 /**
  * AI Concierge chat panel. Vanilla JS, no framework: sends client messages to
  * the Laravel backend and renders both plain text and the structured
@@ -30,6 +31,8 @@ function initConcierge() {
             micListening: root.dataset.labelMicListening,
             micDenied: root.dataset.labelMicDenied,
             micNoSpeech: root.dataset.labelMicNospeech,
+            voice: root.dataset.labelVoice,
+            voiceOn: root.dataset.labelVoiceOn,
             open: root.dataset.labelOpen,
             close: root.dataset.labelClose,
             intro: root.dataset.labelIntro,
@@ -64,10 +67,12 @@ function initConcierge() {
         },
     };
 
+    const speechLocales = { id: 'id-ID', en: 'en-US', ja: 'ja-JP', th: 'th-TH', zh: 'zh-TW' };
     const messagesEl = root.querySelector('[data-messages]');
     const formEl = root.querySelector('[data-chat-form]');
     const inputEl = root.querySelector('[data-chat-input]');
     const micEl = root.querySelector('[data-chat-mic]');
+    const voiceEl = root.querySelector('[data-chat-voice]');
     const submitEl = root.querySelector('[data-chat-submit]');
     const statusBanner = root.querySelector('[data-status-banner]');
     const chatStatus = root.querySelector('[data-chat-status]');
@@ -140,6 +145,7 @@ function initConcierge() {
     function finishClosePanel({ restoreFocus = true } = {}) {
         isOpen = false;
         stopListening({ discard: true });
+        stopReading();
         syncPanelState();
         hideDraftDialog();
         if (restoreFocus) launcher?.focus();
@@ -654,6 +660,7 @@ function initConcierge() {
         inputEl.disabled = disabled;
         submitEl.disabled = disabled;
         if (micEl) micEl.disabled = disabled;
+        if (voiceEl) voiceEl.disabled = !ready;
         if (disabled) stopListening({ discard: true });
         if (launcher) launcher.disabled = busy || !ready;
         if (newChatButton) newChatButton.disabled = busy || !ready;
@@ -887,8 +894,9 @@ function initConcierge() {
         return el;
     }
 
-    async function sendMessage(text, { retry = false } = {}) {
+    async function sendMessage(text, { retry = false, spoken = false } = {}) {
         if (!text.trim() || handedOver || busy || !ready) return;
+        stopReading();
 
         const clientToken = localStorage.getItem(config.storageKey);
         if (!clientToken) return;
@@ -902,6 +910,7 @@ function initConcierge() {
         try {
             const data = await api(config.messageUrl, { client_token: clientToken, message: text, ...uiContext() });
             renderMessage(data.message, true);
+            if (voiceReplies || spoken) readAloud(data.message.content);
             setChatStatus(config.labels.statusSent, 'sent');
             window.venueSound?.play('incoming');
             knownMessageCount += 2; // the client message just sent + the reply just rendered
@@ -970,6 +979,7 @@ function initConcierge() {
         closeShowcase();
         hideDraftDialog();
         stopPolling();
+        stopReading();
 
         localStorage.removeItem(config.storageKey);
         messagesEl.replaceChildren();
@@ -999,7 +1009,6 @@ function initConcierge() {
     // into text, which then goes through the same path as a typed message.
     // The button stays hidden where the browser has no speech recognition.
     const SpeechRecognitionClass = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const speechLocales = { id: 'id-ID', en: 'en-US', ja: 'ja-JP', th: 'th-TH', zh: 'zh-TW' };
     let recognition = null;
     let micFailure = null;
     let micDiscard = false;
@@ -1021,6 +1030,8 @@ function initConcierge() {
 
     function startListening() {
         if (!SpeechRecognitionClass || recognition || !ready || busy || handedOver) return;
+
+        stopReading();
 
         const session = new SpeechRecognitionClass();
         let transcript = '';
@@ -1050,7 +1061,7 @@ function initConcierge() {
                 setChatStatus(config.labels.micNoSpeech, 'error');
             } else if (transcript && !busy && !handedOver) {
                 inputEl.value = '';
-                sendMessage(transcript);
+                sendMessage(transcript, { spoken: true });
             }
         };
 
@@ -1066,11 +1077,71 @@ function initConcierge() {
 
     if (micEl && SpeechRecognitionClass) {
         micEl.hidden = false;
-        micEl.addEventListener('click', () => (recognition ? stopListening() : startListening()));
+        micEl.addEventListener('click', () => {
+            unlockVoice(); // a tap now lets the spoken answer start later on iPhone
+            if (recognition) stopListening();
+            else startListening();
+        });
+    }
+
+    // Voice replies: the concierge reads its answers aloud (device voice, or the site's cloud voice when switched on).
+    // Off by default and remembered per browser; when the guest speaks with the mic the answer is read once regardless.
+    const voiceStorageKey = 'venue_voice_reply';
+    const voiceLocale = speechLocales[config.locale] || 'en-US';
+    let voiceReplies = false;
+    try {
+        voiceReplies = localStorage.getItem(voiceStorageKey) === 'on';
+    } catch {
+        voiceReplies = false;
+    }
+
+    function stopReading() {
+        stopVoice();
+        voiceEl?.classList.remove('is-speaking');
+    }
+
+    function readAloud(text) {
+        if (!text || !isOpen) return;
+
+        sayAloud(text, {
+            lang: voiceLocale,
+            preference: 'female',
+            onstart: () => voiceEl?.classList.add('is-speaking'),
+            onend: () => voiceEl?.classList.remove('is-speaking'),
+        });
+    }
+
+    function renderVoiceButton() {
+        if (!voiceEl) return;
+
+        const label = voiceReplies ? config.labels.voiceOn : config.labels.voice;
+        voiceEl.classList.toggle('is-on', voiceReplies);
+        voiceEl.setAttribute('aria-pressed', String(voiceReplies));
+        voiceEl.setAttribute('aria-label', label);
+        voiceEl.title = label;
+    }
+
+    if (voiceEl) {
+        canSpeakLocale(voiceLocale).then((possible) => {
+            voiceEl.hidden = !possible;
+            renderVoiceButton();
+        });
+        voiceEl.addEventListener('click', () => {
+            voiceReplies = !voiceReplies;
+            try {
+                localStorage.setItem(voiceStorageKey, voiceReplies ? 'on' : 'off');
+            } catch {
+                // remembering the choice is best effort
+            }
+            renderVoiceButton();
+            if (voiceReplies) unlockVoice();
+            else stopReading();
+        });
     }
 
     formEl.addEventListener('submit', (event) => {
         event.preventDefault();
+        unlockVoice();
         if (!ready || busy || handedOver || !inputEl.value.trim()) return;
         const text = inputEl.value;
         inputEl.value = '';

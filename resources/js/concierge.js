@@ -36,6 +36,7 @@ function initConcierge() {
             call: root.dataset.labelCall,
             callOn: root.dataset.labelCallOn,
             callEnded: root.dataset.labelCallEnded,
+            talkHint: root.dataset.labelTalkHint,
             open: root.dataset.labelOpen,
             close: root.dataset.labelClose,
             intro: root.dataset.labelIntro,
@@ -500,6 +501,9 @@ function initConcierge() {
             </div>
         `;
         wrap.querySelector('.showcase-panel').appendChild(body);
+        // Arrow keys and spoken "next/previous" step through the photos of whatever the window holds.
+        wrap._step = (direction) => body._step?.(direction);
+        wrap._canStep = () => typeof body._step === 'function';
 
         // The photo window covers the chat bar, so the guest can speak from right here.
         if (SpeechRecognitionClass) {
@@ -508,10 +512,10 @@ function initConcierge() {
             dock.className = 'showcase-voice';
             dock.innerHTML = `
                 <p class="showcase-caption" data-showcase-caption aria-live="polite" hidden></p>
-                <button type="button" class="showcase-mic" data-showcase-mic aria-pressed="false" aria-label="${esc(config.labels.mic)}" title="${esc(config.labels.mic)}">
+                <button type="button" class="showcase-mic" data-showcase-mic aria-pressed="false" aria-label="${esc(config.labels.call)}" title="${esc(config.labels.call)}">
                     <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
                 </button>`;
-            dock.querySelector('[data-showcase-mic]').addEventListener('click', toggleMic);
+            dock.querySelector('[data-showcase-mic]').addEventListener('click', toggleCall);
             wrap.appendChild(dock);
         }
 
@@ -524,8 +528,10 @@ function initConcierge() {
         showcaseEl = wrap;
         wrap.querySelector('.showcase-close').focus({ preventScroll: true });
         animateCounts(wrap);
-        if (recognition) wrap.querySelector('[data-showcase-mic]')?.classList.add('is-listening');
-        showcaseCaption(captionText); // a window opened by the answer keeps showing that answer
+        syncShowcaseMic();
+        if (!inCall) autoListenWhereAllowed();
+        // A window opened by the answer keeps showing that answer; with nothing to show, say how to talk.
+        showcaseCaption(captionText || (inCall ? config.labels.micListening : config.labels.talkHint));
     }
 
     /** Every photo of a hall, big in the middle of the screen, drifting slowly like a film still. */
@@ -952,7 +958,7 @@ function initConcierge() {
             showcaseCaption(data.message.content ? plainText(data.message.content) : '');
             if (inCall) {
                 // In a call the concierge always answers aloud, then the mic opens again by itself.
-                silentRounds = 0;
+                lastActivity = Date.now();
                 if (data.status === 'handed_over') endCall({ quiet: true });
                 else if (data.message.content) readAloud(data.message.content, continueCall);
                 else continueCall();
@@ -1072,13 +1078,20 @@ function initConcierge() {
         micEl.title = label;
         inputEl.placeholder = value ? config.labels.micListening : config.labels.placeholder;
 
+        syncShowcaseMic();
+        if (value) showcaseCaption(config.labels.micListening);
+    }
+
+    /** The mic in the photo window mirrors the call: green while hands-free, red while the mic is open. */
+    function syncShowcaseMic() {
+        const label = inCall ? config.labels.callOn : (recognition ? config.labels.micListening : config.labels.call);
         document.querySelectorAll('[data-showcase-mic]').forEach((button) => {
-            button.classList.toggle('is-listening', value);
-            button.setAttribute('aria-pressed', String(value));
+            button.classList.toggle('is-listening', !!recognition);
+            button.classList.toggle('is-calling', inCall);
+            button.setAttribute('aria-pressed', String(inCall));
             button.setAttribute('aria-label', label);
             button.title = label;
         });
-        if (value) showcaseCaption(config.labels.micListening);
     }
 
     function stopListening({ discard = false } = {}) {
@@ -1093,6 +1106,7 @@ function initConcierge() {
         stopReading();
 
         const session = new SpeechRecognitionClass();
+        const startedAt = Date.now();
         let transcript = '';
         micFailure = null;
         micDiscard = false;
@@ -1119,16 +1133,25 @@ function initConcierge() {
                 setChatStatus(config.labels.micDenied, 'error');
             } else if (!transcript && micFailure !== 'aborted') {
                 if (inCall) {
-                    // Nobody spoke: try once more, then hang up so the mic never stays open for nothing.
-                    silentRounds += 1;
-                    if (silentRounds >= 2) endCall();
+                    // Nobody spoke. The mic stays on for a natural conversation, but never open for nothing:
+                    // hang up after two minutes of silence, or when the browser keeps refusing to listen.
+                    fastFails = Date.now() - startedAt < 1500 ? fastFails + 1 : 0;
+                    if (fastFails >= 3 || Date.now() - lastActivity >= CALL_IDLE_MS) endCall();
                     else continueCall();
                 } else {
                     setChatStatus(config.labels.micNoSpeech, 'error');
                 }
             } else if (transcript && !busy && !handedOver) {
+                fastFails = 0;
+                lastActivity = Date.now();
                 inputEl.value = '';
-                sendMessage(transcript, { spoken: true });
+
+                if (handleVoiceCommand(transcript)) {
+                    // "next photo", "close": done right here, no round trip to the AI.
+                    if (inCall) continueCall();
+                } else {
+                    sendMessage(transcript, { spoken: true });
+                }
             }
         };
 
@@ -1178,6 +1201,7 @@ function initConcierge() {
             onstart: () => voiceEl?.classList.add('is-speaking'),
             onend: () => {
                 voiceEl?.classList.remove('is-speaking');
+                lastActivity = Date.now();
                 then?.();
             },
         });
@@ -1186,9 +1210,61 @@ function initConcierge() {
     // Voice call: one tap, then talk. The concierge greets, listens, answers aloud and listens again,
     // until the guest hangs up (tap again), closes the chat, or two rounds pass in silence.
     let inCall = false;
-    let silentRounds = 0;
+    let lastActivity = Date.now();
+    let fastFails = 0;
+    const CALL_IDLE_MS = 120000;
+    const HANDSFREE_KEY = 'venue_handsfree';
+
+    // Short spoken commands for the photo window, matched whole (never inside a longer question) so they run at once.
+    const VOICE_COMMANDS = {
+        next: [
+            /^(?:go )?(?:to )?(?:the )?(?:next|forward|another)(?: (?:one|photo|picture|image|slide))?(?: please)?$/,
+            /^(?:foto )?(?:berikutnya|selanjutnya|lanjut|next|foto lagi)(?: (?:ya|dong|tolong))?$/,
+            /^(?:もう一[つ枚]|次|つぎ)(?:の)?(?:写真|画像|ページ)?(?:を|へ)?(?:見せて|お願い(?:します)?|ください)?$/,
+            /^(?:รูป)?(?:ถัดไป|ต่อไป)(?:ครับ|ค่ะ)?$/,
+            /^下一(?:[張张個个頁页]|[張张]?照片)?$/,
+        ],
+        previous: [
+            /^(?:go )?(?:back|(?:to )?(?:the )?previous|before)(?: (?:one|photo|picture|image))?(?: please)?$/,
+            /^(?:foto )?(?:sebelumnya|kembali|balik|previous)(?: (?:ya|dong|tolong))?$/,
+            /^(?:前|まえ|一つ前|ひとつ前|戻(?:って|る|して)?)(?:の)?(?:写真|画像|ページ)?(?:を|へ)?(?:見せて|お願い(?:します)?|ください)?$/,
+            /^(?:รูป)?(?:ก่อนหน้า|ก่อนหน้านี้|ย้อนกลับ)(?:ครับ|ค่ะ)?$/,
+            /^上一(?:[張张個个頁页]|[張张]?照片)?$/,
+        ],
+        close: [
+            /^(?:please )?(?:close|exit|dismiss)(?: (?:it|this|the (?:photo|window|picture)s?))?(?: please)?$/,
+            /^(?:tutup|selesai)(?: (?:ini|foto|jendela))?(?: (?:ya|dong|tolong))?$/,
+            /^(?:閉じて|閉じる|とじて|クローズ|終了|閉じてください)$/,
+            /^(?:ปิด)(?:หน้าต่าง|รูป)?(?:ครับ|ค่ะ)?$/,
+            /^(?:關閉|关闭|關掉|关掉)(?:視窗|窗口)?$/,
+        ],
+    };
+
+    function matchVoiceCommand(text) {
+        const spaced = String(text).toLowerCase().replace(/[.,!?。、，！？"“”「」]/g, ' ').replace(/\s+/g, ' ').trim();
+        const compact = spaced.replace(/\s/g, '');
+
+        return Object.keys(VOICE_COMMANDS).find((name) => VOICE_COMMANDS[name].some((pattern) => pattern.test(spaced) || pattern.test(compact))) || null;
+    }
+
+    function handleVoiceCommand(text) {
+        const command = matchVoiceCommand(text);
+        if (!command || !showcaseEl) return false;
+
+        if (command === 'close') {
+            closeShowcase();
+            return true;
+        }
+
+        if (!showcaseEl._canStep?.()) return false;
+        showcaseEl._step(command === 'next' ? 1 : -1);
+        showcaseCaption(`“${String(text).trim()}”`);
+
+        return true;
+    }
 
     function renderCallButton() {
+        syncShowcaseMic();
         if (!callEl) return;
 
         const label = inCall ? config.labels.callOn : config.labels.call;
@@ -1209,26 +1285,84 @@ function initConcierge() {
         if (!inCall) return;
 
         inCall = false;
-        silentRounds = 0;
+        try {
+            sessionStorage.removeItem(HANDSFREE_KEY);
+        } catch {
+            // the flag is only a convenience
+        }
         stopListening({ discard: true });
         stopReading();
         renderCallButton();
         if (!quiet) setChatStatus(config.labels.callEnded, 'sent');
     }
 
-    function startCall() {
-        if (!ready || busy || handedOver || !SpeechRecognitionClass) return;
+    function startCall({ resume = false } = {}) {
+        if (inCall || !ready || busy || handedOver || !SpeechRecognitionClass) return;
 
         unlockVoice();
         openPanel();
         inCall = true;
-        silentRounds = 0;
+        lastActivity = Date.now();
+        fastFails = 0;
         setChatStatus('', '');
         renderCallButton();
+        try {
+            sessionStorage.setItem(HANDSFREE_KEY, 'on');
+        } catch {
+            // the flag is only a convenience
+        }
 
-        // The greeting is the chat's own intro line; with nothing to say, the mic simply opens.
-        if (knownMessageCount === 0 && config.labels.intro) readAloud(config.labels.intro, continueCall);
+        // The greeting is the chat's own intro line; when resuming on another page, or with nothing to say, the mic simply opens.
+        if (!resume && knownMessageCount === 0 && config.labels.intro) readAloud(config.labels.intro, continueCall);
         else startListening();
+    }
+
+    function toggleCall() {
+        if (inCall) endCall();
+        else startCall();
+    }
+
+    // The mic should never keep listening in a hidden tab: pause there, carry on when the guest comes back.
+    document.addEventListener('visibilitychange', () => {
+        if (!inCall) return;
+        if (document.hidden) {
+            stopListening({ discard: true });
+            stopReading();
+        } else {
+            lastActivity = Date.now();
+            continueCall();
+        }
+    });
+
+    // Where the browser already allows the microphone, a photo window starts listening by itself (first time: one tap).
+    async function autoListenWhereAllowed() {
+        if (!SpeechRecognitionClass || !navigator.permissions?.query) return;
+
+        try {
+            const status = await navigator.permissions.query({ name: 'microphone' });
+            if (status.state === 'granted' && showcaseEl && !inCall && !busy) startCall({ resume: true });
+        } catch {
+            // no permission API (Safari): the guest taps the mic
+        }
+    }
+
+    // Moving to another page in the same visit: pick the conversation up again, but only where the browser
+    // already allows the microphone (a first visit always needs one tap).
+    async function resumeCall() {
+        let wanted = false;
+        try {
+            wanted = sessionStorage.getItem(HANDSFREE_KEY) === 'on';
+        } catch {
+            wanted = false;
+        }
+        if (!wanted || !SpeechRecognitionClass || !navigator.permissions?.query) return;
+
+        try {
+            const status = await navigator.permissions.query({ name: 'microphone' });
+            if (status.state === 'granted') startCall({ resume: true });
+        } catch {
+            // no permission API (Safari): the guest taps again
+        }
     }
 
     if (callEl && SpeechRecognitionClass) {
@@ -1237,7 +1371,7 @@ function initConcierge() {
             callEl.hidden = !possible;
         });
         renderCallButton();
-        callEl.addEventListener('click', () => (inCall ? endCall() : startCall()));
+        callEl.addEventListener('click', toggleCall);
     }
 
     function renderVoiceButton() {
@@ -1313,6 +1447,7 @@ function initConcierge() {
         // let the new scene settle for a beat, then carry on the conversation.
         const topic = window.takePendingConciergeTopic?.();
         if (topic && ready) window.setTimeout(() => sendMessage(topic), 650);
+        if (ready) resumeCall();
     });
 }
 

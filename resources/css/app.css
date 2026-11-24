@@ -728,6 +728,7 @@ a.info-fact:hover { border-color: var(--text); }
 .showcase-caption[hidden] { display: none; }
 .showcase-mic { display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; padding: 0; border-radius: 999px; border: 1px solid #e3c27c; background: #fff; color: #2a2118; box-shadow: 0 10px 30px -8px #000; cursor: pointer; transition: background .2s ease, color .2s ease; }
 .showcase-mic:hover:not(.is-listening) { background: #f6ecd6; }
+.showcase-mic.is-calling:not(.is-listening) { border-color: #3f9b6a; background: #3f9b6a; color: #fff; }
 .showcase-mic.is-listening { border-color: #c4574f; background: #c4574f; color: #fff; animation: mic-pulse 1.4s ease-out infinite; }
 @media (prefers-reduced-motion: reduce) { .showcase-mic.is-listening { animation: none; } }
 .showcase.is-closing .showcase-backdrop { animation: stage-fade .3s ease reverse forwards; }

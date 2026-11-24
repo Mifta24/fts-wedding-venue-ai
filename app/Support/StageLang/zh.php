@@ -117,6 +117,7 @@ return [
         'chat_call' => '與禮賓語音通話',
         'chat_call_on' => '通話中 — 點一下結束',
         'chat_call_ended' => '通話已結束。',
+        'chat_talk_hint' => '點一下麥克風直接說話,我會持續聆聽。',
         'chat_send' => '送出',
         'chat_open' => '與 AI 禮賓顧問聊聊',
         'chat_close' => '關閉對話',

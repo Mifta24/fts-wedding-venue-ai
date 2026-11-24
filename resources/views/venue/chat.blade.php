@@ -19,6 +19,7 @@
             data-label-call="{{ $labels['chat_call'] }}"
             data-label-call-on="{{ $labels['chat_call_on'] }}"
             data-label-call-ended="{{ $labels['chat_call_ended'] }}"
+            data-label-talk-hint="{{ $labels['chat_talk_hint'] }}"
             data-tts-enabled="{{ config('services.tts.enabled') && config('services.tts.api_key') ? '1' : '0' }}"
             data-tts-url="{{ route('concierge.speech', $venue->slug) }}"
             data-label-open="{{ $labels['chat_open'] }}"

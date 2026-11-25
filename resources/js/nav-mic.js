@@ -1,5 +1,5 @@
 import { isSpeaking, stop as stopVoice } from './voice';
-import { interpret, perform, stepPage, closeTop, toast } from './voice-nav';
+import { interpret, decisiveAction, earlyDelay, perform, stepPage, closeTop, toast } from './voice-nav';
 
 /**
  * Header microphone: voice navigation for every menu. Listens continuously (until tapped again, hidden tab,
@@ -92,14 +92,29 @@ function initNavMic() {
         const startedWhileSpeaking = isSpeaking();
 
         current.lang = LOCALES[locale] || 'en-US';
-        current.interimResults = false;
+        current.interimResults = true;
         current.continuous = false;
         current.maxAlternatives = 1;
+        let earlyTimer = null;
+        const fireEarly = () => {
+            // A clear menu/language/stop command: act now instead of waiting for the browser's silence timeout.
+            if (session !== current || !transcript) return;
+            session = null;
+            try { current.abort(); } catch { /* already finished */ }
+            fastFails = 0;
+            handle(transcript, { whileSpeaking: startedWhileSpeaking || isSpeaking() });
+            if (on) window.setTimeout(listen, 300);
+        };
         current.onresult = (event) => {
             transcript = Array.from(event.results).map((result) => result[0].transcript).join('').trim();
+
+            window.clearTimeout(earlyTimer);
+            const finished = Array.from(event.results).every((result) => result.isFinal !== false);
+            if (!finished && decisiveAction(transcript)) earlyTimer = window.setTimeout(fireEarly, earlyDelay(transcript));
         };
         current.onerror = (event) => { failure = event.error; };
         current.onend = () => {
+            window.clearTimeout(earlyTimer);
             if (session !== current) return;
             session = null;
 

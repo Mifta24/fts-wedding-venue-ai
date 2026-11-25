@@ -1,6 +1,6 @@
 import { formatMoney } from './money';
 import { canSpeakLocale, speak as sayAloud, stop as stopVoice, unlock as unlockVoice } from './voice';
-import { interpret as interpretNav, perform as performNav } from './voice-nav';
+import { interpret as interpretNav, decisiveAction, earlyDelay, perform as performNav } from './voice-nav';
 /**
  * AI Concierge chat panel. Vanilla JS, no framework: sends client messages to
  * the Laravel backend and renders both plain text and the structured
@@ -1117,14 +1117,33 @@ function initConcierge() {
         session.continuous = false;
         session.maxAlternatives = 1;
 
+        let earlyTimer = null;
         session.onresult = (event) => {
             transcript = Array.from(event.results).map((result) => result[0].transcript).join('').trim();
             inputEl.value = transcript;
+
+            // A clear menu/language command is acted on as soon as it is recognised, without the silence timeout.
+            window.clearTimeout(earlyTimer);
+            const finished = Array.from(event.results).every((result) => result.isFinal !== false);
+            if (finished || !decisiveAction(transcript)) return;
+
+            earlyTimer = window.setTimeout(() => {
+                if (recognition !== session || busy || handedOver) return;
+                const hint = document.querySelector('[data-nav-mic]')?.dataset ?? {};
+                if (!performNav(decisiveAction(transcript), { opening: hint.opening, here: hint.here })) return;
+
+                micDiscard = true;
+                inputEl.value = '';
+                stopReading();
+                session.abort();
+                if (inCall) continueCall();
+            }, earlyDelay(transcript));
         };
         session.onerror = (event) => {
             micFailure = event.error;
         };
         session.onend = () => {
+            window.clearTimeout(earlyTimer);
             recognition = null;
             setListening(false);
 

@@ -91,6 +91,23 @@ export function interpret(text) {
     return null;
 }
 
+/** How long a recognised command must stay unchanged before it is acted on without waiting for the silence. */
+export const EARLY_MS = 700;
+
+/** A lone word ("halls", "book") may still be the start of a question, so it waits a little longer. */
+export const earlyDelay = (text) => (String(text).trim().split(/\s+/).length <= 1 ? 1200 : EARLY_MS);
+
+/**
+ * An unmistakable switch (menu, language, stop) heard so far, or null. Used on interim speech so the page can react
+ * as soon as the command is clear instead of after the browser's silence timeout. Anything that could still grow
+ * into a question ("show me halls for 100 guests") is not decisive until the final result.
+ */
+export function decisiveAction(text) {
+    const action = interpret(text);
+
+    return action && ['menu', 'lang', 'hangup'].includes(action.type) ? action : null;
+}
+
 /** Picks the candidate whose label best matches a spoken query (labels and query compared without spaces). */
 export function bestLabelMatch(query, candidates) {
     const wanted = normalise(query).replace(/\s/g, '');

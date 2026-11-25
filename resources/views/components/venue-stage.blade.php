@@ -67,6 +67,12 @@
             </div>
             <div class="stage-tools">
                 <x-sound-toggle :on="$lobby['sound_on']" :off="$lobby['sound_off']" />
+                <button type="button" class="nav-mic" data-nav-mic hidden aria-pressed="false"
+                    data-label="{{ $lobby['nav_mic'] }}" data-label-on="{{ $lobby['nav_mic_on'] }}"
+                    data-opening="{{ $lobby['nav_opening'] }}" data-here="{{ $lobby['nav_here'] }}" data-hint="{{ $lobby['nav_hint'] }}"
+                    aria-label="{{ $lobby['nav_mic'] }}" title="{{ $lobby['nav_mic'] }}">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+                </button>
                 <nav aria-label="Language" class="stage-lang">
                     @foreach ($supportedLocales as $code)
                         <a href="?lang={{ $code }}" lang="{{ $code }}" aria-label="{{ ['id' => 'Bahasa Indonesia', 'en' => 'English', 'ja' => '日本語', 'th' => 'ภาษาไทย', 'zh' => '繁體中文'][$code] }}" @if($code === $locale) aria-current="true" @endif>{{ $code }}</a>
@@ -80,14 +86,14 @@
             <p class="journey-panel-title">{{ $lobby['explore'] }}</p>
             <ol class="journey-buttons">
                 <li style="--strip-order: 0">
-                    <a href="{{ $lobbyUrl }}" class="journey-button" @if($scene !== 'lobby') data-stage-exit data-tour-line="{{ $narration['tour_lobby'] }}" @else aria-current="page" @endif>
+                    <a href="{{ $lobbyUrl }}" data-menu-key="lobby" class="journey-button" @if($scene !== 'lobby') data-stage-exit data-tour-line="{{ $narration['tour_lobby'] }}" @else aria-current="page" @endif>
                         <span class="journey-key" aria-hidden="true">{{ \App\Http\Controllers\VenuePageController::CHAPTERS['lobby'] }}</span>
                         <span class="journey-label">{{ $lobby['home'] }}</span>
                     </a>
                 </li>
                 @foreach ($menuItems as $item)
                     <li style="--strip-order: {{ $loop->iteration }}">
-                        <a href="{{ $item['href'] }}" class="journey-button"
+                        <a href="{{ $item['href'] }}" data-menu-key="{{ $item['key'] }}" class="journey-button"
                             data-stage-exit @if($item['tour']) data-tour-line="{{ $item['tour'] }}" @endif data-topic="{{ $item['topic'] }}"
                             @if($item['key'] === $currentKey) aria-current="page" @endif>
                             <span class="journey-key" aria-hidden="true">{{ $item['chapter'] }}</span>

@@ -471,7 +471,7 @@ class VenueLobbyTest extends TestCase
             ->assertSee('class="hall-nav"', false)
             ->assertSee("mulai dari Rp\u{00A0}55.000.000 / acara", false)
             ->assertDontSee('Retired Hall')
-            ->assertSee('href="'.route('venue.show', ['venueSlug' => 'demo', 'lang' => 'id']).'" class="journey-button"', false);
+            ->assertSee('href="'.route('venue.show', ['venueSlug' => 'demo', 'lang' => 'id']).'" data-menu-key="lobby" class="journey-button"', false);
 
         $index = $this->get('/demo/halls/grand-ballroom?lang=id')->getContent();
         $navigation = Str::between($index, '<nav class="hall-nav">', '</nav>');
@@ -583,5 +583,22 @@ class VenueLobbyTest extends TestCase
         $this->hall($venue, 'Garden Pavilion', ['base_price' => 28000000, 'max_guests' => 1000]);
 
         $this->get('/demo?lang=en')->assertOk()->assertSee('Rp 28.000.000')->assertSee('1.000 guests')->assertSee('15% off');
+    }
+
+    public function test_every_menu_has_a_voice_navigation_hook_and_the_header_mic_speaks_each_language(): void
+    {
+        $this->venue();
+
+        foreach (['en' => 'Voice navigation', 'id' => 'Navigasi suara', 'ja' => '音声ナビ', 'th' => 'นำทางด้วยเสียง', 'zh' => '語音導覽'] as $lang => $label) {
+            $response = $this->get("/demo?lang={$lang}")->assertOk()->assertSee('data-nav-mic', false)->assertSee($label);
+
+            foreach (['lobby', 'halls', 'services', 'info', 'reservation', 'staff'] as $key) {
+                $response->assertSee('data-menu-key="'.$key.'"', false);
+            }
+        }
+
+        foreach (['/demo/halls', '/demo/services', '/demo/info', '/demo/reservation', '/demo/staff'] as $path) {
+            $this->get($path.'?lang=en')->assertOk()->assertSee('data-nav-mic', false)->assertSee('data-menu-key="halls"', false);
+        }
     }
 }

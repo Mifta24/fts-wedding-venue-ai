@@ -86,6 +86,7 @@ return [
         'service_counter' => '服務', 'prev_service' => '上一項', 'next_service' => '下一項', 'ask_service' => '詢問此項服務', 'back_services' => '全部服務', 'open_service' => '了解更多', 'ask_service_q' => '請多告訴我一些關於 :name 的資訊。',
         'loading' => '布幕緩緩拉開…',
         'sound_on' => '開啟聲音', 'sound_off' => '關閉聲音',
+        'nav_mic' => '語音導覽：說出選單名稱，例如「宴會廳」', 'nav_mic_on' => '聆聽中 — 點一下停止', 'nav_opening' => '正在開啟', 'nav_here' => '您已在此頁面。', 'nav_hint' => '請說出選單：宴會廳、婚禮服務、場地資訊、預約日期、婚禮團隊、首頁。',
         'hall_scene' => '宴會廳詳情', 'hall_counter' => '宴會廳', 'gallery' => '相片集', 'photo' => '相片',
         'no_photo' => '相片即將上傳', 'zoom_photo' => '放大相片', 'watch_video' => '觀看影片', 'video_label' => '場地影片', 'detail' => '詳情', 'photo_info' => '相片資訊', 'photo_of' => '相片', 'hall_label' => '宴會廳', 'close' => '關閉', 'prev_photo' => '上一張相片', 'next_photo' => '下一張相片', 'prev_hall' => '上一間', 'next_hall' => '下一間',
         'ask_hall' => '詢問此宴會廳', 'reserve_hall' => '預約此處的日期',

@@ -1104,6 +1104,7 @@ function initConcierge() {
         if (!SpeechRecognitionClass || recognition || !ready || busy || handedOver) return;
 
         stopReading();
+        window.dispatchEvent(new CustomEvent('venue:chat-mic-start'));
 
         const session = new SpeechRecognitionClass();
         const startedAt = Date.now();
@@ -1431,6 +1432,14 @@ function initConcierge() {
 
     // A menu pick in the same scene: the concierge answers right where the client stands.
     window.addEventListener('concierge:ask', (event) => sendMessage(event.detail.message));
+
+    // Voice navigation (header mic): anything that is not a menu command goes to the concierge, answered aloud.
+    window.addEventListener('venue:voice-ask', (event) => {
+        unlockVoice();
+        if (!ready || busy || handedOver) return;
+        openPanel();
+        sendMessage(event.detail.message, { spoken: true });
+    });
 
     setBusy(true);
     boot().then(() => {

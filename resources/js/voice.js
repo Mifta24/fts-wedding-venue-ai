@@ -251,6 +251,11 @@ export function speak(text, options = {}) {
     }
 }
 
+/** True while the device voice or the cloud voice is talking (the microphone must not listen to it). */
+export function isSpeaking() {
+    return (canBrowserSpeak && window.speechSynthesis.speaking) || (!!audio && !audio.paused && !audio.ended);
+}
+
 /** True when something can speak this language: a cloud voice, or a device voice for it. */
 export async function canSpeakLocale(lang) {
     if (cloudEnabled()) return true;

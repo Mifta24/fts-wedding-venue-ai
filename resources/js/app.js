@@ -4,3 +4,4 @@ import './reservation';
 import './stage';
 import './depth';
 import './narrator';
+import './nav-mic';

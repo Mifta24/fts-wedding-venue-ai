@@ -1,4 +1,4 @@
-import { isSpeaking } from './voice';
+import { isSpeaking, stop as stopVoice } from './voice';
 import { interpret, perform, stepPage, closeTop, toast } from './voice-nav';
 
 /**
@@ -48,9 +48,14 @@ function initNavMic() {
         render();
     }
 
-    function handle(text) {
+    function handle(text, { whileSpeaking = false } = {}) {
         lastActivity = Date.now();
         const action = interpret(text);
+
+        // While the concierge is talking, only an outright switch (menu, language, stop) counts: anything else
+        // is most likely its own voice coming back through the microphone.
+        if (whileSpeaking && !['menu', 'lang', 'hangup'].includes(action?.type)) return;
+        if (whileSpeaking && action?.type !== 'hangup') stopVoice();
 
         if (action?.type === 'hangup') {
             stop();
@@ -73,8 +78,9 @@ function initNavMic() {
     function listen() {
         if (!on || session) return;
 
-        // Never listen to the concierge's own voice (or to the chat's microphone).
-        if (isSpeaking() || document.querySelector('.chat-mic.is-listening, [data-chat-call].is-calling')) {
+        // The chat's own microphone has the floor while it listens. The concierge's voice does not block us:
+        // a guest can switch menu while it is still talking (see handle()).
+        if (document.querySelector('.chat-mic.is-listening, [data-chat-call].is-calling')) {
             window.setTimeout(listen, 600);
             return;
         }
@@ -83,6 +89,7 @@ function initNavMic() {
         const startedAt = Date.now();
         let transcript = '';
         let failure = null;
+        const startedWhileSpeaking = isSpeaking();
 
         current.lang = LOCALES[locale] || 'en-US';
         current.interimResults = false;
@@ -104,7 +111,7 @@ function initNavMic() {
 
             if (transcript) {
                 fastFails = 0;
-                handle(transcript);
+                handle(transcript, { whileSpeaking: startedWhileSpeaking || isSpeaking() });
             } else {
                 fastFails = Date.now() - startedAt < 1500 ? fastFails + 1 : 0;
             }

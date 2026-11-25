@@ -1,5 +1,6 @@
 import { formatMoney } from './money';
 import { canSpeakLocale, speak as sayAloud, stop as stopVoice, unlock as unlockVoice } from './voice';
+import { interpret as interpretNav, perform as performNav } from './voice-nav';
 /**
  * AI Concierge chat panel. Vanilla JS, no framework: sends client messages to
  * the Laravel backend and renders both plain text and the structured
@@ -1249,6 +1250,16 @@ function initConcierge() {
     }
 
     function handleVoiceCommand(text) {
+        // Switching menu or language by voice works from the chat and the call too, even mid-conversation.
+        const navigation = interpretNav(text);
+        if (navigation && (navigation.type === 'menu' || navigation.type === 'lang')) {
+            const hint = document.querySelector('[data-nav-mic]')?.dataset ?? {};
+            if (performNav(navigation, { opening: hint.opening, here: hint.here })) {
+                stopReading();
+                return true;
+            }
+        }
+
         const command = matchVoiceCommand(text);
         if (!command || !showcaseEl) return false;
 

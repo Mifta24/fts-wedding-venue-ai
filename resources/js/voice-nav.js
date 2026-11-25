@@ -13,6 +13,10 @@ const normalise = (text) => String(text || '')
 
 // Polite filler around a menu name, per language; removed before matching.
 const FILLER = [
+    // Conversational lead-ins before a menu name: "ok now halls", "can you open services", "skip this and go to services".
+    /\b(?:ok|okay|alright|now|then|so|also|and|just|actually|can you|could you|would you|will you|i would like to go to|i would like to|i'd like to go to|i'd like to|i d like to|i wanna go to|i wanna|let's go to|let's see|let's|let s see|let s go to|let s|lets go to|move on to|move on|move to|jump to|skip this and|skip this|skip to|skip|bring me to|bring me|head to|see the|look at|check out|check)\b/g,
+    /\b(?:sekarang|coba|ayo|yuk|lanjut ke|pindah ke|langsung ke|skip ke|lewati ini dan)\b/g,
+    /(?:次は|今度は|じゃあ|では|まず|ちょっと|今から)/g,
     /\b(?:please|go to|go|open|show me|show|take me to|take me|navigate to|let us see|lets see|i want to see|i want to go to|i want to|switch to|change language to|change to|language|the|page|menu|section|to)\b/g,
     /\b(?:tolong|buka|ke|halaman|lihat|tampilkan|menu|ya|dong|saya|mau|ingin|ganti|ubah|bahasa)\b/g,
     /(?:を|へ|に|は|開いて|開く|見せて|見たい|行きたい|行って|移動して|移動|お願いします|お願い|ください|戻って|戻る|もどって|もどる|ページ|画面|メニュー|にして|に変更|に切り替え|切り替えて|言語)/g,
@@ -32,7 +36,7 @@ const MENU = {
     halls: /^(?:halls?|venues?|rooms?|plans?|packages?|hall pernikahan|gedung|ruang|ruangan|paket|ホール|会場一覧|プラン|パッケージ|ฮอลล์|แพ็กเกจ|宴會廳|宴会厅|方案)$/,
     services: /^(?:services?|options?|wedding services?|layanan|opsi|layanan pernikahan|サービス|オプション|ウェディングサービス|บริการ|บริการแต่งงาน|婚禮服務|服務|服务)$/,
     info: /^(?:info|information|venue information|informasi|informasi gedung|会場ご案内|会場案内|案内|情報|会場情報|インフォメーション|ข้อมูล|ข้อมูลสถานที่|場地資訊|場地信息|資訊|资讯)$/,
-    reservation: /^(?:reservations?|booking|book|reserve|hold date|hold my date|hold your date|reservasi|pesan|pemesanan|amankan tanggal|予約|日程|日程仮予約|仮予約|日程を仮予約|จอง|จองวันจัดงาน|預約|預約日期|预约)$/,
+    reservation: /^(?:reservations?|booking|book|book a date|book my date|book the date|make a reservation|make reservation|make a booking|reserve|reserve a date|reserve my date|hold date|hold my date|hold your date|reservasi|pesan|pemesanan|amankan tanggal|予約|日程|日程仮予約|仮予約|日程を仮予約|จอง|จองวันจัดงาน|預約|預約日期|预约)$/,
     staff: /^(?:staff|team|talk team|talk team|contact|contact us|talk staff|wedding team|tim|staf|hubungi|bicara tim|bicara dengan tim|スタッフ|チーム|相談|スタッフ相談|スタッフに相談|ทีมงาน|คุยกับทีมงาน|ติดต่อทีมงาน|ติดต่อ|婚禮團隊|團隊|团队|聯絡|联系)$/,
 };
 

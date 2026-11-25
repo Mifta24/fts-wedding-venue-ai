@@ -31,7 +31,7 @@ const MENU = {
     lobby: /^(?:home|welcome|lobby|start|main|beranda|awal|utama|ホーム|ロビー|トップ|ウェルカム|หน้าแรก|หน้าหลัก|ต้อนรับ|首頁|首页|歡迎|主頁)$/,
     halls: /^(?:halls?|venues?|rooms?|plans?|packages?|hall pernikahan|gedung|ruang|ruangan|paket|ホール|会場一覧|プラン|パッケージ|ฮอลล์|แพ็กเกจ|宴會廳|宴会厅|方案)$/,
     services: /^(?:services?|options?|wedding services?|layanan|opsi|layanan pernikahan|サービス|オプション|ウェディングサービス|บริการ|บริการแต่งงาน|婚禮服務|服務|服务)$/,
-    info: /^(?:info|information|venue information|policies|policy|about|access|faq|informasi|informasi gedung|tentang|kebijakan|akses|会場ご案内|会場案内|案内|情報|会場情報|インフォメーション|アクセス|ข้อมูล|ข้อมูลสถานที่|場地資訊|場地信息|資訊|资讯)$/,
+    info: /^(?:info|information|venue information|informasi|informasi gedung|会場ご案内|会場案内|案内|情報|会場情報|インフォメーション|ข้อมูล|ข้อมูลสถานที่|場地資訊|場地信息|資訊|资讯)$/,
     reservation: /^(?:reservations?|booking|book|reserve|hold date|hold my date|hold your date|reservasi|pesan|pemesanan|amankan tanggal|予約|日程|日程仮予約|仮予約|日程を仮予約|จอง|จองวันจัดงาน|預約|預約日期|预约)$/,
     staff: /^(?:staff|team|talk team|talk team|contact|contact us|talk staff|wedding team|tim|staf|hubungi|bicara tim|bicara dengan tim|スタッフ|チーム|相談|スタッフ相談|スタッフに相談|ทีมงาน|คุยกับทีมงาน|ติดต่อทีมงาน|ติดต่อ|婚禮團隊|團隊|团队|聯絡|联系)$/,
 };

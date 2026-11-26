@@ -1152,6 +1152,9 @@ function initConcierge() {
             if (micFailure === 'not-allowed' || micFailure === 'service-not-allowed') {
                 endCall({ quiet: true });
                 setChatStatus(config.labels.micDenied, 'error');
+            } else if (!transcript && micFailure === 'aborted' && inCall) {
+                // The browser cut the mic short (another recognition started, or the voice began): a call never stays dead.
+                continueCall();
             } else if (!transcript && micFailure !== 'aborted') {
                 if (inCall) {
                     // Nobody spoke. The mic stays on for a natural conversation, but never open for nothing:

@@ -80,7 +80,8 @@ function initNavMic() {
 
         // The chat's own microphone has the floor while it listens. The concierge's voice does not block us:
         // a guest can switch menu while it is still talking (see handle()).
-        if (document.querySelector('.chat-mic.is-listening, [data-chat-call].is-calling')) {
+        if (document.querySelector('.chat-mic.is-listening, [data-chat-call].is-calling, [data-showcase-mic].is-listening, [data-showcase-mic].is-calling')) {
+            lastActivity = Date.now();
             window.setTimeout(listen, 600);
             return;
         }
@@ -162,7 +163,15 @@ function initNavMic() {
     button.addEventListener('click', () => (on ? stop() : start()));
 
     // The chat's own microphone and the nav mic never listen at once.
-    window.addEventListener('venue:chat-mic-start', () => { if (on) stop({ forget: false }); });
+    // The header mic stays switched on: it only steps aside while the chat/photo-window mic has the floor
+    // (listen() waits for it) and takes over again the moment that one stops, so it is never left off.
+    window.addEventListener('venue:chat-mic-start', () => {
+        if (!on) return;
+        const yielded = session;
+        session = null;
+        try { yielded?.abort(); } catch { /* already finished */ }
+        window.setTimeout(listen, 700);
+    });
 
     document.addEventListener('visibilitychange', () => {
         if (!on) return;
